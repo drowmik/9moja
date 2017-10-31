@@ -1,12 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Title</title>
+    <meta charset="UTF-8">
+    <title>welcome to funbook</title>
+    
+    <style type="text/css">
+        img{
+            width: 200px;
+        }
+    </style>
+    
 </head>
 <body>
 
-<h1>templating workingggggggggg</h1>
+<ul>
+
+{% for lp in latest_posts %}
+    <li>
+        <h1>{{ lp.post_name }}</h1>
+        <img src="{{ lp.post_img }}" alt="{{ lp.post_name }}">
+    </li>
+{% endfor %}
+
+<ul>
 
 </body>
 </html>
