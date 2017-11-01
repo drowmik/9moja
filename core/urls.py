@@ -19,11 +19,11 @@ from django.conf.urls.static import static
 from core import settings
 
 urlpatterns = [
-    url(r'^', include('main_app.urls')),
+    
+    url(r'^', include('main_app.urls', namespace="main_app")),
     
     url(r'^admin/', admin.site.urls),
     
-    url(r'^admin/', admin.site.urls),
 ]
 
 
