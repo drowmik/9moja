@@ -1,29 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>welcome to funbook</title>
+{% extends 'main_app/base.html' %}
+
+{% block extra_css %}
+<style type="text/css">
+    img{
+        width: 200px;
+    }
+</style>
+{% endblock %}
+
+
+{% block main_content %}
+    <ul>
     
-    <style type="text/css">
-        img{
-            width: 200px;
-        }
-    </style>
+        {% for lp in latest_posts %}
+            <li>
+                <h1>{{ lp.title }}</h1>
+                <img src="{{ lp.img.url }}" alt="{{ lp.title }}"/>
+                <a href="{% url 'main_app:each_post' lp.slug %}">{{ lp.title }}</a>
+            </li>
+        {% endfor %}
     
-</head>
-<body>
-
-<ul>
-
-{% for lp in latest_posts %}
-    <li>
-        <h1>{{ lp.title }}</h1>
-        <img src="{{ lp.img.url }}" alt="{{ lp.title }}"/>
-        <a href="{% url 'main_app:each_post' lp.slug %}">{{ lp.title }}</a>
-    </li>
-{% endfor %}
-
-<ul>
-
-</body>
-</html>
+    </ul>
+{% endblock %}

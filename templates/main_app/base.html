@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+<head>
+    
+    
+    {% block meta %}
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta content="bani bd" name="author">
+    {% endblock %}
+    
+    
+    {% block extra_meta %}{% endblock %}
+    
+    
+    {% block google_analytics %}{% endblock %}
+    
+    
+    {% block google_tag_manager %}{% endblock %}
+    
+    
+    <title>{% block title %}Welcome babe{% endblock title %}</title>
+    
+    
+    {#    <link rel="shortcut icon" href="{% static 'main_app/img/favicon.ico' %}">#}
+    
+    
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'main_app/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'main_app/css/font-awesome.min.css' %}">
+    {% endblock %}
+    
+    
+    {% block extra_css %}{% endblock %}
+
+
+</head>
+<body {% block body_attr %}{% endblock body_attr %}>
+
+
+{% block header %}
+
+{% endblock %}
+
+
+{% block main_content %}{% endblock %}
+
+
+{% block footer %}
+
+{% endblock %}
+
+
+{% block js %}
+    <script src="{% static 'main_app/js/bootstrap.min.js' %}"></script>
+{% endblock %}
+
+
+{% block extra_js %}{% endblock %}
+
+
+</body>
+</html>
