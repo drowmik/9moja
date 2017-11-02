@@ -1,3 +1,29 @@
+[data-hover="target"]:hover ~ [data-hover-show="result"],
+[data-hover-show="result"]:hover {
+    display: block !important;
+}
+
+.top-search-btn,
+.top-social-ul > .nav-item > a {
+    border: none;
+    padding: .35rem .5rem;
+    font-size: 12px;
+}
+
+.top-search-btn {
+    cursor: pointer;
+}
+
+.navbar {
+    padding: .1rem 1rem;
+    font-size: 12px;
+}
+
+.navbar input {
+    padding: .3rem .5rem;
+    font-size: 0.7rem;
+}
+
 @media (min-width: 992px) {
     .top-social-ul > li {
         padding-left: 5px;

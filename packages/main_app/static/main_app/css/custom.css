@@ -3,9 +3,41 @@
     display: block !important;
 }
 
+body {
+    background-color: #f5eeee;
+}
+
+img {
+    max-width: 100%;
+}
+
+.sidebar-img {
+    height: 120px;
+    width: 120px;
+    overflow: hidden;
+}
+
+.category-link {
+    padding: 1px 8px;
+}
+
+aside.sidebar hr {
+    border-width: 4px;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+.category-link:hover {
+    text-decoration: none;
+    color: #fff;
+	background-color: #007bff;
+    border-color: #007bff !important;
+}
+
 .top-search-btn,
 .top-social-ul > .nav-item > a {
     border: none;
+    padding: .35rem .5rem;
+    font-size: 12px;
 }
 
 .top-search-btn {
@@ -22,8 +54,77 @@
     font-size: 0.7rem;
 }
 
+.navbar-brand img {
+    width: 50px;
+}
+
+.navbar-brand {
+    position: absolute;
+    top: 0;
+    margin: 0;
+}
+
+#collapsible_navbar {
+    font-size: 15px;
+}
+
+#collapsible_navbar ul.nav:first-child {
+    margin-right: 30px;
+}
+
+#collapsible_navbar ul.nav:last-child {
+    margin-left: 30px;
+}
+
+section.section {
+    margin-top: 35px;
+    margin-bottom: 35px;
+}
+
+#articles {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#articles article {
+    box-shadow: 2px 2px 10px 0px #0000003b;
+}
+
+.article-title {
+
+}
+
+.article-status {
+    font-size: 11px;
+}
+
+.article-actions .btn:hover {
+    background: none;
+    color: inherit;
+}
+
+.article-actions .btn {
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    padding-right: 15px;
+}
+
 @media (min-width: 992px) {
     .top-social-ul > li {
         padding-left: 5px;
+    }
+}
+
+/* bootstrap override */
+@media (min-width: 992px) {
+    .container {
+        max-width: 940px
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 940px
     }
 }
