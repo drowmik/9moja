@@ -11,6 +11,16 @@ img {
     max-width: 100%;
 }
 
+.mx-h{
+    max-height: 100%;
+    max-width: none;
+}
+
+.mx-w{
+    max-width: 100%;
+    max-height: none;
+}
+
 .sidebar-img {
     height: 120px;
     width: 120px;
@@ -29,7 +39,7 @@ aside.sidebar hr {
 .category-link:hover {
     text-decoration: none;
     color: #fff;
-	background-color: #007bff;
+    background-color: #007bff;
     border-color: #007bff !important;
 }
 
@@ -98,16 +108,19 @@ section.section {
     font-size: 11px;
 }
 
-.article-actions .btn:hover {
-    background: none;
-    color: inherit;
-}
-
 .article-actions .btn {
-    border: none;
+    border: none !important;
     cursor: pointer;
     padding: 0;
     padding-right: 15px;
+}
+
+.article-actions .btn:active,
+.article-actions .btn:focus,
+.article-actions .btn:hover {
+    background: none !important;
+    color: inherit !important;
+    box-shadow: none !important;
 }
 
 @media (min-width: 992px) {

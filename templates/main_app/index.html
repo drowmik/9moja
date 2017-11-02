@@ -69,7 +69,11 @@
                                     <li class="mb-4">
                                         <a href="{% url 'main_app:each_post' lp.slug %}" class="d-block">
                                             <div class="sidebar-img rounded-circle">
-                                                <img src="{{ lp.img.url }}" alt="{{ lp.title }}">
+                                                <img
+                                                        src="{{ lp.img.url }}"
+                                                        alt="{{ lp.title }}"
+                                                        class="{% if lp.img.width > lp.img.height %}mx-h{% else %}mx-w{% endif %}"
+                                                />
                                             </div>
                                         </a>
                                     </li>
