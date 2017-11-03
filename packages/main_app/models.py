@@ -8,6 +8,8 @@ class Post(models.Model):
     slug = models.SlugField(editable=False) # hide from admin
     
     title = models.CharField(max_length=200)
+
+    id = models.AutoField(primary_key=True)
     
     publish_date = models.DateTimeField(default=timezone.now)
 

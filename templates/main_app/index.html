@@ -16,11 +16,11 @@
                         
                         {% for lp in latest_posts %}
                             <article class="card mb-3 bg-light">
-                                <a href="{% url 'main_app:each_post' lp.slug %}" class="d-block article-link-media">
+                                <a href="{% url 'main_app:each_post' lp.id lp.slug %}" class="d-block article-link-media">
                                     <img src="{{ lp.img.url }}" alt="{{ lp.title }}" class="w-100"/>
                                 </a>
                                 <div class="card-footer mt-3">
-                                    <a href="{% url 'main_app:each_post' lp.slug %}" class="d-block article-link-title">
+                                    <a href="{% url 'main_app:each_post' lp.id lp.slug %}" class="d-block article-link-title">
                                         <h4 class="article-title">{{ lp.title }}</h4>
                                     </a>
                                     
@@ -67,7 +67,7 @@
                                 
                                 {% for lp in latest_posts %}
                                     <li class="mb-4">
-                                        <a href="{% url 'main_app:each_post' lp.slug %}" class="d-block">
+                                        <a href="{% url 'main_app:each_post' lp.id lp.slug %}" class="d-block">
                                             <div class="sidebar-img rounded-circle">
                                                 <img
                                                         src="{{ lp.img.url }}"
@@ -89,7 +89,7 @@
                             
                             {% for lp in latest_posts %}
                                 <a
-                                        href="{% url 'main_app:each_post' lp.slug %}"
+                                        href="{% url 'main_app:each_post' lp.id lp.slug %}"
                                         class="d-inline-block mb-2 border rounded border-secondary category-link"
                                 >{{ lp.slug }}</a>
                             {% endfor %}

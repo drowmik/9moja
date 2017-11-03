@@ -3,6 +3,5 @@ env/
 .*\.pyc
 .*\.orig
 db.sqlite3
-media/
 .hg/
 .gitignore

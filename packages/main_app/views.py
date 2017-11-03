@@ -15,9 +15,9 @@ def index(request):
     return render(r, t, c)
 
 
-def each_post(request, slug):
+def each_post(request, slug, pk):
     try:
-        post = Post.objects.get(slug=slug)
+        post = Post.objects.get(id=pk)
     except Post.DoesNotExist:
         raise Http404("This does not exist")
     
