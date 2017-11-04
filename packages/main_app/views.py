@@ -1,18 +1,16 @@
 from django.shortcuts import render
 from django.http import Http404
 from .models import Post
-#from core import settings
 
 
 def index(request):
     latest_posts = Post.objects.order_by('-publish_date')
     
-    r = request   #request
-    t = 'main_app/index.html'   #template name
-    c = {  #context
+    templ = 'main_app/index.html'   #template name
+    ctx = {  #context
         "latest_posts": latest_posts
     }
-    return render(r, t, c)
+    return render(request, templ, ctx)
 
 
 def each_post(request, slug, pk):
@@ -21,10 +19,9 @@ def each_post(request, slug, pk):
     except Post.DoesNotExist:
         raise Http404("This does not exist")
     
-    r = request   #request
-    t = 'main_app/single_post.html'   #template name
-    c = {  #context
+    templ = 'main_app/single_post.html'   #template name
+    ctx = {  #context
         'post': post,
          'media_url': post.img.url
     }
-    return render(r, t, c)
+    return render(request, templ, ctx)

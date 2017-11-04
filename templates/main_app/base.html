@@ -7,10 +7,9 @@
     
     
     {% block meta %}
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta content="bani bd" name="author">
+        
+        {% include 'snippets/meta_default.html' %}
+    
     {% endblock %}
     
     
@@ -30,8 +29,8 @@
     
     
     {% block css %}
-        <link rel="stylesheet" href="{% static 'main_app/css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static 'main_app/css/font-awesome.min.css' %}">
+        
+        {% include 'snippets/css_defaults.html' %}
         
         <link rel="stylesheet" href="{% static 'main_app/css/custom.css' %}">
     {% endblock %}
@@ -171,7 +170,9 @@
 
 
 {% block js %}
-    <script src="{% static 'main_app/js/bootstrap.min.js' %}"></script>
+    
+    {% include 'snippets/default_js.html' %}
+
 {% endblock %}
 
 

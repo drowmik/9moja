@@ -21,6 +21,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     
+    url(r'^dashboard/', include('dashboard.urls', namespace="dashboard")),
+    
     url(r'^admin/', admin.site.urls),
     
     url(r'^', include('main_app.urls', namespace="main_app")),

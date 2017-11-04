@@ -109,7 +109,7 @@ section.section {
 }
 
 .article-actions .btn {
-    border: none;
+    border: none !important;
     cursor: pointer;
     padding: 0;
     padding-right: 15px;
@@ -118,8 +118,9 @@ section.section {
 .article-actions .btn:active,
 .article-actions .btn:focus,
 .article-actions .btn:hover {
-    background: none;
-    color: inherit;
+    background: none !important;
+    color: inherit !important;
+    box-shadow: none !important;
 }
 
 @media (min-width: 992px) {

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dashboard</title>
+    
+    
+    {% include 'snippets/css_defaults.html' %}
+    
+    <style type="text/css">
+        img {
+            width: 20px;
+        }
+    </style>
+    
+    
+</head>
+<body>
+
+
+<table class="table text-center">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Title</th>
+        <th scope="col">File</th>
+        <th scope="col">Date</th>
+        <th scope="col">view</th>
+        <th scope="col">edit</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+    {% for post in posts %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ post.title }}</td>
+            <td><img src="{{ post.img.url }}" alt="{{ post.title }}"></td>
+            <td>{{ post.publish_date }}</td>
+            <td><a href="{% url 'main_app:each_post' post.id post.slug %}">view post</a></td>
+            <td><a href="{% url 'dashboard:edit_post' post.id %}">edit post</a></td>
+        </tr>
+    {% endfor %}
+    
+    </tbody>
+</table>
+
+
+</body>
+</html>
