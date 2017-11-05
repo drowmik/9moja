@@ -12,15 +12,6 @@ class Post(models.Model):
     publish_date = models.DateTimeField(default=timezone.now)
 
     img = models.ImageField()
-    
-    category = models.ManyToManyField(
-        'main_app.Category',
-        through='Categorize',
-        through_fields=(
-            'post',
-            'category'
-        ),
-    )
 
     def __str__(self):
         return self.title
@@ -34,9 +25,18 @@ class Post(models.Model):
         
 class Category(models.Model):
     
-    name = models.CharField(max_length=25, default='uncategorized')
+    name = models.CharField( max_length=25 )
     
     slug = models.SlugField(editable=False) # hidden in admin panel
+    
+    post = models.ManyToManyField(
+        'main_app.Post',
+        through='Categorize',
+        through_fields=(
+            'category',
+            'post',
+        ),
+    )
 
     def __str__(self):
         return self.name
