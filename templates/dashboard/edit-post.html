@@ -15,7 +15,7 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <form class="form" method="post">
+            <form class="form" method="post" enctype="multipart/form-data">
                 
                 {% csrf_token %}
                 
@@ -25,14 +25,39 @@
                             type="text"
                             class="form-control"
                             id="post_title"
-                            name="post_title"
-                            value="{{ post.title }}"
+                            name="{{ form.title.name }}"
+                            value="{{ form.title.value }}"
                             placeholder="Enter Title here.."
+                    >
+                </div>
+                
+                {% comment %}<div class="form-group">
+                    <label for="post_published">Date Posted:</label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            id="post_published"
+                            name="{{ form.publish_date.name }}"
+                            value="{{ form.publish_date.value }}"
+                            placeholder="Publish Date"
+                    >
+                </div>{% endcomment %}
+                
+                <div class="form-group">
+                    <label for="post_file">File name: {{ form.img.value }}</label>
+                    <input
+                            type="file"
+                            class="form-control"
+                            id="post_file"
+                            name="{{ form.img.name }}"
+                            value="{{ form.img.value }}"
                     >
                 </div>
                 
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+            
+            
         </div>
     </div>
 </div>

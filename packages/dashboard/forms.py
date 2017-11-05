@@ -1,6 +1,9 @@
 from django import forms
+from main_app.models import Post
 
-"""
-class Edit_Post_Form(forms.Form):
-    post_title = forms.CharField(label='Post Title:', max_length=100)
-"""
+
+class EditPostForm(forms.ModelForm):
+
+    class Meta:
+        model = Post
+        fields = ['title', 'img']
