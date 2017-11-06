@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+<head>
+    
+    
+    {% block meta %}
+        
+        {% include 'snippets/meta_default.html' %}
+    
+    {% endblock %}
+    
+    {% comment %}
+    {% block extra_meta %}{% endblock %}
+    
+    
+    {% block google_analytics %}{% endblock %}
+    
+    
+    {% block google_tag_manager %}{% endblock %}
+    {% endcomment %}
+    
+    <title>{% block title %}Daaaaaashboard !!{% endblock title %}</title>
+    
+    {% comment %}
+    <link rel="shortcut icon" href="{% static 'dashboard/img/favicon.ico' %}">
+    {% endcomment %}
+    
+    {% block css %}
+        
+        {% comment %}
+        <link rel="stylesheet" href="{% static 'dashboard/css/bootstrap.min.css' %}">
+        
+        <link rel="stylesheet" href="{% static 'dashboard/css/custom.css' %}">
+        {% endcomment %}
+    
+    {% endblock %}
+    
+    
+    {% block extra_css %}{% endblock %}
+
+
+</head>
+<body class="{% block body_class %}{% endblock body_class %}" {% block body_attr %}{% endblock body_attr %}>
+
+
+{% block header %}
+
+{% endblock %}
+
+<div id="dashboard_container">
+    {% block main_container %}{% endblock %}
+</div>
+
+
+{% block footer %}{% endblock %}
+
+
+{% block js %}
+    
+    <script src="{% static 'dashboard/js/jquery-3.2.1.slim.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/popper.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/bootstrap.min.js' %}"></script>
+
+{% endblock %}
+
+
+{% block extra_js %}{% endblock %}
+
+
+</body>
+</html>

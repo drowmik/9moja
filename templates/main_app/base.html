@@ -30,7 +30,8 @@
     
     {% block css %}
         
-        {% include 'snippets/css_defaults.html' %}
+        <link rel="stylesheet" href="{% static 'main_app/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'main_app/css/font-awesome.min.css' %}">
         
         <link rel="stylesheet" href="{% static 'main_app/css/custom.css' %}">
     {% endblock %}
@@ -171,7 +172,9 @@
 
 {% block js %}
     
-    {% include 'snippets/default_js.html' %}
+    <script src="{% static 'main_app/js/jquery-3.2.1.slim.min.js' %}"></script>
+    <script src="{% static 'main_app/js/popper.min.js' %}"></script>
+    <script src="{% static 'main_app/js/bootstrap.min.js' %}"></script>
 
 {% endblock %}
 
