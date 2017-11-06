@@ -44,7 +44,11 @@
 
 {% block header %}
 
-{% endblock %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+
+{% endblock header %}
 
 <div id="dashboard_container">
     {% block main_container %}{% endblock %}

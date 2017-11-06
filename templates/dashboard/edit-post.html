@@ -1,5 +1,18 @@
 {% extends 'dashboard/base.html' %}
 
+
+{% block header %}
+    
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{% url 'dashboard:home' %}">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">Edit <span class="font-italic">{{ form.title.value }}</span></li>
+</ol>
+
+{% endblock header %}
+
+
 {% block main_container %}
     
     <div class="container">
