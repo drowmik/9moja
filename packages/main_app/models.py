@@ -22,8 +22,8 @@ class Post(models.Model):
 
     img = models.ImageField()
 
-    """def __str__(self):
-        return self.title"""
+    def __str__(self):
+        return self.title
 
     # override models save method for slug saving:
     def save(self, *args, **kwargs):
@@ -67,6 +67,10 @@ class Categorize(models.Model):
         Category,
         on_delete=models.CASCADE
     )
+    
+    def __str__(self):
+        data = {'category': self.category, 'post': self.post}
+        return "{category} : {post}".format(**data)
     
 
 
