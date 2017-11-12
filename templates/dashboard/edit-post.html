@@ -9,7 +9,7 @@
         </li>
         <li class="breadcrumb-item active"><span class="text-capitalize">{{ type }}</span> <span class="font-italic"
         >{{ form.title.value }}</span></li>
-</ol>
+    </ol>
 
 {% endblock header %}
 
@@ -45,9 +45,31 @@
                                 value="{{ form.img.value }}"
                         >
                     </div>
+                
+                    <ul>
+                    
+                        {# not included in modelform, handled customly #}
+                        {% for c in all_categories %}
+                            <li>
+                                <input
+                                        type="checkbox"
+                                        {% comment %}name="cat-{{ forloop.counter }}"{% endcomment %}
+                                        value="{{ c.category.id }}"
+                                        id="cat-{{ forloop.counter }}"
+                                        {% if c.has_category %}
+                                            checked
+                                        {% endif %}
+                                >
+                                <label for="cat-{{ forloop.counter }}">{{ c.category }}</label>
+                            </li>
+                        {% endfor %}
+                    
+                    </ul>
                     
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
+                
+                
             
             
             </div>

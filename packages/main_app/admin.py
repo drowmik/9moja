@@ -34,12 +34,14 @@ class PostAdmin(admin.ModelAdmin):
             message_bit = "{0} quote were".format(rows_updated)
         self.message_user(request, "{0} {1}".format(message_bit, desc))
 
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     
     list_display = ['id', 'name']
     
     list_display_links = ['id', 'name']
+
 
 @admin.register(Categorize)
 class CategorizeAdmin(admin.ModelAdmin):
