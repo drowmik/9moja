@@ -19,6 +19,7 @@
                 <th scope="col">File</th>
                 <th scope="col">User</th>
                 <th scope="col">Date</th>
+                <th scope="col">Category</th>
                 <th scope="col">view</th>
                 <th scope="col">edit</th>
             </tr>
@@ -32,14 +33,21 @@
                     <td><img src="{{ post.img.url }}" alt="{{ post.title }}"></td>
                     <td>{{ post.user|default:"-" }}</td>
                     <td>{{ post.publish_date }}</td>
-                    <td><a href="{% url 'main_app:each_post' post.id post.slug %}">view post</a></td>
-                    <td><a href="{% url 'dashboard:edit_post' post.id %}">edit post</a></td>
+                    <td>
+                        
+                        {% for cat in post.get_categories %}
+                            {{ cat.category }}{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    
+                    </td>
+                    <td><a href="{% url 'main_app:each_post' post.id post.slug %}">view</a></td>
+                    <td><a href="{% url 'dashboard:edit_post' post.id %}">edit</a></td>
                 </tr>
             {% endfor %}
             
             </tbody>
         </table>
-    
+        
         <a href="{% url 'dashboard:create_post' %}">create post</a>
     </div>
 

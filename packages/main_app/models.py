@@ -37,6 +37,9 @@ class Post(models.Model):
             self.user = user
         super(Post, self).save()    # saving the slug automatically
         
+    def get_categories(self):
+        return self.categorize_set.all()
+        
         
 class Category(models.Model):
     
