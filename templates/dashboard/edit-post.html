@@ -53,7 +53,7 @@
                             <li>
                                 <input
                                         type="checkbox"
-                                        {% comment %}name="cat-{{ forloop.counter }}"{% endcomment %}
+                                        name="cat-{{ forloop.counter }}"
                                         value="{{ c.category.id }}"
                                         id="cat-{{ forloop.counter }}"
                                         {% if c.has_category %}

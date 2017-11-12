@@ -35,26 +35,12 @@ def edit_post (request, pk):
     else:
         form = EditPostForm(instance=post)
     
-    cat_list = []
-    
-    for cat in Category.objects.all():
-        if cat.name in [x.category.name for x in Categorize.objects.filter(post=post)]:     # all categories of this post
-            flag = True
-        else:
-            flag = False
-
-        # all categories including a flag containing this post have this category or not
-        cat_list.append({
-            "has_category":flag,
-            "category" : cat
-        })
-    
     templ = 'dashboard/edit-post.html'   #template name
     ctx = {  #context
         "post": post,
         "form": form,
         "type": "edit",
-        "all_categories" : cat_list,
+        "all_categories" : get_category_list_by_post(post),
     }
     return render(request, templ, ctx)
 
@@ -77,8 +63,10 @@ def create_post (request):
         # "post": post,
         "form": form,
         "type": "create",
+        "all_categories" : get_category_list_by_post(),
     }
     return render(request, templ, ctx)
+
 
 def update_category ( post, cat_list ):
 
@@ -95,3 +83,21 @@ def update_category ( post, cat_list ):
             obj = Categorize.objects.select_related().filter(category=cat)
             if obj:
                 obj.delete()    # delete queryset if not changed from unassigned
+
+
+def get_category_list_by_post (pst=None):
+    cat_list = []
+    
+    for cat in Category.objects.all():
+        if cat.name in [x.category.name for x in Categorize.objects.filter(post=pst)]:  # all categories of this post
+            flag = True
+        else:
+            flag = False
+        
+        # all categories including a flag containing this post have this category or not
+        cat_list.append({
+            "has_category": flag,
+            "category": cat
+        })
+    
+    return cat_list
