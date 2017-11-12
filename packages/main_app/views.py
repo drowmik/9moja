@@ -4,7 +4,7 @@ from .models import Post
 
 
 def index(request):
-    latest_posts = Post.objects.order_by('-publish_date')
+    latest_posts = Post.objects.order_by('-publish_date').filter(status="p")    # showing only published posts
     
     templ = 'main_app/index.html'   #template name
     ctx = {  #context

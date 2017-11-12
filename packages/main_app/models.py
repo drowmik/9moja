@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.template.defaultfilters import slugify
+from django.contrib.auth import get_user_model
 
 
 STATUS_CHOICES = (
@@ -9,8 +10,11 @@ STATUS_CHOICES = (
     ('a', 'Archived'),
 )
 
+User = get_user_model()
 
 class Post(models.Model):
+    
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     
     slug = models.SlugField(editable=False) # hidden in admin panel
     
@@ -18,7 +22,7 @@ class Post(models.Model):
     
     publish_date = models.DateTimeField(default=timezone.now)
 
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='u')
 
     img = models.ImageField()
 
@@ -26,9 +30,11 @@ class Post(models.Model):
         return self.title
 
     # override models save method for slug saving:
-    def save(self, *args, **kwargs):
+    def save(self, user=None, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.title)
+        if user:
+            self.user = user
         super(Post, self).save()    # saving the slug automatically
         
         

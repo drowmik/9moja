@@ -8,4 +8,6 @@ urlpatterns = [
     
     url(r'^edit/(?P<pk>[\d]+)/$', views.edit_post, name='edit_post'),
     
+    url(r'^create/$', views.create_post, name='create_post'),
+    
 ]
