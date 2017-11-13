@@ -10,4 +10,6 @@ urlpatterns = [
     
     url(r'^create/$', views.create_post, name='create_post'),
     
+    url(r'^new-category/$', views.add_category, name='add_category'),
+    
 ]

@@ -1,8 +1,14 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from main_app.models import Post, Category, Categorize
 from .forms import EditPostForm, CreatePostForm
+
+EDIT_OR_CREATE = {
+    "edit": "edit",
+    "create": "create",
+    "template": "dashboard/edit-or-create-post.html"
+}
 
 
 @login_required
@@ -35,11 +41,11 @@ def edit_post (request, pk):
     else:
         form = EditPostForm(instance=post)
     
-    templ = 'dashboard/edit-post.html'   #template name
+    templ = EDIT_OR_CREATE["template"]   #template name
     ctx = {  #context
         "post": post,
         "form": form,
-        "type": "edit",
+        "type": EDIT_OR_CREATE["edit"],
         "all_categories" : get_category_list_by_post(post),
     }
     return render(request, templ, ctx)
@@ -58,11 +64,10 @@ def create_post (request):
     else:
         form = CreatePostForm()
     
-    templ = 'dashboard/edit-post.html'   #template name
+    templ = EDIT_OR_CREATE["template"]   #template name
     ctx = {  #context
-        # "post": post,
         "form": form,
-        "type": "create",
+        "type": EDIT_OR_CREATE["create"],
         "all_categories" : get_category_list_by_post(),
     }
     return render(request, templ, ctx)
@@ -74,12 +79,12 @@ def update_category ( post, cat_list ):
     all_cat_list = list(Category.objects.values_list('id', flat=True))      # categories assigned for this post
 
     for cat in all_cat_list:
-        if cat in cat_list:
+        if cat in cat_list:     # check if any new category is added
             Categorize.objects.update_or_create(
                 post=post,
                 category= Category.objects.get(id=cat),
             )
-        else:
+        else:   # if unmarked, delete it
             obj = Categorize.objects.select_related().filter(category=cat)
             if obj:
                 obj.delete()    # delete queryset if not changed from unassigned
@@ -101,3 +106,35 @@ def get_category_list_by_post (pst=None):
         })
     
     return cat_list
+
+
+@login_required
+def add_category(request):      # add new category and build relation with the post
+    data = {}
+    if request.method == 'POST':
+        new_cat_name = request.POST["new_cat"]
+        print(request.POST)
+        # check if duplicate category
+        all_cat_name = list(Category.objects.values_list('name', flat=True))
+        if new_cat_name in all_cat_name:
+            data["err"] = "Duplicate category not allowed"
+            return JsonResponse(data)
+    
+        new_cat, created = Category.objects.update_or_create(   # new category created
+            name=new_cat_name
+        )
+        
+        # connect category to post only if editing
+        if request.POST['type'] is EDIT_OR_CREATE["edit"]:
+            post_id = int(request.POST['post_id'])
+            post = Post.objects.get(id=post_id) # find post by id
+            
+            # connecting post and category
+            Categorize.objects.update_or_create(
+                post=post,
+                category=Category.objects.get(id=new_cat.id),
+            )
+        
+        data["name"] = new_cat.name
+        data["id"] = new_cat.id
+    return JsonResponse(data)

@@ -1,0 +1,150 @@
+{% extends 'dashboard/base.html' %}
+
+
+{% block header %}
+    
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{% url 'dashboard:home' %}">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <span class="text-capitalize">{{ type }}</span>
+            <span class="font-italic">{{ form.title.value|default:"New Post" }}</span>
+        </li>
+    </ol>
+
+{% endblock header %}
+
+
+{% block main_container %}
+    
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form class="form" method="post" enctype="multipart/form-data">
+                    
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="post_title">Post Title:</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="post_title"
+                                name="{{ form.title.name }}"
+                                value="{{ form.title.value }}"
+                                placeholder="Enter Title here.."
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="post_file">File name: {{ form.img.value }}</label>
+                        <input
+                                type="file"
+                                class="form-control"
+                                id="post_file"
+                                name="{{ form.img.name }}"
+                                value="{{ form.img.value }}"
+                        >
+                    </div>
+                    
+                    <ul class="all-cat-ul">
+                        
+                        {# not included in modelform, handled customly #}
+                        {% for c in all_categories %}
+                            <li>
+                                <input
+                                        type="checkbox"
+                                        name="cat-{{ forloop.counter }}"
+                                        value="{{ c.category.id }}"
+                                        id="cat-{{ forloop.counter }}"
+                                        {% if c.has_category %}
+                                        checked
+                                        {% endif %}
+                                >
+                                <label for="cat-{{ forloop.counter }}">{{ c.category }}</label>
+                            </li>
+                        {% endfor %}
+                    
+                    </ul>
+                    
+                    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                </form>
+                
+                <form method="post" id="add_cat_form">
+                    
+                    {% csrf_token %}
+                    
+                    <input type="text" name="new_cat" class="mb-2">
+                    <br>
+                    <button type="submit" class="btn btn-outline-success mb-2">+Add new category</button>
+                </form>
+            
+            
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    
+    <script type="text/javascript">
+        (function ($) {
+            $("#add_cat_form").submit(function (e) {
+                e.preventDefault();
+
+                var new_cat_input = $('input[name="new_cat"]');
+                var json_data = {};
+                json_data['new_cat'] = new_cat_input.val();
+                json_data['post_id'] = "{{ post.id|default:None }}";   {# if not editing, no post id will be delivered #}
+                json_data['type'] = "{{ type }}";
+
+                $.ajax({
+                    url: '{% url 'dashboard:add_category' %}',
+                    method: "post",
+                    dataType: 'json',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(
+                            "X-CSRFToken",
+                            $.cookie('csrftoken')
+                        );
+                    },
+                    data: json_data,
+                    success: function (data) {
+                        var html;
+                        
+                        {# if any error raised, error msg will be shown #}
+                        if (data["err"]){
+                            html =
+                                '<li class="text-danger new_cat_error">' +
+                                    data["err"] +
+                                '</li>'
+                        }else {     {# show new created category if no error #}
+                            html =
+                                '<li>' +
+                                    '<input type="checkbox" ' +
+                                        'name="cat-' + data["id"] + '" ' +
+                                        'value="' + data["id"] + '" ' +
+                                        'id="cat-' + data["id"] + '" ' +
+                                        'checked' +
+                                    '> ' +
+                                    '<label for="cat-' + data["id"] + '">' + data["name"] + '</label>' +
+                                '</li>';
+                            
+                            $('li.new_cat_error').remove();
+                        }
+                        
+                        $('.all-cat-ul').append(html);
+                        new_cat_input.val("");
+                    },
+                    error: function (e) {
+                        console.log("error hoise re bajan... " + e)
+                    }
+                })
+            });
+        })(jQuery)
+    </script>
+{% endblock %}
