@@ -75,9 +75,18 @@ class Category(models.Model):
         if not self.id:
             self.slug = slugify(self.name)
         super(Category, self).save()    # saving the slug automatically
+
+    def get_absolute_url(self):
+        return reverse(
+            'main_app:each_category',
+            args=[
+                str(self.slug)
+            ]
+        )
         
 
 class Categorize(models.Model):
+    
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE

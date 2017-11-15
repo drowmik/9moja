@@ -68,22 +68,8 @@ aside.sidebar hr {
     width: 50px;
 }
 
-.navbar-brand {
-    position: absolute;
-    top: 0;
-    margin: 0;
-}
-
 #collapsible_navbar {
     font-size: 15px;
-}
-
-#collapsible_navbar ul.nav:first-child {
-    margin-right: 30px;
-}
-
-#collapsible_navbar ul.nav:last-child {
-    margin-left: 30px;
 }
 
 section.section {

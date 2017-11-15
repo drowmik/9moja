@@ -1,0 +1,17 @@
+{% extends 'main_app/base.html' %}
+
+
+{% block main_container %}
+    <section id="home_page_contents" class="section">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col">
+                    
+                    <h1>Just for fun <span><i class="fa fa-smile-o"></i></span></h1>
+                    <h3>Please stay in touch, <span><a href="{% url 'main_app:index' %}">Click here</a></span></h3>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

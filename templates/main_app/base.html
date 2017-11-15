@@ -53,22 +53,22 @@
                         <ul class="navbar-nav mr-auto">
                             
                             <li class="nav-item active">
-                                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                                <a class="nav-link" href="{% url 'main_app:index' %}">Home <span class="sr-only">(current)</span></a>
                             </li>
                             
                             {% for cat in categories %}
                                 
-                                {% if forloop.counter < 4 %}
+                                {% if forloop.counter < limit %}
                                     <li class="nav-item">
                                         <a href="{% url "main_app:each_category" cat.slug %}" class="nav-link">{{ cat.name }}</a>
                                     </li>
-                                {% elif forloop.counter == 4 %}
+                                {% elif forloop.counter == limit %}
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" data-hover="target">More Categories</a>
                                         <div class="dropdown-menu" data-hover-show="result">
                                 {% endif %}
                             
-                                {% if forloop.counter >= 4 %}
+                                {% if forloop.counter >= limit %}
                                             <a class="dropdown-item" href="#">{{ cat.name }}</a>
                                 {% endif %}
                                 {% if forloop.last %}
@@ -80,18 +80,13 @@
                         
                         </ul>
                         <ul class="navbar-nav top-social-ul">
-                            <li class="nav-item active">
-                                <a href="#" class="btn btn-outline-success"><i class="fa fa-facebook"></i></a>
-                            </li>
-                            <li class="nav-item active">
-                                <a href="#" class="btn btn-outline-success"><i class="fa fa-twitter"></i></a>
-                            </li>
-                            <li class="nav-item active">
-                                <a href="#" class="btn btn-outline-success"><i class="fa fa-youtube-play"></i></a>
-                            </li>
-                            <li class="nav-item active">
-                                <a href="#" class="btn btn-outline-success"><i class="fa fa-soccer-ball-o"></i></a>
-                            </li>
+    
+                            {% for s in socials %}
+                                <li class="nav-item active">
+                                    <a href="#" class="btn btn-outline-success"><i class="{{ s }}"></i></a>
+                                </li>
+                            {% endfor %}
+                            
                             <li class="nav-item active">
                                 <form class="form-inline my-2 my-lg-0">
                                     <input
@@ -121,39 +116,19 @@
                     </button>
                     <div class="collapse navbar-collapse" id="collapsible_navbar">
                         <div class="w-100">
-                            <div class="navbar-nav justify-content-center">
-                                <ul class="nav">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">page0 <span class="sr-only">(current)</span></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">page 1</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">page 2</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">page 4</a>
-                                    </li>
-                                </ul>
-                                
-                                <a class="navbar-brand" href="#">
-                                    <img src="{% static 'main_app/img/logo.png' %}" alt="logo">
+                            <div class="navbar-nav">
+                                <a class="navbar-brand mr-auto" href="{% url 'main_app:index' %}">
+                                    {% comment %}<img src="{% static 'main_app/img/logo.png' %}" alt="logo">{% endcomment %}
+                                    <h3 class="mb-0" style="line-height: 1">LOGO</h3>
                                 </a>
-                                
                                 <ul class="nav">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">page0 <span class="sr-only">(current)</span></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">page 1</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">page 2</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">page 4</a>
-                                    </li>
+        
+                                    {% for p in dummy_pages %}
+                                        <li class="nav-item d-flex align-items-center">
+                                            <a class="nav-link" href="{% url 'main_app:coming_soon' %}">{{ p }}</a>
+                                        </li>
+                                    {% endfor %}
+    
                                 </ul>
                             </div>
                         </div>

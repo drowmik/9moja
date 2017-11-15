@@ -40,7 +40,7 @@
                         {% endfor %}
                     
                     </td>
-                    <td><a href="{% url 'main_app:each_post' post.id post.slug %}">view</a></td>
+                    <td><a href="{{ post.get_absolute_url }}">view</a></td>
                     <td><a href="{% url 'dashboard:edit_post' post.id %}">edit</a></td>
                 </tr>
             {% endfor %}
