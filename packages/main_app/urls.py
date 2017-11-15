@@ -9,4 +9,6 @@ urlpatterns = [
     # public page, so need a slug for better seo
     url(r'^(?P<pk>[\d]+)/(?P<slug>[-\w]+)/$', views.each_post, name='each_post'),
     
+    url(r'^(?P<slug>[-\w]+)/$', views.each_category, name='each_category'),
+    
 ]

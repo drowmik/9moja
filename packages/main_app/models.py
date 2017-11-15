@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 
 STATUS_CHOICES = (
@@ -11,6 +12,7 @@ STATUS_CHOICES = (
 )
 
 User = get_user_model()
+
 
 class Post(models.Model):
     
@@ -39,6 +41,15 @@ class Post(models.Model):
         
     def get_categories(self):
         return self.categorize_set.all()
+
+    def get_absolute_url(self):
+        return reverse(
+            'main_app:each_post',
+            args=[
+                str(self.id),
+                str(self.slug)
+            ]
+        )
         
         
 class Category(models.Model):

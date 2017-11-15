@@ -85,7 +85,7 @@ def update_category ( post, cat_list ):
                 category= Category.objects.get(id=cat),
             )
         else:   # if unmarked, delete it
-            obj = Categorize.objects.select_related().filter(category=cat)
+            obj = Categorize.objects.filter(category=cat, post=post)    # delete only selected relation with post and category
             if obj:
                 obj.delete()    # delete queryset if not changed from unassigned
 

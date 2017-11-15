@@ -51,29 +51,33 @@
                 <nav class="navbar navbar-expand-lg">
                     <div class="collapse navbar-collapse">
                         <ul class="navbar-nav mr-auto">
+                            
                             <li class="nav-item active">
                                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Page 1</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Page 2</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Page 3</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-hover="target">More</a>
-                                <div class="dropdown-menu" data-hover-show="result">
-                                    <a class="dropdown-item" href="#">link 4</a>
-                                    <a class="dropdown-item" href="#">link 5</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">link 6</a>
-                                    <a class="dropdown-item" href="#">link 7</a>
-                                    <a class="dropdown-item" href="#">link 8</a>
-                                </div>
-                            </li>
+                            
+                            {% for cat in categories %}
+                                
+                                {% if forloop.counter < 4 %}
+                                    <li class="nav-item">
+                                        <a href="{% url "main_app:each_category" cat.slug %}" class="nav-link">{{ cat.name }}</a>
+                                    </li>
+                                {% elif forloop.counter == 4 %}
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" data-hover="target">More Categories</a>
+                                        <div class="dropdown-menu" data-hover-show="result">
+                                {% endif %}
+                            
+                                {% if forloop.counter >= 4 %}
+                                            <a class="dropdown-item" href="#">{{ cat.name }}</a>
+                                {% endif %}
+                                {% if forloop.last %}
+                                        </div>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        
+                        
                         </ul>
                         <ul class="navbar-nav top-social-ul">
                             <li class="nav-item active">
