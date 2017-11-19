@@ -1,0 +1,116 @@
+{% extends 'fb_scrapper/base.html' %}
+
+
+{% block extra_css %}
+    <style type="text/css">
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+{% endblock %}
+
+
+{% block scrapper_js %}
+    
+    <script type="text/javascript">
+    
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+        
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '361495860961861',
+                appSecret: 'a9255cff275001c025d19f69924eef6e',
+                cookie: true,
+                xfbml: true,
+                version: 'v2.11'
+            });
+
+            FB.AppEvents.logPageView();
+
+        };
+        
+    </script>
+    
+{% endblock %}
+
+
+
+{% block main_container %}
+    
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                
+                
+                {% if form_error %}
+                    <div class="text-danger">
+                        {{ form.errors }}
+                    </div>
+                {% endif %}
+                
+                <form method="post">
+                    
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="{{ form2.page.name }}">Facebook page</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="{{ form2.page.name }}"
+                                name="{{ form2.page.name }}"
+                                placeholder="facebook Page name">
+                        <small class="form-text text-muted">Get it from url (https://facebook.com/this-is-page-name/)</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.app_id.name }}">Facebook APP ID</label>
+                        <input
+                                type="number"
+                                class="form-control"
+                                id="{{ form.app_id.name }}"
+                                name="{{ form.app_id.name }}"
+                                value="{{ form.app_id.value|default:"" }}"
+                                placeholder="facebook App id">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.app_secret_id.name }}">Facebook APP Secret ID</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="{{ form.app_secret_id.name }}"
+                                name="{{ form.app_secret_id.name }}"
+                                value="{{ form.app_secret_id.value|default:"" }}"
+                                placeholder="facebook App Secret id">
+                    </div>
+                    
+                    
+                    <div class="form-group">
+                        <label for="{{ form.token.name }}">Facebook APP Token(for long time)</label>
+                        <textarea
+                                class="form-control"
+                                id="{{ form.token.name }}"
+                                name="{{ form.token.name }}"
+                                placeholder="facebook App Token"
+                        >{{ form.token.value|default:"" }}</textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
