@@ -23,7 +23,7 @@ urlpatterns = [
     
     url(r'^dashboard/', include('dashboard.urls', namespace="dashboard")),
     
-    url(r'^fb-scrapper/', include('fb_scrapper.urls', namespace="fbs")),
+    url(r'^fbs/', include('fb_scrapper.urls', namespace="fbs")),
     
     url(r'^admin/', admin.site.urls),
     

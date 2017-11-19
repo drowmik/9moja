@@ -42,6 +42,20 @@
 <body class="{% block body_class %}{% endblock body_class %}" {% block body_attr %}{% endblock body_attr %}>
 
 
+{% block js %}
+    
+    <script src="{% static 'dashboard/js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/popper.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/bootstrap.min.js' %}"></script>
+
+{% endblock %}
+
+{% block scrapper_js %}{% endblock %}
+
+
+{% block extra_js %}{% endblock %}
+
+
 {% block header %}
 
     <ol class="breadcrumb">
@@ -57,17 +71,6 @@
 
 {% block footer %}{% endblock %}
 
-
-{% block js %}
-    
-    <script src="{% static 'dashboard/js/jquery-3.2.1.min.js' %}"></script>
-    <script src="{% static 'dashboard/js/popper.min.js' %}"></script>
-    <script src="{% static 'dashboard/js/bootstrap.min.js' %}"></script>
-
-{% endblock %}
-
-
-{% block extra_js %}{% endblock %}
 
 
 </body>

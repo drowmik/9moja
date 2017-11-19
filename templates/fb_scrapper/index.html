@@ -11,43 +11,22 @@
 
 {% block main_container %}
     <div class="container">
-        <table class="table text-center">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Title</th>
-                <th scope="col">File</th>
-                <th scope="col">User</th>
-                <th scope="col">Date</th>
-                <th scope="col">Category</th>
-                <th scope="col">view</th>
-                <th scope="col">edit</th>
-            </tr>
-            </thead>
-            <tbody>
-            
-            {% for post in posts %}
-                <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ post.title }}</td>
-                    <td><img src="{{ post.img.url }}" alt="{{ post.title }}"></td>
-                    <td>{{ post.user|default:"-" }}</td>
-                    <td>{{ post.publish_date }}</td>
-                    <td>
-                        
-                        {% for cat in post.get_categories %}
-                            {{ cat.category }}{% if not forloop.last %},{% endif %}
-                        {% endfor %}
-                    
-                    </td>
-                    <td><a href="{{ post.get_absolute_url }}">view</a></td>
-                    <td><a href="{% url 'dashboard:edit_post' post.id %}">edit</a></td>
-                </tr>
-            {% endfor %}
-            
-            </tbody>
-        </table>
         
+        <div class="row">
+            <div class="col">
+                
+                {% for val in auth_info %}
+                    <div class="card bg-primary">
+                        <div class="card-body">
+                            <p>App ID: <span>{{ val.app_id }}</span></p>
+                            <p>App secret ID: <span>{{ val.app_secret_id }}</span></p>
+                        </div>
+                    </div>
+                {% endfor %}
+            
+            </div>
+        </div>
+    
     </div>
 
 {% endblock %}
