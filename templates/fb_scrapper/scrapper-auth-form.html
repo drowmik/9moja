@@ -8,12 +8,15 @@
             -webkit-appearance: none;
             margin: 0;
         }
+        
+        .btn {
+            cursor: pointer
+        }
     </style>
 {% endblock %}
 
 
 {% block scrapper_js %}
-    
     <script type="text/javascript">
 
         (function (d, s, id) {
@@ -29,17 +32,17 @@
 
         window.fbAsyncInit = function () {
             FB.init({
-                appId: '361495860961861',
-                appSecret: 'a9255cff275001c025d19f69924eef6e',
+                appId: '{{ form.app_id.value|default:"" }}',
+                {% comment %}appId: '361495860961861',{% endcomment %}
+                appSecret: '{{ form.app_secret_id.value|default:"" }}',
+                {% comment %}appSecret: 'a9255cff275001c025d19f69924eef6e',{% endcomment %}
                 cookie: true,
                 xfbml: true,
                 version: 'v2.11'
             });
 
             FB.AppEvents.logPageView();
-
         };
-
 
         function checkLoginState() {
             FB.getLoginStatus(function (response) {
@@ -49,6 +52,7 @@
 
         function statusChangeCallback(response) {
             var fb_btn = $('#fb_login_btn');
+            var err_msg_elem = $('#error_msg');
 
             if (response.status === 'connected') {
                 // the user is logged in and has authenticated your
@@ -56,12 +60,8 @@
                 // the user's ID, a valid access token, a signed
                 // request, and the time the access token
                 // and signed request each expire
-                //var uid = response.authResponse.userID;
                 var accessToken = response.authResponse.accessToken;
-                //console.log("Fuck you for logging.. its your fuck:    " + accessToken);
-
                 fb_btn.hide();
-
 
                 $.ajax({
                     url: '{% url 'fbs:scrapper_ajax' %}',
@@ -71,59 +71,62 @@
                     },
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data)
+                        console.log(data);
+                        if (data["error"])
+                            err_msg_elem.html(data["error"]["message"]);
+                        else {
+                            window.location.assign("{% url 'fbs:scrapper' %}")
+                        }
                     },
                     error: function (e) {
-                        console.log("errrrorrr");
+                        err_msg_elem.html("Server error!");
                         console.log(e);
                     }
-                })
-
-
+                });
             } else if (response.status === 'not_authorized') {
                 // the user is logged in to Facebook,
                 // but has not authenticated your app
-                console.log("you're a fuckin BOT or not my type!! ");
-
+                {% comment %}console.log("you're a fuckin BOT or not my type!! ");{% endcomment %}
                 fb_btn.show();
             } else {
                 // the user isn't logged in to Facebook.
-                console.log("shauar pola login kor.... ");
-
+                {% comment %}console.log("shauar pola login kor.... ");{% endcomment %}
+                err_msg_elem.html("No auth found, Login please");
                 fb_btn.show();
             }
 
         }
     </script>
-
-
 {% endblock %}
 
 
-
 {% block main_container %}
-    
     <div class="container">
         <div class="row">
             <div class="col">
                 
-                
-                {% comment %}{% if not form.token.value %}    {# if no token expired #}{% endcomment %}
-                
                 {% if token_expired %}
                     
-                    <div id="fb_login_btn" class="mb-5">
-                        <p class="text-primary mb-0">Please Login to get a token</p>
-                        <fb:login-button
-                                scope="public_profile,email"
-                                onlogin="checkLoginState();">
-                        </fb:login-button>
-                    </div>
+                    <p class="text-danger mb-0" id="error_msg">
+                        
+                        {% if not form.token.value %}Register App first{% endif %}
+                    
+                    </p>
+                    
+                    {% if form.app_id.value and not form.errors %}
+                        <div id="fb_login_btn" class="mb-5">
+                            <p class="text-primary mb-0">Please Login to get a token</p>
+                            <fb:login-button
+                                    scope="public_profile"
+                                    onlogin="checkLoginState();">
+                            </fb:login-button>
+                        </div>
+                    {% endif %}
                 
                 {% endif %}
                 
                 
-                {% if form_error %}
+                {% if form.errors %}
                     <div class="text-danger">
                         {{ form.errors }}
                     </div>
@@ -132,27 +135,6 @@
                 <form method="post">
                     
                     {% csrf_token %}
-                    
-                    <div class="form-group">
-                        <label for="{{ form2.page.name }}">Facebook page</label>
-                        <input
-                                type="text"
-                                class="form-control"
-                                id="{{ form2.page.name }}"
-                                name="{{ form2.page.name }}"
-                                placeholder="facebook Page url postfix">
-                        <small class="form-text text-muted">Get it from url (https://facebook.com/this-is-page-name/)</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="{{ form2.name.name }}">Facebook page Name</label>
-                        <input
-                                type="text"
-                                class="form-control"
-                                id="{{ form2.name.name }}"
-                                name="{{ form2.name.name }}"
-                                placeholder="facebook Page name">
-                    </div>
                     
                     <div class="form-group">
                         <label for="{{ form.app_id.name }}">Facebook APP ID</label>
@@ -178,13 +160,14 @@
                     
                     
                     <div class="form-group">
-                        <label for="{{ form.token.name }}">Facebook APP Token(for long time)</label>
+                        <label for="{{ form.token.name }}">Facebook APP Token(login for auto generate)</label>
                         <textarea
                                 class="form-control"
                                 id="{{ form.token.name }}"
                                 name="{{ form.token.name }}"
+                                disabled
                                 placeholder="facebook App Token"
-                        >{{ form.token.value|default:"" }}</textarea>
+                        >{{ form.token.value|default:" " }}</textarea>
                     </div>
                     
                     <button type="submit" class="btn btn-primary">Submit</button>

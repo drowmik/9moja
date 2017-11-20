@@ -1,0 +1,78 @@
+{% extends 'fb_scrapper/base.html' %}
+
+
+{% block scrapper_js %}
+    <script type="text/javascript">
+        $('#chk_data').click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '{% url 'fbs:scrapper_data_ajax' %}',
+                method: 'GET',
+                data: {
+                    "temp_token": "accessToken",
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    if (data["error"])
+                        err_msg_elem.html(data["error"]["message"]);
+                    else {
+                        window.location({% url 'fbs:scrapper' %})
+                    }
+                },
+                error: function (e) {
+                    err_msg_elem.html("Server error!");
+                    console.log(e);
+                }
+            })
+        })
+    </script>
+{% endblock %}
+
+
+{% block main_container %}
+    
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                
+                {% if form.errors %}
+                    <div class="text-danger">
+                        {{ form.errors }}
+                    </div>
+                {% endif %}
+                
+                <form method="post">
+                    
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="{{ form.page.name }}">Facebook page</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="{{ form.page.name }}"
+                                name="{{ form.page.name }}"
+                                placeholder="facebook Page url postfix">
+                        <small class="form-text text-muted">Get it from url (https://facebook.com/this-is-page-name/)</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.name.name }}">Facebook page Name</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="{{ form.name.name }}"
+                                name="{{ form.name.name }}"
+                                placeholder="facebook Page name">
+                    </div>
+                    <button type="button" class="btn btn-success" id="chk_data">Check data</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                
+                <div id="fb_data"></div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

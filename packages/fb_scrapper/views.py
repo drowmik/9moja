@@ -7,9 +7,6 @@ from .forms import FbScrapperAuthForm, FbScrapperDataForm
 import requests, json
 
 
-# https://graph.facebook.com/v2.6/oyvai/posts/?fields=full_picture&limit=20&access_token=
-
-
 # @login_required
 def home(request):
     auth = FacebookAuth.objects.all()
@@ -29,76 +26,127 @@ def scrapper(request):
 
 
 # @login_required
-def get_fb_scrapper_data(request):
-    token_expired = True    # initially assumed no token
+def get_fb_scrapper_auth(request):
+    token_expired = True  # initially assumed no token
     
     if request.method == 'POST':
         form = FbScrapperAuthForm(request.POST)
-        form2 = FbScrapperDataForm(request.POST)
-        if form.is_valid() and form2.is_valid():
-            FacebookAuth.objects.all().delete()     # no need previous auth tokens
-            form.save()     # save new token
-            form2.save()     # save page info
-            return HttpResponseRedirect('/fbs')
+        # form2 = FbScrapperDataForm(request.POST)
+        # print(form["app_secret_id"].value())
+        if form.is_valid():  # and form2.is_valid():
+            FacebookAuth.objects.all().delete()  # no need previous auth tokens
+            form.save()  # save new token
+            # form2.save()     # save page info
+            if form["token"].value():
+                return HttpResponseRedirect('/fbs/')
+            else:
+                return HttpResponseRedirect('/fbs/scrapper-auth-form/')
         else:
             print(type(form.errors))
     else:
-        form2 = FbScrapperDataForm()
+        # form2 = FbScrapperDataForm()
         
         saved_auth = FacebookAuth.objects.first()
         if saved_auth is None:
             form = FbScrapperAuthForm()
         else:
             # need to check if token expired or not
-            token_details = get_fb_json_data_from_long_token(
+            token_details = get_long_token(
                 secret_id=saved_auth.app_secret_id,
                 app_id=saved_auth.app_id,
                 temp_token=saved_auth.token
             )
             
             # check if token expired
-            if  token_details:
+            if not token_details.get('error'):
                 token_expired = False
             form = FbScrapperAuthForm(instance=saved_auth)
-
-    templ = 'fb_scrapper/scrapper-form.html'  # template name
+    
+    templ = 'fb_scrapper/scrapper-auth-form.html'  # template name
     ctx = {  # context
-        "form" : form,
-        "form2" : form2,
-        "token_expired" : token_expired
+        "form": form,
+        # "form2" : form2,
+        "token_expired": token_expired
     }
     return render(request, templ, ctx)
 
 
-def scrapper_ajax (request):
+def get_fb_scrapper_data(request):
+    if request.method == 'POST':
+        form = FbScrapperDataForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/fbs/')
+    else:
+        if not FacebookAuth.objects.first():
+            return HttpResponseRedirect('/fbs/scrapper-auth-form/')
+        else:
+            form = FbScrapperDataForm()
+
+    templ = 'fb_scrapper/scrapper-data-form.html'  # template name
+    ctx = {  # context
+        "form": form
+    }
+    return render(request, templ, ctx)
+
+
+def scrapper_ajax(request):
     if request.method == 'GET':
         ajax_data = request.GET
-        # print(q.get("temp_token"))
-
+        
         saved_auth = FacebookAuth.objects.first()
-
+        # if any auth is saved just change the token
         if saved_auth:
-            jd = get_fb_json_data_from_long_token(
+            jd = get_long_token(
                 secret_id=saved_auth.app_secret_id,
                 app_id=saved_auth.app_id,
                 temp_token=ajax_data.get("temp_token")
             )
         else:
             jd = {
-                "new" : "joldi ekta noya app lo"
+                "error": {
+                    "message": "Add new app ID and app secret ID First"
+                }
             }
-
-        #jd = get_fb_json_data(fb_input_data)
+        
+        print("json data dicchi ajax re ...", jd)
+        
+        # jd = get_fb_json_data(fb_input_data)
         # print("baal koro?" if not jd else "maal ta hocche: ", jd)
         
         return JsonResponse(jd)
     
     return JsonResponse({
-        "error": "baaaaler kono Data not found"
+        "error": {
+            "message": "Data not found"
+        }
     })
 
 
-def get_fb_json_data_from_long_token(secret_id=None, app_id=None, temp_token=None):
+def get_data_ajax(request):
+    jd = {}
+    if request.method == 'GET':
+        page_data = request.GET
+        
+        if FacebookAuth.objects.first():
+            token = FacebookAuth.objects.first().token
+            jd = scrap_data(
+                fields=("full_picture",),
+                token=token
+            )
+        else:
+            return HttpResponseRedirect('/fbs/scrapper-auth-form/')
+    else:
+        jd = {
+            "error": {
+                "message": "Broken Url.."
+            }
+        }
+        
+    return JsonResponse(jd)
+
+
+def get_long_token(secret_id=None, app_id=None, temp_token=None):
     fb_dict_input = {
         "grant_type": "fb_exchange_token",
         "client_id": app_id,
@@ -113,17 +161,39 @@ def get_fb_json_data_from_long_token(secret_id=None, app_id=None, temp_token=Non
     url_prefix = "https://graph.facebook.com/oauth/access_token?"
     url = url_prefix + '&'.join("{}={}".format(key, fb_dict_input[key]) for key in fb_dict_input)
     
-    print("the asshole URL is: ---", url)
+    # print("the URL is: ---", url)
     
     r = requests.get(url)
     json_data = json.loads(r.text)
-    print("returned JSON data from facebook: " , json_data)
-    if json_data.get('error'):
-        return False
-    else:
+    print("returned JSON data from facebook: ", json_data)
+    if not json_data.get('error'):
         token = json_data.get('access_token')
         update_fb_auth_model(token)
-        return token
+    return json_data
+
+
+def scrap_data(api_ver="v2.11", fields=("full_picture",), token=""):
+    if not token:
+        # token/ auth error
+        return {
+                "error": {
+                    "message": "No Auth/Token found"
+                }
+            }
+
+    # https://graph.facebook.com/v2.6/oyvai/posts/?fields=full_picture&limit=20&access_token=
+    # generating url to to scrap data from facebook
+    url_prefix = "https://graph.facebook.com/oauth/" + api_ver + "/posts/?fields="
+    url = url_prefix + ','.join("{}".format(f) for f in fields)
+    url += "&access_token=" + token
+    
+    print("the URL is: -----", url)
+    
+    r = requests.get(url)
+    json_data = json.loads(r.text)
+    print("returned JSON data from facebook: ", json_data)
+    
+    return json_data
 
 
 def update_fb_auth_model(new_token):

@@ -2,7 +2,11 @@ from django.db import models
 
 
 class FacebookAuth(models.Model):
-    token = models.CharField(max_length=300)  # long term token
+    token = models.CharField(
+        max_length=300,
+        blank=True,
+        null=True
+    )  # long term token
     
     app_id = models.CharField(max_length=20)  # generally app id length 15
     
@@ -30,4 +34,4 @@ class FacebookData(models.Model):
     )
     
     def __str__(self):
-        return self.name
+        return self.page
