@@ -124,14 +124,13 @@ def scrapper_ajax(request):
 
 
 def get_data_ajax(request):
-    jd = {}
     if request.method == 'GET':
         page_data = request.GET
+        
         field = []
-        for x in dict(page_data):
-            if x[:5] == "field":
-                print("voda paisi amar baaaaaaal:    ", page_data.get(x))
-                field.append(page_data.get(x))
+        # creating field list (fields from ajax request)
+        [field.append(page_data.get(x)) if x[:5] == "field" else None for x in dict(page_data)]
+        
         if FacebookAuth.objects.first():
             token = FacebookAuth.objects.first().token
             jd = scrap_data(
@@ -140,7 +139,7 @@ def get_data_ajax(request):
                 fields=field,
                 token=token
             )
-            print(jd)
+            # print(jd)
         else:
             return HttpResponseRedirect('/fbs/scrapper-auth-form/')
     else:
@@ -194,11 +193,11 @@ def scrap_data(api_ver="v2.11", page="", limit="500",fields=("full_picture",), t
     url = url_prefix + ','.join("{}".format(f) for f in fields)
     url += "&access_token=" + token + "&limit=" + limit
     
-    print("the URL is: -----", url)
+    # print("the URL is: -----", url)
     
     r = requests.get(url)
     json_data = json.loads(r.text)
-    print("returned JSON data from facebook: ", json_data)
+    # print("returned JSON data from facebook: ", json_data)
     
     return json_data
 

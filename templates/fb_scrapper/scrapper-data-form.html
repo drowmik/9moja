@@ -24,15 +24,32 @@
                             "0": "full_picture",
                             "1": "id"
                         },
-                        "limit" : "100"
+                        "limit": "100"
                     },
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data);
                         if (data["error"])
                             err_msg_elem.html(data["error"]["message"]);
-                        else {
+                        else if (data["data"]) {
                             {% comment %}window.location.assign("{% url 'fbs:scrapper' %}"){% endcomment %}
+                            d = data["data"];
+                            console.log(d);
+                            var img_count = 0;
+                            var html = "";
+                            for (var i = 0; i < d.length; i++) {
+                                if (d[i]["full_picture"]) {
+                                    if (img_count % 3 === 0) html += '<div class="row mb-3">';
+                                    html +=
+                                        '<div class="col-md-4">' +
+                                        '<img src="' + d[i]["full_picture"] + '" class="w-100">' +
+                                        '</div>';
+                                    if (img_count % 3 === 2) html += '</div><!--'+img_count+'-->';
+                                    img_count++;
+                                }
+                            }
+                            $('#all_img').append(html);
+                        } else {
+                            err_msg_elem.html("Unexpected Fucking error occurred");
                         }
                     },
                     error: function (e) {
@@ -90,7 +107,10 @@
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
                 
-                <div id="fb_data"></div>
+                <div id="fb_data">
+                    <p class="message"></p>
+                    <div id="all_img"></div>
+                </div>
             </div>
         </div>
     </div>
