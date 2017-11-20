@@ -1,30 +1,48 @@
 {% extends 'fb_scrapper/base.html' %}
 
+{% block extra_css %}
+    <style type="text/css">
+        .btn {
+            cursor: pointer
+        }
+    </style>
+{% endblock %}
 
-{% block scrapper_js %}
+{% block extra_js %}
     <script type="text/javascript">
+        var err_msg_elem = $('#error_msg')
+
         $('#chk_data').click(function (e) {
             e.preventDefault();
-            $.ajax({
-                url: '{% url 'fbs:scrapper_data_ajax' %}',
-                method: 'GET',
-                data: {
-                    "temp_token": "accessToken",
-                },
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data);
-                    if (data["error"])
-                        err_msg_elem.html(data["error"]["message"]);
-                    else {
-                        window.location({% url 'fbs:scrapper' %})
+            if ($('#{{ form.page.name }}').val()) {
+                $.ajax({
+                    url: '{% url 'fbs:scrapper_data_ajax' %}',
+                    method: 'GET',
+                    data: {
+                        "page": $('#{{ form.page.name }}').val(),
+                        "fields": {
+                            "0": "full_picture",
+                            "1": "id"
+                        },
+                        "limit" : "100"
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        if (data["error"])
+                            err_msg_elem.html(data["error"]["message"]);
+                        else {
+                            {% comment %}window.location.assign("{% url 'fbs:scrapper' %}"){% endcomment %}
+                        }
+                    },
+                    error: function (e) {
+                        err_msg_elem.html("error!");
+                        console.log(e);
                     }
-                },
-                error: function (e) {
-                    err_msg_elem.html("Server error!");
-                    console.log(e);
-                }
-            })
+                });
+            } else {
+                err_msg_elem.html("Please enter facebook page name");
+            }
         })
     </script>
 {% endblock %}
@@ -35,6 +53,8 @@
     <div class="container">
         <div class="row">
             <div class="col">
+                
+                <p class="text-danger mb-0" id="error_msg"></p>
                 
                 {% if form.errors %}
                     <div class="text-danger">

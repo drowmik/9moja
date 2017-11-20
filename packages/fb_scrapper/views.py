@@ -127,13 +127,20 @@ def get_data_ajax(request):
     jd = {}
     if request.method == 'GET':
         page_data = request.GET
-        
+        field = []
+        for x in dict(page_data):
+            if x[:5] == "field":
+                print("voda paisi amar baaaaaaal:    ", page_data.get(x))
+                field.append(page_data.get(x))
         if FacebookAuth.objects.first():
             token = FacebookAuth.objects.first().token
             jd = scrap_data(
-                fields=("full_picture",),
+                page=page_data.get("page"),
+                limit=page_data.get("limit"),
+                fields=field,
                 token=token
             )
+            print(jd)
         else:
             return HttpResponseRedirect('/fbs/scrapper-auth-form/')
     else:
@@ -172,7 +179,7 @@ def get_long_token(secret_id=None, app_id=None, temp_token=None):
     return json_data
 
 
-def scrap_data(api_ver="v2.11", fields=("full_picture",), token=""):
+def scrap_data(api_ver="v2.11", page="", limit="500",fields=("full_picture",), token=""):
     if not token:
         # token/ auth error
         return {
@@ -183,9 +190,9 @@ def scrap_data(api_ver="v2.11", fields=("full_picture",), token=""):
 
     # https://graph.facebook.com/v2.6/oyvai/posts/?fields=full_picture&limit=20&access_token=
     # generating url to to scrap data from facebook
-    url_prefix = "https://graph.facebook.com/oauth/" + api_ver + "/posts/?fields="
+    url_prefix = "https://graph.facebook.com/" + api_ver + "/" + page + "/posts/?fields="
     url = url_prefix + ','.join("{}".format(f) for f in fields)
-    url += "&access_token=" + token
+    url += "&access_token=" + token + "&limit=" + limit
     
     print("the URL is: -----", url)
     
