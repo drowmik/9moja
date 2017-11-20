@@ -10,6 +10,8 @@ urlpatterns = [
     
     url(r'^scrapper-form/$', views.get_fb_scrapper_data, name='scrapper_form'),
     
+    url(r'^get-data-using-token/$', views.scrapper_ajax, name='scrapper_ajax'),
+    
     # url(r'^edit/(?P<pk>[\d]+)/$', views.edit_post, name='edit_post'),
     #
     # url(r'^create/$', views.create_post, name='create_post'),
