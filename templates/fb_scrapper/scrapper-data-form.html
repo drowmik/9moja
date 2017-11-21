@@ -10,10 +10,11 @@
 
 {% block extra_js %}
     <script type="text/javascript">
-        var err_msg_elem = $('#error_msg')
+        var err_msg_elem = $('#error_msg');
 
         $('#chk_data').click(function (e) {
             e.preventDefault();
+            $('#all_img').html("");
             if ($('#{{ form.page.name }}').val()) {
                 $.ajax({
                     url: '{% url 'fbs:scrapper_data_ajax' %}',
