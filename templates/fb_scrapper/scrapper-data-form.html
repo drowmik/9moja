@@ -1,67 +1,151 @@
 {% extends 'fb_scrapper/base.html' %}
 
-{% block extra_css %}
-    <style type="text/css">
-        .btn {
-            cursor: pointer
-        }
-    </style>
-{% endblock %}
 
 {% block extra_js %}
+    
+    <script type="text/template" id="html_templ">
+        {% verbatim %}
+        
+        <div id="all_img">
+            <div id="check-all">
+                <p>
+                    <input type="checkbox" id="chkall">
+                    <label for="chkall"></label>
+                    <span>Check all </span>
+                </p>
+            </div>
+    
+    
+            {{ var img_count = 0; }}
+            {{
+            for (var i = 0; i < d.length; i++) {
+                var _identity = _name.val() + "-" + i;
+                try {
+                    if (d[i]["type"] === "photo") {
+            }}
+            
+            {{ if (img_count % 3 === 0){ }}
+            <div class="row mb-3">
+            {{ } }}
+                
+                <div class="col-md-4">
+                    <div class="each-post px-1 pt-5 pb-3 h-100">
+                        <img src="{{: d[i]['full_picture'] }}" class="w-100 border border-dark" data-name="{{: _identity }}">
+                        <p class="text-primary">
+                            reactions: {{: d[i]["reactions"]["summary"]["total_count"] }}, shares: {{: d[i]["shares"]["count"] }}
+                        </p>
+                        <div class="chkbox">
+                            <input type="checkbox" name="{{: _identity }}" id="{{: _identity }}">
+                            <label for="{{: _identity }}" class="position-absolute"><span class="ml-5">select</span></label>
+                        </div>
+                    </div>
+                </div>
+            
+                {{ if (img_count % 3 === 2){ }}
+            </div>
+                {{ } }}
+            {{ img_count++; }}
+        
+            {{
+                    }   /* if */
+                } catch(e){
+            
+                } /*try catch*/
+            } /*for*/
+            }}
+        
+        </div>
+        
+        {% endverbatim %}
+    </script>
+    
+    
+    
+    
+    
+    
     <script type="text/javascript">
         var err_msg_elem = $('#error_msg');
+        var all_img = $('#all_img');
+        var _page = $('#{{ form.page.name }}');
+        var _name = $('#{{ form.name.name }}');
+        var _limit = $('#post_limit');
+
+        {% verbatim %}
+        $.extend({
+            template_renderer: function (template) {
+                return new Function("obj", "var p=[],print=function(){p.push.apply(p,arguments);};with(obj){p.push('" +
+                    template.replace(/[\r\t\n]/g, " ")
+                        .split("{{").join("\t").replace(/((^|\}\})[^\t]*)'/g, "$1\r")
+                        .replace(/\t:(.*?)\}\}/g, "',$1,'").split("\t").join("');").split("}}")
+                        .join("p.push('").split("\r").join("\\'") + "');}return p.join('');")
+            }
+        });
+        {% endverbatim %}
+        
+        
 
         $('#chk_data').click(function (e) {
             e.preventDefault();
-            $('#all_img').html("");
-            if ($('#{{ form.page.name }}').val()) {
+            err_msg_elem.html("");
+            all_img.html("");
+            if (_page.val() && _name.val() && _limit.val()) {
                 $.ajax({
                     url: '{% url 'fbs:scrapper_data_ajax' %}',
                     method: 'GET',
                     data: {
-                        "page": $('#{{ form.page.name }}').val(),
+                        "page": _page.val(),
                         "fields": {
                             "0": "full_picture",
-                            "1": "id"
+                            "1": "type",
+                            "2": "reactions.summary(true)",
+                            "3": "shares",
                         },
-                        "limit": "100"
+                        "limit": _limit.val()
                     },
                     dataType: 'json',
                     success: function (data) {
                         if (data["error"])
                             err_msg_elem.html(data["error"]["message"]);
-                        else if (data["data"]) {
-                            {% comment %}window.location.assign("{% url 'fbs:scrapper' %}"){% endcomment %}
-                            d = data["data"];
-                            console.log(d);
-                            var img_count = 0;
-                            var html = "";
-                            for (var i = 0; i < d.length; i++) {
-                                if (d[i]["full_picture"]) {
-                                    if (img_count % 3 === 0) html += '<div class="row mb-3">';
-                                    html +=
-                                        '<div class="col-md-4">' +
-                                        '<img src="' + d[i]["full_picture"] + '" class="w-100">' +
-                                        '</div>';
-                                    if (img_count % 3 === 2) html += '</div><!--'+img_count+'-->';
-                                    img_count++;
+                        else if (d = data["data"]) {
+                            
+                            
+                            var html = $.template_renderer($('#html_templ').html());
+                            all_img.append(html);
+
+                            
+                            
+                            //defining click event right after the html rendering
+                            $('.each-post').click(function () {
+                                var t = $(this).find('.chkbox').find('input');
+                                console.log("vodar baaal", t);
+
+                                if (t.is(":checked"))
+                                    t.prop("checked", false);
+                                else {
+                                    t.prop("checked", true);
+                                    $('#check-all input').prop("checked", false)
                                 }
-                            }
-                            $('#all_img').append(html);
+
+                            });
+
+                            $('#check-all input').change(function () {
+                                var bool = $(this).is(':checked');
+                                $('.chkbox input').prop("checked", bool)
+                            });
                         } else {
                             err_msg_elem.html("Unexpected Fucking error occurred");
                         }
                     },
                     error: function (e) {
-                        err_msg_elem.html("error!");
+                        err_msg_elem.html("unexpected error!");
                         console.log(e);
                     }
                 });
             } else {
-                err_msg_elem.html("Please enter facebook page name");
+                err_msg_elem.html("Please enter details....");
             }
-        })
+        });
     </script>
 {% endblock %}
 
@@ -104,8 +188,18 @@
                                 name="{{ form.name.name }}"
                                 placeholder="facebook Page name">
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="post_limit">Post Limit(max. 100)</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="post_limit"
+                                name="post_limit"
+                                placeholder="post limit(max. 100)">
+                    </div>
                     <button type="button" class="btn btn-success" id="chk_data">Check data</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+{#                    <button type="submit" class="btn btn-primary">Submit</button>#}
                 </form>
                 
                 <div id="fb_data">

@@ -197,7 +197,7 @@ def scrap_data(api_ver="v2.11", page="", limit="500",fields=("full_picture",), t
     
     r = requests.get(url)
     json_data = json.loads(r.text)
-    # print("returned JSON data from facebook: ", json_data)
+    print("returned JSON data from facebook: ", json_data)
     
     return json_data
 
