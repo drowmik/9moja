@@ -6,7 +6,7 @@
     <script type="text/template" id="html_templ">
         {% verbatim %}
         
-        <div id="all_img">
+        <div class="all-img">
             <div id="check-all">
                 <p>
                     <input type="checkbox" id="chkall">
@@ -17,6 +17,7 @@
     
     
             {{ var img_count = 0; }}
+            {{ var d = _d["data"]; }}
             {{
             for (var i = 0; i < d.length; i++) {
                 var _identity = _name.val() + "-" + i;
@@ -48,13 +49,33 @@
         
             {{
                     }   /* if */
-                } catch(e){
-            
-                } /*try catch*/
+                } catch(e){} /*try catch*/
             } /*for*/
             }}
         
         </div>
+        
+        <!--<div id="pagination">-->
+        
+            {{
+                var pr = _d["paging"]["previous"];
+                var nx = _d["paging"]["next"];
+                var pr_btn = $('#chk_data-prev');
+                var nx_btn = $('#chk_data-next');
+                if (pr) {
+                    pr_btn.attr("data-url", pr).show();
+                } else {
+                    pr_btn.hide();
+                }
+                if (nx) {
+                    nx_btn.attr("data-url", nx).show();
+                } else {
+                    nx_btn.hide();
+                }
+            }}
+        
+        
+        <!--</div>-->
         
         {% endverbatim %}
     </script>
@@ -83,10 +104,16 @@
         });
         {% endverbatim %}
         
+        $.extend({
+            toggle_disable: function(elem) {
+                elem.prop('enabled', function(i, v) { return v; })
+            }
+        });
         
-
-        $('#chk_data').click(function (e) {
+        $('.chk_data').click(function (e) {
             e.preventDefault();
+            $.toggle_disable($('.chk_data'));
+            var _t = $(this);
             err_msg_elem.html("");
             all_img.html("");
             if (_page.val() && _name.val() && _limit.val()) {
@@ -94,6 +121,7 @@
                     url: '{% url 'fbs:scrapper_data_ajax' %}',
                     method: 'GET',
                     data: {
+                        "direct_url": _t.attr("data-url"),
                         "page": _page.val(),
                         "fields": {
                             "0": "full_picture",
@@ -105,12 +133,13 @@
                     },
                     dataType: 'json',
                     success: function (data) {
-                        if (data["error"])
+                        if (data["error"]) {
                             err_msg_elem.html(data["error"]["message"]);
-                        else if (d = data["data"]) {
-                            
+                        }
+                        else if (_d = data) {
                             
                             var html = $.template_renderer($('#html_templ').html());
+                            
                             all_img.append(html);
 
                             
@@ -136,8 +165,11 @@
                         } else {
                             err_msg_elem.html("Unexpected Fucking error occurred");
                         }
+                        
+                        $.toggle_disable($('.chk_data'));
                     },
                     error: function (e) {
+                         $.toggle_disable($('.chk_data'));
                         err_msg_elem.html("unexpected error!");
                         console.log(e);
                     }
@@ -192,19 +224,23 @@
                     <div class="form-group">
                         <label for="post_limit">Post Limit(max. 100)</label>
                         <input
-                                type="text"
+                                type="number"
                                 class="form-control"
                                 id="post_limit"
                                 name="post_limit"
                                 placeholder="post limit(max. 100)">
                     </div>
-                    <button type="button" class="btn btn-success" id="chk_data">Check data</button>
+                    <button type="button" class="btn btn-success chk_data">Check data</button>
 {#                    <button type="submit" class="btn btn-primary">Submit</button>#}
                 </form>
                 
                 <div id="fb_data">
                     <p class="message"></p>
                     <div id="all_img"></div>
+                    <div id="pagination">
+                        <button class="btn btn-success chk_data" style="display: none" id="chk_data-prev">prev</button>
+                        <button class="btn btn-success chk_data" style="display: none" id="chk_data-next">next</button>
+                    </div>
                 </div>
             </div>
         </div>

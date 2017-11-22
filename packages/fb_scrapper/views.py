@@ -127,9 +127,19 @@ def get_data_ajax(request):
     if request.method == 'GET':
         page_data = request.GET
         
+        if page_data.get("direct_url"):
+            d_url = page_data.get("direct_url")
+            r = requests.get(d_url)
+            json_data = json.loads(r.text)
+            return JsonResponse(json_data)
+        
         field = []
         # creating field list (fields from ajax request)
-        [field.append(page_data.get(x)) if x[:5] == "field" else None for x in dict(page_data)]
+        #[field.append(page_data.get(x)) if x[:5] == "field" else None for x in dict(page_data)]
+        field.extend(
+            [page_data.get(x) for x in dict(page_data) if x[:5] == "field"]
+        )
+        print(field)
         
         if FacebookAuth.objects.first():
             token = FacebookAuth.objects.first().token
@@ -178,7 +188,7 @@ def get_long_token(secret_id=None, app_id=None, temp_token=None):
     return json_data
 
 
-def scrap_data(api_ver="v2.11", page="", limit="500",fields=("full_picture",), token=""):
+def scrap_data(api_ver="v2.11", page="", limit="100",fields=("full_picture",), token=""):
     if not token:
         # token/ auth error
         return {
@@ -186,6 +196,13 @@ def scrap_data(api_ver="v2.11", page="", limit="500",fields=("full_picture",), t
                     "message": "No Auth/Token found"
                 }
             }
+    
+    if int(limit) > 100:
+        return {
+            "error": {
+                "message": "Maximum limit is 100"
+            }
+        }
 
     # https://graph.facebook.com/v2.6/oyvai/posts/?fields=full_picture&limit=20&access_token=
     # generating url to to scrap data from facebook
