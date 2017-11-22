@@ -55,28 +55,6 @@
         
         </div>
         
-        <!--<div id="pagination">-->
-        
-            {{
-                var pr = _d["paging"]["previous"];
-                var nx = _d["paging"]["next"];
-                var pr_btn = $('#chk_data-prev');
-                var nx_btn = $('#chk_data-next');
-                if (pr) {
-                    pr_btn.attr("data-url", pr).show();
-                } else {
-                    pr_btn.hide();
-                }
-                if (nx) {
-                    nx_btn.attr("data-url", nx).show();
-                } else {
-                    nx_btn.hide();
-                }
-            }}
-        
-        
-        <!--</div>-->
-        
         {% endverbatim %}
     </script>
     
@@ -104,15 +82,9 @@
         });
         {% endverbatim %}
         
-        $.extend({
-            toggle_disable: function(elem) {
-                elem.prop('enabled', function(i, v) { return v; })
-            }
-        });
         
         $('.chk_data').click(function (e) {
             e.preventDefault();
-            $.toggle_disable($('.chk_data'));
             var _t = $(this);
             err_msg_elem.html("");
             all_img.html("");
@@ -142,12 +114,20 @@
                             
                             all_img.append(html);
 
+                            var pr = _d["paging"]["previous"];
+                            var nx = _d["paging"]["next"];
+                            var pr_btn = $('#chk_data-prev');
+                            var nx_btn = $('#chk_data-next');
                             
+                            if (pr) pr_btn.attr("data-url", pr).show();
+                            else    pr_btn.hide();
+                            
+                            if (nx) nx_btn.attr("data-url", nx).show();
+                            else    nx_btn.hide();
                             
                             //defining click event right after the html rendering
                             $('.each-post').click(function () {
                                 var t = $(this).find('.chkbox').find('input');
-                                console.log("vodar baaal", t);
 
                                 if (t.is(":checked"))
                                     t.prop("checked", false);
@@ -165,11 +145,8 @@
                         } else {
                             err_msg_elem.html("Unexpected Fucking error occurred");
                         }
-                        
-                        $.toggle_disable($('.chk_data'));
                     },
                     error: function (e) {
-                         $.toggle_disable($('.chk_data'));
                         err_msg_elem.html("unexpected error!");
                         console.log(e);
                     }
@@ -238,8 +215,8 @@
                     <p class="message"></p>
                     <div id="all_img"></div>
                     <div id="pagination">
-                        <button class="btn btn-success chk_data" style="display: none" id="chk_data-prev">prev</button>
-                        <button class="btn btn-success chk_data" style="display: none" id="chk_data-next">next</button>
+                        <button class="btn btn-primary chk_data" style="display: none" id="chk_data-prev">prev</button>
+                        <button class="btn btn-primary chk_data" style="display: none" id="chk_data-next">next</button>
                     </div>
                 </div>
             </div>

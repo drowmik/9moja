@@ -135,11 +135,9 @@ def get_data_ajax(request):
         
         field = []
         # creating field list (fields from ajax request)
-        #[field.append(page_data.get(x)) if x[:5] == "field" else None for x in dict(page_data)]
         field.extend(
             [page_data.get(x) for x in dict(page_data) if x[:5] == "field"]
         )
-        print(field)
         
         if FacebookAuth.objects.first():
             token = FacebookAuth.objects.first().token
