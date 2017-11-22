@@ -76,7 +76,33 @@ def get_fb_scrapper_data(request):
         form = FbScrapperDataForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/fbs/')
+            
+            
+            from django.utils import timezone
+            from core.settings import MEDIA_ROOT
+            import urllib.request as uu
+            import os
+            img_urls = form["selected_img"].value().split(",")
+            
+            for i, item in enumerate(img_urls):
+                #dir = os.path.join(MEDIA_ROOT, timezone.now().date().isoformat(), form["name"].value()) # directory string
+                dir = MEDIA_ROOT
+                
+                # create directory if not exists
+                if not os.path.exists(dir):
+                   os.makedirs(dir)
+                
+                slug = form["name"].value() + "-" + str(i)
+                
+                # download the image
+                # scrapped data from facebook always jpg
+                img = uu.urlretrieve(item, os.path.join(dir, slug + ".jpg" ))
+                
+                # creating an instance and save to db
+                p = Post(slug=slug, title=slug, img=slug+".jpg", publish_date=timezone.now(), status="p").save()
+            
+            return JsonResponse({"asd":img_urls})
+            #return HttpResponseRedirect('/fbs/')
     else:
         if not FacebookAuth.objects.first():
             return HttpResponseRedirect('/fbs/scrapper-auth-form/')

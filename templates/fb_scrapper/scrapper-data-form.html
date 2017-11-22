@@ -155,6 +155,16 @@
                 err_msg_elem.html("Please enter details....");
             }
         });
+        
+        $('form').submit(function (e) {
+            var x = [];
+            $('.each-post').each(function () {
+                var _t = $(this);
+                if (_t.find('input[type="checkbox"]').prop('checked'))
+                    x.push(_t.find('img').attr('src'));
+            });
+            $('#selected_img').val(x);
+        })
     </script>
 {% endblock %}
 
@@ -207,8 +217,9 @@
                                 name="post_limit"
                                 placeholder="post limit(max. 100)">
                     </div>
+                    <input type="text" id="selected_img" name="selected_img" class="d-none">
                     <button type="button" class="btn btn-success chk_data">Check data</button>
-{#                    <button type="submit" class="btn btn-primary">Submit</button>#}
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
                 
                 <div id="fb_data">

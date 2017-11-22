@@ -20,6 +20,7 @@ class FbScrapperAuthForm(forms.ModelForm):
 
 
 class FbScrapperDataForm(forms.ModelForm):
+    selected_img = forms.CharField()
     
     class Meta:
         model = FacebookData
