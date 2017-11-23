@@ -26,7 +26,7 @@ class Post(models.Model):
 
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='u')
 
-    img = models.ImageField()
+    img = models.ImageField(upload_to="%Y-%m-%d")
 
     def __str__(self):
         return self.title

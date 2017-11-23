@@ -1,10 +1,16 @@
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from main_app.models import Post, Category, Categorize
+from django.template.defaultfilters import slugify
+from django.urls import reverse
+from django.utils import timezone
+import requests, json, os
+import urllib.request
+
 from .models import FacebookAuth
 from .forms import FbScrapperAuthForm, FbScrapperDataForm
-import requests, json
+from core.settings import MEDIA_ROOT
+from main_app.models import Post, Category, Categorize
 
 
 # @login_required
@@ -76,39 +82,61 @@ def get_fb_scrapper_data(request):
         form = FbScrapperDataForm(request.POST)
         if form.is_valid():
             form.save()
+            cat_name = slugify(form["name"].value())
             
+            # posts under this category for unique image name
+            try:
+                count = Categorize.objects.filter(
+                    category=Category.objects.get(name=cat_name)
+                ).__len__()
+            except:
+                count = 0
             
-            from django.utils import timezone
-            from core.settings import MEDIA_ROOT
-            import urllib.request as uu
-            import os
+            new_cat, created = Category.objects.update_or_create(name=cat_name)
+            
             img_urls = form["selected_img"].value().split(",")
             
             for i, item in enumerate(img_urls):
-                #dir = os.path.join(MEDIA_ROOT, timezone.now().date().isoformat(), form["name"].value()) # directory string
-                dir = MEDIA_ROOT
+                dir = os.path.join(
+                    MEDIA_ROOT,  # media/
+                    timezone.now().date().isoformat(),  # YYYY-MM-DD/
+                    #cat_name  # category
+                )  # directory string
+                # dir = MEDIA_ROOT
                 
                 # create directory if not exists
                 if not os.path.exists(dir):
-                   os.makedirs(dir)
+                    os.makedirs(dir)
                 
-                slug = form["name"].value() + "-" + str(i)
+                # unique image name
+                if count:
+                    slug = cat_name + "-" + str(count+i)
+                else:
+                    slug = cat_name + "-" + str(i)
+                
+                img_dir = os.path.join(timezone.now().date().isoformat(), slug + ".jpg")
                 
                 # download the image
                 # scrapped data from facebook always jpg
-                img = uu.urlretrieve(item, os.path.join(dir, slug + ".jpg" ))
+                img = urllib.request.urlretrieve(item, os.path.join(dir, slug + ".jpg"))
                 
-                # creating an instance and save to db
-                p = Post(slug=slug, title=slug, img=slug+".jpg", publish_date=timezone.now(), status="p").save()
+                # creating a post instance and save
+                p = Post(slug=slug, title=slug, img=img_dir, publish_date=timezone.now(), status="p")
+                p.save()
+                
+                # connecting post and category
+                Categorize.objects.update_or_create(
+                    post=p,
+                    category=Category.objects.get(id=new_cat.id),
+                )
             
-            return JsonResponse({"asd":img_urls})
-            #return HttpResponseRedirect('/fbs/')
+            return HttpResponseRedirect(reverse('main_app:each_category', args=[cat_name]))
     else:
         if not FacebookAuth.objects.first():
             return HttpResponseRedirect('/fbs/scrapper-auth-form/')
         else:
             form = FbScrapperDataForm()
-
+    
     templ = 'fb_scrapper/scrapper-data-form.html'  # template name
     ctx = {  # context
         "form": form
@@ -182,7 +210,7 @@ def get_data_ajax(request):
                 "message": "Broken Url.."
             }
         }
-        
+    
     return JsonResponse(jd)
 
 
@@ -212,14 +240,14 @@ def get_long_token(secret_id=None, app_id=None, temp_token=None):
     return json_data
 
 
-def scrap_data(api_ver="v2.11", page="", limit="100",fields=("full_picture",), token=""):
+def scrap_data(api_ver="v2.11", page="", limit="100", fields=("full_picture",), token=""):
     if not token:
         # token/ auth error
         return {
-                "error": {
-                    "message": "No Auth/Token found"
-                }
+            "error": {
+                "message": "No Auth/Token found"
             }
+        }
     
     if int(limit) > 100:
         return {
@@ -227,7 +255,7 @@ def scrap_data(api_ver="v2.11", page="", limit="100",fields=("full_picture",), t
                 "message": "Maximum limit is 100"
             }
         }
-
+    
     # https://graph.facebook.com/v2.6/oyvai/posts/?fields=full_picture&limit=20&access_token=
     # generating url to to scrap data from facebook
     url_prefix = "https://graph.facebook.com/" + api_ver + "/" + page + "/posts/?fields="
