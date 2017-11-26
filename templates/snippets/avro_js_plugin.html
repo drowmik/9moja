@@ -1,0 +1,11 @@
+{% load static %}
+
+<script src="{% static "main_app/js/avro-v1.1.4.min.js" %}"></script>
+
+<script type="text/javascript">
+
+    (function ($) {
+        $('textarea:not(.bangla-na), input[type="text"]:not(.bangla-na)').avro();
+    })(jQuery);
+
+</script>

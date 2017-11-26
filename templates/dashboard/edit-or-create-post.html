@@ -32,19 +32,19 @@
                                 class="form-control"
                                 id="post_title"
                                 name="{{ form.title.name }}"
-                                value="{{ form.title.value }}"
+                                value="{{ form.title.value|default:"" }}"
                                 placeholder="Enter Title here.."
                         >
                     </div>
                     
                     <div class="form-group">
-                        <label for="post_file">File name: {{ form.img.value }}</label>
+                        <label for="post_file">File name: {{ form.img.value|default:"" }}</label>
                         <input
                                 type="file"
                                 class="form-control"
                                 id="post_file"
                                 name="{{ form.img.name }}"
-                                value="{{ form.img.value }}"
+                                value="{{ form.img.value|default:"" }}"
                         >
                     </div>
                     
@@ -146,4 +146,7 @@
             });
         })(jQuery)
     </script>
+    
+    {% include "snippets/avro_js_plugin.html" %}
+    
 {% endblock %}

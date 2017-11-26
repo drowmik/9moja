@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-{% load static %}
+{% load static i18n %}
 
 <html lang="en">
 <head>
@@ -22,7 +22,7 @@
     {% block google_tag_manager %}{% endblock %}
     
     
-    <title>{% block title %}Welcome babe{% endblock title %}</title>
+    <title>{% block title %}নয় মজা{% endblock title %}</title>
     
     
     {#    <link rel="shortcut icon" href="{% static 'main_app/img/favicon.ico' %}">#}
@@ -53,7 +53,8 @@
                         <ul class="navbar-nav mr-auto">
                             
                             <li class="nav-item active">
-                                <a class="nav-link" href="{% url 'main_app:index' %}">Home <span class="sr-only">(current)</span></a>
+                                <a class="nav-link" href="{% url 'main_app:index' %}">{% trans "মূল পেইজ" %} <span class="sr-only">
+                                    (current)</span></a>
                             </li>
                             
                             {% for cat in categories %}
@@ -64,7 +65,7 @@
                                     </li>
                                 {% elif forloop.counter == limit %}
                                     <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" data-hover="target">More Categories</a>
+                                        <a class="nav-link dropdown-toggle" href="#" data-hover="target">{% trans "আরও বিভাগ" %}</a>
                                         <div class="dropdown-menu" data-hover-show="result">
                                 {% endif %}
                             
@@ -92,7 +93,7 @@
                                     <input
                                             class="form-control mr-sm-2"
                                             type="search"
-                                            placeholder="Search"
+                                            placeholder="{% trans "খুঁজুন" %}"
                                             aria-label="Search">
                                     <button class="btn btn-outline-success my-2 my-sm-0 top-search-btn" type="submit">
                                         <i class="fa fa-search"></i>
@@ -119,7 +120,7 @@
                             <div class="navbar-nav">
                                 <a class="navbar-brand mr-auto" href="{% url 'main_app:index' %}">
                                     {% comment %}<img src="{% static 'main_app/img/logo.png' %}" alt="logo">{% endcomment %}
-                                    <h3 class="mb-0" style="line-height: 1">LOGO</h3>
+                                    <h3 class="mb-0" style="line-height: 1">{% trans "লোগো" %}</h3>
                                 </a>
                                 <ul class="nav">
         

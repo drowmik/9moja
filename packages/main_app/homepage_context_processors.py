@@ -6,14 +6,14 @@ def header(request):
     categories = Category.objects.all()
     
     dummy_pages = [
-        "Get a prize",
-        "Top MeMes",
-        "Top Categories",
-        "Best meme-guy",
-        "login",
-        "sign-up",
-        "use app",
-        "contact",
+        "পুরস্কার জিতুন",#"Get a prize",
+        "জনপ্রিয় মিম",#"Top MeMes",
+        "জনপ্রিয় বিভাগ", #"Top Categories",
+        "জনপ্রিয় পোস্টদাতা",#"Best meme-guy",
+        "লগইন",#"login",
+        "সাইন আপ",#"sign-up",
+        "এপ ব্যবহার করুন",#"use app",
+        "",#"contact",
     ]
     
     social_site_font = [

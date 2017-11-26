@@ -1,5 +1,6 @@
 {% extends 'main_app/base.html' %}
 
+{% load i18n %}
 
 {% block main_container %}
     
@@ -10,10 +11,13 @@
                     <div id="articles">
                         
                         {% if not posts %}
-                            <h3 class="text-center">Sorry, no meme found! <span><a href="{% url 'main_app:index' %}">Back to
-                                homepage</a></span></h3>
+                            <h3 class="text-center">{% trans "দুঃখিত, কোন মিম খুঁজে পাওয়া যায় নি" %}
+                                <span>
+                                    <a href="{% url 'main_app:index' %}">{% trans "মূল পেইজে ফেরত যান" %}</a>
+                                </span>
+                            </h3>
                         {% endif %}
-                    
+                        
                         {% for post in posts %}
                             <article class="card mb-3 bg-light">
                                 <a href="{{ post.get_absolute_url }}" class="d-block article-link-media">
@@ -25,9 +29,9 @@
                                     </a>
                                     
                                     <p class="article-status">
-                                        <a href="#" class="text-secondary"><span>28346 likes</span></a>
+                                        <a href="#" class="text-secondary"><span>{% trans "২৩৪৪ পছন্দ" %}</span></a>
                                         <span>.</span>
-                                        <a href="#" class="text-secondary"><span>3263 comments</span></a>
+                                        <a href="#" class="text-secondary"><span>{% trans "৭৮৩ টি বক্তব্য" %}</span></a>
                                     </p>
                                     
                                     {% comment %}<ul class="nav article-actions">
@@ -62,21 +66,23 @@
                 <div class="col-md-3">
                     <aside class="sidebar text-center">
                         <div class="popular-post">
-                            <h2>Popular Post</h2>
+                            <h2>{% trans "জনপ্রিয় মিমগুলো" %}</h2>
                             <ul class="nav row justify-content-md-center">
                                 
-                                {% for post in posts %}
-                                    <li class="mb-4">
-                                        <a href="{{ post.get_absolute_url }}" class="d-block">
-                                            <div class="sidebar-img rounded-circle">
-                                                <img
-                                                        src="{{ post.img.url }}"
-                                                        alt="{{ post.title }}"
-                                                        class="{% if post.img.width > post.img.height %}mx-h{% else %}mx-w{% endif %}"
-                                                />
-                                            </div>
-                                        </a>
-                                    </li>
+                                {% for post in posts|slice:":5" %}
+                                    {% if post.img %}
+                                        <li class="mb-4">
+                                            <a href="{{ post.get_absolute_url }}" class="d-block">
+                                                <div class="sidebar-img rounded-circle">
+                                                    <img
+                                                            src="{{ post.img.url }}"
+                                                            alt="{{ post.title }}"
+                                                            class="{% if post.img.width > post.img.height %}mx-h{% else %}mx-w{% endif %}"
+                                                    />
+                                                </div>
+                                            </a>
+                                        </li>
+                                    {% endif %}
                                 {% endfor %}
                             
                             </ul>
@@ -85,12 +91,12 @@
                         <hr>
                         
                         <div class="popular-categories">
-                            <h2>Popular Categories</h2>
+                            <h2>{% trans "জনপ্রিয় বিভাগগুলো" %}</h2>
                             
                             {% for cat in categories %}
                                 <a
-                                    href="{{ cat.get_absolute_url }}"
-                                    class="d-inline-block mb-2 border rounded border-secondary category-link"
+                                        href="{{ cat.get_absolute_url }}"
+                                        class="d-inline-block mb-2 border rounded border-secondary category-link"
                                 >{{ cat.name }}</a>
                             {% endfor %}
                         
@@ -105,14 +111,14 @@
                                     <input
                                             type="search"
                                             class="form-control"
-                                            placeholder="Search"
+                                            placeholder="{% trans "খুঁজুন" %}"
                                             aria-label="Search"
                                             aria-describedby="sidebar_search">
                                     <button type="submit" class="input-group-addon" id="sidebar_search">
                                         <i class="fa fa-search"></i>
                                     </button>
                                 </div>
-                                
+                            
                             </form>
                         </div>
                     </aside>
