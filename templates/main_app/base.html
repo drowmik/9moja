@@ -22,7 +22,7 @@
     {% block google_tag_manager %}{% endblock %}
     
     
-    <title>{% block title %}নয় মজা{% endblock title %}</title>
+    <title>{% block title %}{% trans "নয় মজা" %}{% endblock title %}</title>
     
     
     {#    <link rel="shortcut icon" href="{% static 'main_app/img/favicon.ico' %}">#}
@@ -152,7 +152,7 @@
 
 {% block js %}
     
-    <script src="{% static 'main_app/js/jquery-3.2.1.slim.min.js' %}"></script>
+    <script src="{% static 'main_app/js/jquery-3.2.1.min.js' %}"></script>
     <script src="{% static 'main_app/js/popper.min.js' %}"></script>
     <script src="{% static 'main_app/js/bootstrap.min.js' %}"></script>
 
