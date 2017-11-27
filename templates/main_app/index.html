@@ -61,6 +61,29 @@
                         {% endfor %}
                     
                     </div>
+                    
+                    <div id="pagination">
+                        
+                        {% if start_end.start %}
+                            <a href="?page=1">Start</a>
+                        {% endif %}
+                        
+                        {% for i in page_iter %}
+                            {% if i == '...' %}
+                                <span class="btn btn-outline-success disabled">{{ i }}</span>
+                            {% else %}
+                                <a class="btn btn-outline-success {% if i == current_page|add:"0" %}disabled{% endif %}"
+                                   href="?page={{ i }}">{{ i }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        
+                        {% if start_end.end %}
+                            <a href="?page={{ start_end.end }}">End</a>
+                        {% endif %}
+                    
+                    
+                    </div>
                 </div>
                 
                 <div class="col-md-3">
