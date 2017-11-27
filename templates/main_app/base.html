@@ -61,7 +61,7 @@
                                 
                                 {% if forloop.counter < limit %}
                                     <li class="nav-item">
-                                        <a href="{% url "main_app:each_category" cat.slug %}" class="nav-link">{{ cat.name }}</a>
+                                        <a href="{{ cat.get_absolute_url }}" class="nav-link">{{ cat.name }}</a>
                                     </li>
                                 {% elif forloop.counter == limit %}
                                     <li class="nav-item dropdown">
@@ -70,7 +70,7 @@
                                 {% endif %}
                             
                                 {% if forloop.counter >= limit %}
-                                            <a class="dropdown-item" href="#">{{ cat.name }}</a>
+                                            <a class="dropdown-item" href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
                                 {% endif %}
                                 {% if forloop.last %}
                                         </div>
