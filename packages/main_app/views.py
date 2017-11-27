@@ -13,7 +13,13 @@ def index(request):
     total_pages = p.num_pages
     
     # pagination
-    page = int(request.GET.get('page'))
+    if request.GET.get('page'):
+        page = int(request.GET.get('page'))
+    
+    # if direct homepage
+    else:
+        page = 1
+    
     try:
         latest_posts = p.page(page)
     except EmptyPage:
