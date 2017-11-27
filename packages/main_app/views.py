@@ -10,7 +10,7 @@ categories = Category.objects.all()  # limited
 def index(request):
     posts = Post.objects.order_by('-publish_date').filter(status="p")  # showing only published posts
     p = Paginator(posts, 10)  # show 10 post per page
-    total_pages = p.num_pages
+    total_pages = p.num_pages  # or last page
     
     # pagination
     if request.GET.get('page'):
@@ -24,8 +24,8 @@ def index(request):
         latest_posts = p.page(page)
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
-        latest_posts = p.page(p.num_pages)
-        page = p.num_pages
+        latest_posts = p.page(total_pages)
+        page = total_pages
     except PageNotAnInteger:
         # If page is not an integer, deliver first page.
         latest_posts = p.page(1)
