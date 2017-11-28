@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from django.template.defaultfilters import slugify
+from django.utils.text import slugify
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
@@ -34,7 +34,7 @@ class Post(models.Model):
     # override models save method for slug saving:
     def save(self, user=None, *args, **kwargs):
         if not self.id:
-            self.slug = slugify(self.title)
+            self.slug = slugify(value=self.title, allow_unicode=True)
         if user:
             self.user = user
         super(Post, self).save()    # saving the slug automatically
@@ -73,7 +73,7 @@ class Category(models.Model):
     # override models save method for slug saving:
     def save(self, *args, **kwargs):
         if not self.id:
-            self.slug = slugify(self.name)
+            self.slug = slugify(value=self.name, allow_unicode=True)
         super(Category, self).save()    # saving the slug automatically
 
     def get_absolute_url(self):

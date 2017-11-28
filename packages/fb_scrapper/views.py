@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.template.defaultfilters import slugify
+from django.utils.text import slugify
 from django.urls import reverse
 from django.utils import timezone
 import requests, json, os
@@ -82,7 +82,7 @@ def get_fb_scrapper_data(request):
         form = FbScrapperDataForm(request.POST)
         if form.is_valid():
             form.save()
-            cat_name = slugify(form["name"].value())
+            cat_name = slugify(value=form["name"].value(), allow_unicode=True)
             
             # posts under this category for unique image name
             try:
