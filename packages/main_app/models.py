@@ -18,7 +18,7 @@ class Post(models.Model):
     
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     
-    slug = models.SlugField(editable=False) # hidden in admin panel
+    slug = models.SlugField(allow_unicode=True)
     
     title = models.CharField(max_length=200)
     
@@ -56,7 +56,7 @@ class Category(models.Model):
     
     name = models.CharField( max_length=25 )
     
-    slug = models.SlugField(editable=False) # hidden in admin panel
+    slug = models.SlugField(allow_unicode=True)
     
     post = models.ManyToManyField(
         'main_app.Post',
