@@ -1,5 +1,8 @@
 {% extends 'fb_scrapper/base.html' %}
 
+{% block ime %}
+    {% include "snippets/avro_js_plugin.html" %}
+{% endblock %}
 
 {% block main_container %}
     
@@ -231,5 +234,4 @@
         })
     </script>
     
-    {% include "snippets/avro_js_plugin.html" %}
 {% endblock %}

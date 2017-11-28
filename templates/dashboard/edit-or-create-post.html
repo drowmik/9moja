@@ -1,5 +1,8 @@
 {% extends 'dashboard/base.html' %}
 
+{% block ime %}
+    {% include "snippets/avro_js_plugin.html" %}
+{% endblock %}
 
 {% block header %}
     
@@ -147,6 +150,5 @@
         })(jQuery)
     </script>
     
-    {% include "snippets/avro_js_plugin.html" %}
     
 {% endblock %}

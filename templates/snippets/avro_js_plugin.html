@@ -1,11 +1,26 @@
 {% load static %}
 
-<script src="{% static "main_app/js/avro-v1.1.4.min.js" %}"></script>
+<link rel="stylesheet" href="{% static 'main_app/ime/css/jquery.ime.css' %}">
+<script src="{% static 'main_app/js/jquery-3.2.1.min.js' %}"></script>
 
-<script type="text/javascript">
+<script src="{% static 'main_app/js/jquery-3.2.1.min.js' %}"></script>
+
+<script src="{% static 'main_app/ime/js/jquery.ime.js' %}"></script>
+<script src="{% static 'main_app/ime/js/jquery.ime.selector.js' %}"></script>
+<script src="{% static 'main_app/ime/js/jquery.ime.preferences.js' %}"></script>
+<script src="{% static 'main_app/ime/js/jquery.ime.inputmethods.js' %}"></script>
+
+<script type="text/javascript" charset="utf-8">
 
     (function ($) {
-        $('textarea:not(.bangla-na), input[type="text"]:not(.bangla-na)').avro();
+
+        $(document).ready(function () {
+            $('input.textarea:not(.bangla-na), input[type="text"]:not(.bangla-na)').ime({
+                imePath: '{% static 'main_app/ime/' %}',
+                languages: ['bn']
+            }).focus();
+        });
+
     })(jQuery);
 
 </script>
