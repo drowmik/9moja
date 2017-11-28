@@ -57,19 +57,19 @@
                                     (current)</span></a>
                             </li>
                             
-                            {% for cat in categories %}
+                            {% for cat in hcp_categories %}
                                 
-                                {% if forloop.counter < limit %}
+                                {% if forloop.counter < hcp_limit %}
                                     <li class="nav-item">
                                         <a href="{{ cat.get_absolute_url }}" class="nav-link">{{ cat.name }}</a>
                                     </li>
-                                {% elif forloop.counter == limit %}
+                                {% elif forloop.counter == hcp_limit %}
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" data-hover="target">{% trans "আরও বিভাগ" %}</a>
                                         <div class="dropdown-menu" data-hover-show="result">
                                 {% endif %}
                             
-                                {% if forloop.counter >= limit %}
+                                {% if forloop.counter >= hcp_limit %}
                                             <a class="dropdown-item" href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
                                 {% endif %}
                                 {% if forloop.last %}
@@ -82,7 +82,7 @@
                         </ul>
                         <ul class="navbar-nav top-social-ul">
     
-                            {% for s in socials %}
+                            {% for s in hcp_socials %}
                                 <li class="nav-item active">
                                     <a href="#" class="btn btn-outline-success"><i class="{{ s }}"></i></a>
                                 </li>
@@ -126,7 +126,7 @@
                                 </a>
                                 <ul class="nav">
         
-                                    {% for p in dummy_pages %}
+                                    {% for p in hcp_dummy_pages %}
                                         <li class="nav-item d-flex align-items-center">
                                             <a class="nav-link" href="{% url 'main_app:coming_soon' %}">{{ p }}</a>
                                         </li>
