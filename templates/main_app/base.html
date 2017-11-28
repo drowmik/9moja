@@ -89,10 +89,12 @@
                             {% endfor %}
                             
                             <li class="nav-item active">
-                                <form class="form-inline my-2 my-lg-0">
+                                <form class="form-inline my-2 my-lg-0" method="get" action="{% url 'main_app:search' %}">
+                                    
                                     <input
                                             class="form-control mr-sm-2"
                                             type="search"
+                                            name="q"
                                             placeholder="{% trans "খুঁজুন" %}"
                                             aria-label="Search">
                                     <button class="btn btn-outline-success my-2 my-sm-0 top-search-btn" type="submit">

@@ -128,12 +128,13 @@
                         <hr>
                         
                         <div class="sidebar-search">
-                            <form class="form-inline my-2 my-lg-0">
+                            <form class="form-inline my-2 my-lg-0" method="get" action="{% url 'main_app:search' %}">
                                 
                                 <div class="input-group">
                                     <input
                                             type="search"
                                             class="form-control"
+                                            name="q"
                                             placeholder="{% trans "খুঁজুন" %}"
                                             aria-label="Search"
                                             aria-describedby="sidebar_search">

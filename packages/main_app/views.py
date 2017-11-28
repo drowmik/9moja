@@ -123,3 +123,25 @@ def each_category(request, slug):
 
 def coming_soon(request):
     return render(request, 'main_app/coming-soon.html')
+
+
+def search(request):
+    result = None
+    
+    if request.method == 'GET':
+        keyword = request.GET.get('q')  # search keyword
+        
+        if keyword:
+            posts = Post.objects.filter(title__contains=keyword)  # post
+            cats = Category.objects.filter(name__contains=keyword)  # categories
+            if posts and cats:
+                result = {
+                    "posts": posts,
+                    "cats": cats,
+                }
+    
+    templ = 'main_app/search.html'
+    ctx = {
+        "result": result
+    }
+    return render(request, templ, ctx)
