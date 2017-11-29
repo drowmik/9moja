@@ -50,10 +50,6 @@ aside.sidebar hr {
     font-size: 12px;
 }
 
-.top-search-btn {
-    cursor: pointer;
-}
-
 .navbar {
     padding: .1rem 1rem;
     font-size: 12px;
@@ -96,7 +92,6 @@ section.section {
 
 .article-actions .btn {
     border: none !important;
-    cursor: pointer;
     padding: 0;
     padding-right: 15px;
 }

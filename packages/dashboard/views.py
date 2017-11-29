@@ -75,7 +75,7 @@ def create_post(request):
 
             # if no category found bound on that post
             if not new_post.get_categories():
-                cat, create = Category.objects.update_or_create(name="বিভাগহীন")
+                cat, create = Category.objects.get_or_create(name="বিভাগহীন")
                 Categorize.objects.update_or_create(
                     post=new_post,
                     category=cat,

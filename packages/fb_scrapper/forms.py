@@ -3,11 +3,10 @@ from .models import FacebookAuth, FacebookData
 
 
 class FbScrapperAuthForm(forms.ModelForm):
-    
     class Meta:
         model = FacebookAuth
         fields = ['token', 'app_id', 'app_secret_id']
-
+    
     def clean(self):
         try:
             # no space allowed
@@ -17,15 +16,13 @@ class FbScrapperAuthForm(forms.ModelForm):
             print("form data error, probably unexpected")
 
 
-
-
 class FbScrapperDataForm(forms.ModelForm):
     selected_img = forms.CharField()
     
     class Meta:
         model = FacebookData
         fields = ['page', 'name']
-
+    
     def clean(self):
         try:
             # no space allowed
@@ -33,6 +30,3 @@ class FbScrapperDataForm(forms.ModelForm):
                 raise forms.ValidationError({'page': 'no space allowed in url friendly text'})
         except:
             print("form2 data error, probably unexpected")
-
-
-

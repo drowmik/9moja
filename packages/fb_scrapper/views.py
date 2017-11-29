@@ -37,12 +37,9 @@ def get_fb_scrapper_auth(request):
     
     if request.method == 'POST':
         form = FbScrapperAuthForm(request.POST)
-        # form2 = FbScrapperDataForm(request.POST)
-        # print(form["app_secret_id"].value())
-        if form.is_valid():  # and form2.is_valid():
+        if form.is_valid():
             FacebookAuth.objects.all().delete()  # no need previous auth tokens
             form.save()  # save new token
-            # form2.save()     # save page info
             if form["token"].value():
                 return HttpResponseRedirect('/fbs/')
             else:
@@ -50,8 +47,6 @@ def get_fb_scrapper_auth(request):
         else:
             print(type(form.errors))
     else:
-        # form2 = FbScrapperDataForm()
-        
         saved_auth = FacebookAuth.objects.first()
         if saved_auth is None:
             form = FbScrapperAuthForm()
@@ -71,7 +66,6 @@ def get_fb_scrapper_auth(request):
     templ = 'fb_scrapper/scrapper-auth-form.html'  # template name
     ctx = {  # context
         "form": form,
-        # "form2" : form2,
         "token_expired": token_expired
     }
     return render(request, templ, ctx)
@@ -100,9 +94,7 @@ def get_fb_scrapper_data(request):
                 dir = os.path.join(
                     MEDIA_ROOT,  # media/
                     timezone.now().date().isoformat(),  # YYYY-MM-DD/
-                    #cat_name  # category
                 )  # directory string
-                # dir = MEDIA_ROOT
                 
                 # create directory if not exists
                 if not os.path.exists(dir):
@@ -110,7 +102,7 @@ def get_fb_scrapper_data(request):
                 
                 # unique image name
                 if count:
-                    slug = cat_name + "-" + str(count+i)
+                    slug = cat_name + "-" + str(count + i)
                 else:
                     slug = cat_name + "-" + str(i)
                 
@@ -118,7 +110,7 @@ def get_fb_scrapper_data(request):
                 
                 # download the image
                 # scrapped data from facebook always jpg
-                img = urllib.request.urlretrieve(item, os.path.join(dir, slug + ".jpg"))
+                urllib.request.urlretrieve(item, os.path.join(dir, slug + ".jpg"))
                 
                 # creating a post instance and save
                 p = Post(slug=slug, title=slug, img=img_dir, publish_date=timezone.now(), status="p")
@@ -139,7 +131,13 @@ def get_fb_scrapper_data(request):
     
     templ = 'fb_scrapper/scrapper-data-form.html'  # template name
     ctx = {  # context
-        "form": form
+        "form": form,
+        "fb_fields": {
+            "0": "full_picture",
+            "1": "type",
+            "2": "reactions.summary(true)",
+            "3": "shares",
+        },
     }
     return render(request, templ, ctx)
 

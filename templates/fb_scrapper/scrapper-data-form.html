@@ -53,18 +53,19 @@
                                 placeholder="post limit(max. 100)">
                     </div>
                     <input type="text" id="selected_img" name="selected_img" class="d-none">
+                    
                     <button type="button" class="btn btn-success chk_data">Check data</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-                
-                <div id="fb_data">
-                    <p class="message"></p>
-                    <div id="all_img"></div>
-                    <div id="pagination">
-                        <button class="btn btn-primary chk_data" style="display: none" id="chk_data-prev">prev</button>
-                        <button class="btn btn-primary chk_data" style="display: none" id="chk_data-next">next</button>
+    
+                    <div id="fb_data">
+                        <p class="message"></p>
+                        <div id="all_img"></div>
+                        <div id="pagination">
+                            <button class="btn btn-outline-info chk_data mb-3" style="display: none" id="chk_data-prev">prev</button>
+                            <button class="btn btn-outline-info chk_data mb-3" style="display: none" id="chk_data-next">next</button>
+                        </div>
                     </div>
-                </div>
+                    <button type="submit" class="btn btn-primary mb-3">Submit</button>
+                </form>
             </div>
         </div>
     </div>
@@ -102,7 +103,8 @@
                 
                 <div class="col-md-4">
                     <div class="each-post px-1 pt-5 pb-3 h-100">
-                        <img src="{{: d[i]['full_picture'] }}" class="w-100 border border-dark" data-name="{{: _identity }}">
+                        <a href="{{: d[i]['full_picture'] }}" target="_blank"><img src="{{: d[i]['full_picture'] }}" class="w-100 border
+                        border-dark" data-name="{{: _identity }}"></a>
                         <p class="text-primary">
                             reactions: {{: d[i]["reactions"]["summary"]["total_count"] }}, shares: {{: d[i]["shares"]["count"] }}
                         </p>
@@ -162,16 +164,12 @@
                     data: {
                         "direct_url": _t.attr("data-url"),
                         "page": _page.val(),
-                        "fields": {
-                            "0": "full_picture",
-                            "1": "type",
-                            "2": "reactions.summary(true)",
-                            "3": "shares",
-                        },
+                        "fields": {{ fb_fields|safe }},
                         "limit": _limit.val()
                     },
                     dataType: 'json',
                     success: function (data) {
+                        console.log(data);
                         if (data["error"]) {
                             err_msg_elem.html(data["error"]["message"]);
                         }
