@@ -72,6 +72,14 @@ def create_post(request):
             # and get the post by id
             form_post_id = max([x.id for x in Post.objects.filter(title=request.POST['title'])])
             new_post = Post.objects.get(id=form_post_id)
+
+            # if no category found bound on that post
+            if not new_post.get_categories():
+                cat, create = Category.objects.update_or_create(name="বিভাগহীন")
+                Categorize.objects.update_or_create(
+                    post=new_post,
+                    category=cat,
+                )
             [Categorize.objects.update_or_create(
                 post=new_post,
                 category=Category.objects.get(id=int(k[4:])),
