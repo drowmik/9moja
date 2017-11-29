@@ -6,12 +6,15 @@
         <div class="container">
             <div class="row text-center">
                 
-                {% if result %}
+                {% if not err %}
                     
                     {% if result.posts %}
-                        <h1 class="w-100">মিলে যাওয়া মিমগুলো</h1>
+                        <div class="col-sm-12">
+                            <h1 class="w-100">মিলে যাওয়া মিমগুলো</h1>
+                        </div>
                         {% for post in result.posts %}
                             <div class="col-sm-4">
+                                <h3>{{ post.title }}</h3>
                                 <a href="{{ post.get_absolute_url }}" class="d-block article-link-media">
                                     <img src="{{ post.img.url }}" alt="{{ post.title }}" class="w-100"/>
                                 </a>
@@ -25,8 +28,10 @@
                     {% endif %}
                     
                     {% if result.cats %}
-                        <h1 class="w-100 mt-5">মিলে যাওয়া বিভাগগুলো</h1>
-                        <div class="col">
+                        <div class="col-sm-12">
+                            <h1 class="w-100 mt-5">মিলে যাওয়া বিভাগগুলো</h1>
+                        </div>
+                        <div class="col text-left">
                             {% for cat in result.cats %}
                                 <a href="{{ cat.get_absolute_url }}" class="d-block">
                                     <h3>{{ cat.name }}</h3>
@@ -37,8 +42,10 @@
                 
                 
                 {% else %}
-                    <h1>দুষ্টুমি করো? <span><i class="fa fa-smile-o"></i></span></h1>
-                    <h3>সন্ধ্যা হইসে, <span><a href="{% url 'main_app:index' %}">ঘরে ফিরে যাও</a></span></h3>
+                    <div class="col-sm-12">
+                        <h1>দুষ্টুমি করো? <span><i class="fa fa-smile-o"></i></span></h1>
+                        <h3>সন্ধ্যা হইসে, <span><a href="{% url 'main_app:index' %}">ঘরে ফিরে যাও</a></span></h3>
+                    </div>
                 {% endif %}
             
             </div>

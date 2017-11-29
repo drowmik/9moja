@@ -127,21 +127,22 @@ def coming_soon(request):
 
 def search(request):
     result = None
-    
+    err = None
     if request.method == 'GET':
         keyword = request.GET.get('q')  # search keyword
         
         if keyword:
             posts = Post.objects.filter(title__contains=keyword)  # post
             cats = Category.objects.filter(name__contains=keyword)  # categories
-            if posts and cats:
-                result = {
-                    "posts": posts,
-                    "cats": cats,
-                }
+            result = {
+                "posts": posts,
+                "cats": cats
+            }
+            err = None if posts or cats else "No result"
     
     templ = 'main_app/search.html'
     ctx = {
-        "result": result
+        "result": result,
+        "err": err
     }
     return render(request, templ, ctx)
