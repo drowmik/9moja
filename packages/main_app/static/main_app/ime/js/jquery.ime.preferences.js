@@ -8,7 +8,7 @@
 			previousLanguages: [], // array of previous languages
 			previousInputMethods: [], // array of previous inputmethods
 			imes: {
-				en: 'system'
+				'bn': 'bn-avro'
 			}
 		},
 
@@ -36,7 +36,7 @@
 		},
 
 		getDefaultLanguage: function () {
-			return 'en';
+			return 'bn';
 		},
 
 		getPreviousLanguages: function () {

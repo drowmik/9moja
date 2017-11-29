@@ -78,14 +78,6 @@
 			name: 'অভ্র',
 			source: 'rules/bn/bn-avro.js'
 		},
-		'bn-inscript': {
-			name: 'ইনস্ক্ৰিপ্ট',
-			source: 'rules/bn/bn-inscript.js'
-		},
-		'bn-inscript2': {
-			name: 'ইনস্ক্ৰিপ্ট ২',
-			source: 'rules/bn/bn-inscript2.js'
-		},
 		'bn-nkb': {
 			name: 'ন্যাশনাল কিবোর্ড',
 			source: 'rules/bn/bn-nkb.js'
