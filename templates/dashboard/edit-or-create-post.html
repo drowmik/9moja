@@ -58,9 +58,9 @@
                             <li>
                                 <input
                                         type="checkbox"
-                                        name="cat-{{ forloop.counter }}"
+                                        name="{{ category_prefix }}{{ c.category.id }}"
                                         value="{{ c.category.id }}"
-                                        id="cat-{{ forloop.counter }}"
+                                        id="{{ category_prefix }}{{ c.category.id }}"
                                         {% if c.has_category %}
                                         checked
                                         {% endif %}

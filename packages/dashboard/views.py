@@ -12,24 +12,24 @@ EDIT_OR_CREATE = {
 
 
 @login_required
-def home (request):
+def home(request):
     posts = Post.objects.order_by('-publish_date')
     
-    templ = 'dashboard/index.html'   #template name
-    ctx = {  #context
+    templ = 'dashboard/index.html'  # template name
+    ctx = {  # context
         "posts": posts
     }
     return render(request, templ, ctx)
 
 
 @login_required
-def edit_post (request, pk):
+def edit_post(request, pk):
     post = get_object_or_404(Post, id=pk)
     
     if request.method == 'POST':
         cat_in_post_dict = (request.POST).dict()
         del cat_in_post_dict['csrfmiddlewaretoken'], cat_in_post_dict["title"], cat_in_post_dict['img']
-    
+        
         x = list(cat_in_post_dict.values())
         
         update_category(post, x)
@@ -41,18 +41,19 @@ def edit_post (request, pk):
     else:
         form = EditPostForm(instance=post)
     
-    templ = EDIT_OR_CREATE["template"]   #template name
-    ctx = {  #context
+    templ = EDIT_OR_CREATE["template"]  # template name
+    ctx = {  # context
         "post": post,
         "form": form,
         "type": EDIT_OR_CREATE["edit"],
-        "all_categories" : get_category_list_by_post(post),
+        "all_categories": get_category_list_by_post(post),
     }
     return render(request, templ, ctx)
 
 
 @login_required
-def create_post (request):
+def create_post(request):
+    cat_prefix = 'cat-'
     
     if request.method == 'POST':
         form = CreatePostForm(request.POST, request.FILES)
@@ -60,37 +61,52 @@ def create_post (request):
             f = form.save(commit=False)
             f.user = request.user
             f.save()
+            
+            # should've use form.form but I don't know how to use along with model form
+            # saving category when creating post
+            
+            # finding post by id
+            # why not title?
+            # if any dumb guy post same title's post it may be a pain in the ass to manage them
+            # so here, I'm searching for the maximum id, which must be this form-post id
+            # and get the post by id
+            form_post_id = max([x.id for x in Post.objects.filter(title=request.POST['title'])])
+            new_post = Post.objects.get(id=form_post_id)
+            [Categorize.objects.update_or_create(
+                post=new_post,
+                category=Category.objects.get(id=int(k[4:])),
+            ) for k in request.POST if k[:4] == cat_prefix]
             return HttpResponseRedirect('/dashboard/')
     else:
         form = CreatePostForm()
     
-    templ = EDIT_OR_CREATE["template"]   #template name
-    ctx = {  #context
+    templ = EDIT_OR_CREATE["template"]  # template name
+    ctx = {  # context
         "form": form,
         "type": EDIT_OR_CREATE["create"],
-        "all_categories" : get_category_list_by_post(),
+        "all_categories": get_category_list_by_post(),
+        "category_prefix": cat_prefix
     }
     return render(request, templ, ctx)
 
 
-def update_category ( post, cat_list ):
-
-    cat_list = list(map(int, cat_list))     # all categories
-    all_cat_list = list(Category.objects.values_list('id', flat=True))      # categories assigned for this post
-
+def update_category(post, cat_list):
+    cat_list = list(map(int, cat_list))  # all categories
+    all_cat_list = list(Category.objects.values_list('id', flat=True))  # categories assigned for this post
+    
     for cat in all_cat_list:
-        if cat in cat_list:     # check if any new category is added
+        if cat in cat_list:  # check if any new category is added
             Categorize.objects.update_or_create(
                 post=post,
-                category= Category.objects.get(id=cat),
+                category=Category.objects.get(id=cat),
             )
-        else:   # if unmarked, delete it
-            obj = Categorize.objects.filter(category=cat, post=post)    # delete only selected relation with post and category
+        else:  # if unmarked, delete it
+            obj = Categorize.objects.filter(category=cat, post=post)  # delete only selected relation with post and category
             if obj:
-                obj.delete()    # delete queryset if not changed from unassigned
+                obj.delete()  # delete queryset if not changed from unassigned
 
 
-def get_category_list_by_post (pst=None):
+def get_category_list_by_post(pst=None):
     cat_list = []
     
     for cat in Category.objects.all():
@@ -109,7 +125,7 @@ def get_category_list_by_post (pst=None):
 
 
 @login_required
-def add_category(request):      # add new category and build relation with the post
+def add_category(request):  # add new category and build relation with the post
     data = {}
     if request.method == 'POST':
         new_cat_name = request.POST["new_cat"]
@@ -119,15 +135,15 @@ def add_category(request):      # add new category and build relation with the p
         if new_cat_name in all_cat_name:
             data["err"] = "Duplicate category not allowed"
             return JsonResponse(data)
-    
-        new_cat, created = Category.objects.update_or_create(   # new category created
+        
+        new_cat, created = Category.objects.update_or_create(  # new category created
             name=new_cat_name
         )
         
         # connect category to post only if editing
         if request.POST['type'] is EDIT_OR_CREATE["edit"]:
             post_id = int(request.POST['post_id'])
-            post = Post.objects.get(id=post_id) # find post by id
+            post = Post.objects.get(id=post_id)  # find post by id
             
             # connecting post and category
             Categorize.objects.update_or_create(
