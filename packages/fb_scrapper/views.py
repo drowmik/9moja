@@ -89,6 +89,8 @@ def get_fb_scrapper_data(request):
             new_cat, created = Category.objects.update_or_create(name=cat_name)
             
             img_urls = form["selected_img"].value().split(",")
+            img_react = form["fb_img_reaction"].value().split(",")
+            img_share = form["fb_img_share"].value().split(",")
             
             for i, item in enumerate(img_urls):
                 dir = os.path.join(
@@ -113,7 +115,15 @@ def get_fb_scrapper_data(request):
                 urllib.request.urlretrieve(item, os.path.join(dir, slug + ".jpg"))
                 
                 # creating a post instance and save
-                p = Post(slug=slug, title=slug, img=img_dir, publish_date=timezone.now(), status="p")
+                p = Post(
+                    slug=slug,
+                    title=slug,
+                    img=img_dir,
+                    publish_date=timezone.now(),
+                    status="p",
+                    likes=img_react[i],
+                    shares=img_share[i]
+                )
                 p.save()
                 
                 # connecting post and category

@@ -19,6 +19,10 @@ class FbScrapperAuthForm(forms.ModelForm):
 class FbScrapperDataForm(forms.ModelForm):
     selected_img = forms.CharField()
     
+    fb_img_reaction = forms.CharField()
+    
+    fb_img_share = forms.CharField()
+    
     class Meta:
         model = FacebookData
         fields = ['page', 'name']

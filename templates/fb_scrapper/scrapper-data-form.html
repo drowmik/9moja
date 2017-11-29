@@ -53,6 +53,8 @@
                                 placeholder="post limit(max. 100)">
                     </div>
                     <input type="text" id="selected_img" name="selected_img" class="d-none">
+                    <input type="text" id="fb_img_reaction" name="fb_img_reaction" class="d-none">
+                    <input type="text" id="fb_img_share" name="fb_img_share" class="d-none">
                     
                     <button type="button" class="btn btn-success chk_data">Check data</button>
     
@@ -106,7 +108,8 @@
                         <a href="{{: d[i]['full_picture'] }}" target="_blank"><img src="{{: d[i]['full_picture'] }}" class="w-100 border
                         border-dark" data-name="{{: _identity }}"></a>
                         <p class="text-primary">
-                            reactions: {{: d[i]["reactions"]["summary"]["total_count"] }}, shares: {{: d[i]["shares"]["count"] }}
+                            reactions: <span class="fb_reaction">{{: d[i]["reactions"]["summary"]["total_count"] }}</span>, shares:
+                            <span class="fb_share">{{ try{ }}{{: d[i]["shares"]["count"] }}{{ }catch(e){ }}0{{ } }}</span>
                         </p>
                         <div class="chkbox">
                             <input type="checkbox" name="{{: _identity }}" id="{{: _identity }}">
@@ -221,14 +224,21 @@
             }
         });
         
-        $('form').submit(function (e) {
-            var x = [];
+        $('form').submit(function () {
+            var _img = [];
+            var _react = [];
+            var _share = [];
             $('.each-post').each(function () {
                 var _t = $(this);
-                if (_t.find('input[type="checkbox"]').prop('checked'))
-                    x.push(_t.find('img').attr('src'));
+                if (_t.find('input[type="checkbox"]').prop('checked')){
+                    _img.push(_t.find('img').attr('src'));
+                    _react.push(_t.find('.fb_reaction').html());
+                    _share.push(_t.find('.fb_share').html());
+                }
             });
-            $('#selected_img').val(x);
+            $('#selected_img').val(_img);
+            $('#fb_img_reaction').val(_react);
+            $('#fb_img_share').val(_share);
         })
     </script>
     

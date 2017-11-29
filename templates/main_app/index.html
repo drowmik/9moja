@@ -29,9 +29,15 @@
                                     </a>
                                     
                                     <p class="article-status">
-                                        <a href="#" class="text-secondary"><span>{% trans "২৩৪৪ পছন্দ" %}</span></a>
+                                        <a href="#" class="text-secondary">
+                                            <span>{{ post.likes }}{% trans " পছন্দ" %}</span>
+                                        </a>
                                         <span>.</span>
-                                        <a href="#" class="text-secondary"><span>{% trans "৭৮৩ টি বক্তব্য" %}</span></a>
+                                        <a href="#" class="text-secondary">
+                                            <span>{{ post.shares }}{% trans " বার শেয়ার" %}</span>
+                                        </a>
+                                        {% comment %}<span>.</span>
+                                        <a href="#" class="text-secondary"><span>{% trans "৭৮৩ টি বক্তব্য" %}</span></a>{% endcomment %}
                                     </p>
                                     
                                     {% comment %}<ul class="nav article-actions">

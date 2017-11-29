@@ -42,6 +42,10 @@ class Post(models.Model):
     
     title = models.CharField(max_length=200)
     
+    likes = models.IntegerField(default=0)
+    
+    shares = models.IntegerField(default=0)
+    
     publish_date = models.DateTimeField(default=timezone.now)
 
     status = models.CharField(
