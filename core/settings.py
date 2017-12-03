@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os, dj_database_url, socket
 
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -23,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'mp+hg4qrs6kc6k3^&cvnrg5*irggffprvdqcck&qe0af2&9jld'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if(socket.gethostname() == 'debu-xubuntu') else False
+DEBUG = True if(socket.gethostname() == 'debu-xubuntu' or DATABASE_URL) else False
 
 ALLOWED_HOSTS = ['*']
 
@@ -80,8 +82,6 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-
-DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
     DATABASES = {
