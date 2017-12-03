@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from core import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from dashboard import views as dash_views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     
@@ -26,6 +28,12 @@ urlpatterns = [
     url(r'^fbs/', include('fb_scrapper.urls', namespace="fbs")),
     
     url(r'^admin/', admin.site.urls),
+
+    # need condition (if logged in redirect to dashboard)
+    url(r'^login/$', dash_views.login, {'template_name': 'dashboard/login.html'}, name='login'),
+    
+    # default auth logout, redirect to main page
+    url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
     
     url(r'^', include('main_app.urls', namespace="main_app")),
     

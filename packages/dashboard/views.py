@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from main_app.models import Post, Category, Categorize
 from .forms import EditPostForm, CreatePostForm
+from django.contrib.auth import views as auth_views
 
 EDIT_OR_CREATE = {
     "edit": "edit",
@@ -20,6 +21,13 @@ def home(request):
         "posts": posts
     }
     return render(request, templ, ctx)
+
+
+def login(request, **kwargs):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/dashboard')
+    else:
+        return auth_views.login(request, **kwargs)
 
 
 @login_required

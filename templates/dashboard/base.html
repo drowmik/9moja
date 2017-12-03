@@ -36,7 +36,20 @@
     
     
     {% block extra_css %}{% endblock %}
-
+    
+    
+    <style>
+        .logout_btn {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+        }
+        
+        .logout_btn .btn {
+            padding: 0.3rem 0.5rem;
+        }
+    </style>
+    
     {% block ime %}{% endblock %}
 
 </head>
@@ -50,6 +63,12 @@
     </ol>
 
 {% endblock header %}
+
+{% block header_logout %}
+    <div class="logout_btn">
+        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    </div>
+{% endblock %}
 
 <div id="dashboard_container">
     {% block main_container %}{% endblock %}

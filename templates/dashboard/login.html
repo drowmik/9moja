@@ -1,0 +1,87 @@
+{% extends 'dashboard/base.html' %}
+
+{% load i18n %}
+
+{% block title %}{% trans 'নয় মজায় যোগ দিতে লগইন করুন' %}{% endblock title %}
+
+{# not showing those #}
+{% block header %}{% endblock %}
+{% block header_logout %}{% endblock %}
+
+{% block extra_css %}
+    <style>
+        form {
+            padding: 25px
+        }
+        
+        .login-form-wrapper {
+            background: #fffddd;
+            border: 1px solid #93a4b5;
+        }
+        
+        .login-form-wrapper > h3 {
+            background: #93a4b5;
+            padding: 12px;
+            color: #fffddd;
+        }
+        
+        .h100vh{
+            min-height: 100vh;
+        }
+        
+        @media (max-width: 480px) {
+            form {
+                padding: 10px
+            }
+        }
+    </style>
+{% endblock extra_css %}
+
+{% block main_container %}
+    <div class="container">
+        <div class="row justify-content-md-center align-items-center h100vh">
+            <div class="col col-md-6">
+                
+                <div class="login-form-wrapper">
+                    <h3 class="text-center">{% trans 'লগইন করুন' %}</h3>
+                    
+                    <form method="POST" action="">
+                        
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next }}">
+                        
+                        <div class="form-group">
+                            <label for="{{ form.username.id_for_label }}">{% trans 'ইমেইল অথবা ইউজারনেম' %}</label>
+                            <input
+                                    type="text" id="{{ form.username.id_for_label }}"
+                                    placeholder="{% trans 'ইমেইল অথবা ইউজারনেম দিন' %}"
+                                    class="form-control {% if form.username.errors %}invalid{% endif %} ms-form-control ms-round"
+                                    name="{{ form.username.html_name }}"
+                                    value="{{ form.username.value|default:'' }}"
+                                    aria-describedby="emailHelp">
+                            {% if  form.username.errors %}
+                                <div class="form_field_error form-input-error">{{ form.username.errors|join:" " }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.password.id_for_label }}">{% trans 'পাসওয়ার্ড' %}</label>
+                            <input
+                                    type="password"
+                                    id="{{ form.password.id_for_label }}"
+                                    placeholder="{% trans 'পাসওয়ার্ড দিন' %}"
+                                    class="form-control {% if form.password.errors %}invalid{% endif %} ms-form-control ms-round"
+                                    name="{{ form.password.html_name }}">
+                            
+                            {% if form.password.errors %}
+                                <div class="form_field_error form-input-error">{{ form.password.errors|join:" " }}</div>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-success" value="login">{% trans 'নিবেদন করুন' %}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    
+    
+    </div>
+{% endblock %}

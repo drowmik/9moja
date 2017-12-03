@@ -9,7 +9,7 @@ def header(request):
         "জনপ্রিয় মিম",  # "Top MeMes",
         "জনপ্রিয় বিভাগ",  # "Top Categories",
         "জনপ্রিয় পোস্টদাতা",  # "Best meme-guy",
-        "লগইন",  # "login",
+        #"লগইন",  # "login",
         "সাইন আপ",  # "sign-up",
         "এপ ব্যবহার করুন",  # "use app",
         # " যোগাযোগ করুন",#"contact",
