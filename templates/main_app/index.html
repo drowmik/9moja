@@ -68,28 +68,37 @@
                     
                     </div>
                     
-                    <div id="pagination">
-                        
-                        {% if start_end.start %}
-                            <a href="?page=1">Start</a>
-                        {% endif %}
-                        
-                        {% for i in page_iter %}
-                            {% if i == '...' %}
-                                <span class="btn btn-outline-success disabled">{{ i }}</span>
-                            {% else %}
-                                <a class="btn btn-outline-success {% if i == current_page|add:"0" %}disabled{% endif %}"
-                                   href="?page={{ i }}">{{ i }}</a>
+                    <nav id="pagination">
+                        <ul class="pagination">
+        
+                            {% if start_end.start %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1">Start</a>
+                                </li>
                             {% endif %}
-                        {% endfor %}
+        
+                            {% for i in page_iter %}
+                                {% if i == '...' %}
+                                    <li class="page-item disabled">
+                                    <span class="page-link">
+                                        {{ i }}
+                                        <span class="sr-only">(current)</span>
+                                    </span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item {% if i == current_page|add:"0" %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
                         
-                        
-                        {% if start_end.end %}
-                            <a href="?page={{ start_end.end }}">End</a>
-                        {% endif %}
-                    
-                    
-                    </div>
+                            {% if start_end.end %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ start_end.last_page }}">{{ start_end.last_page }}</a>
+                                </li>
+                            {% endif %}
+
+                    </nav>
                 </div>
                 
                 <div class="col-md-3">

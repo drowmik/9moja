@@ -44,6 +44,7 @@ def index(request):
     start_end = {
         "start": True if page > extra + 1 else False,  # start button appears
         "end": True if (page + extra) < total_pages else False,  # end button appears
+        "last_page": total_pages,
     }
     templ = 'main_app/index.html'  # template name
     ctx = {  # context
