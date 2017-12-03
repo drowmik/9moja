@@ -70,7 +70,7 @@ def create_post(request):
             # if any dumb guy post same title's post it may be a pain in the ass to manage them
             # so here, I'm searching for the maximum id, which must be this form-post id
             # and get the post by id
-            form_post_id = max([x.id for x in Post.objects.filter(title=request.POST['title'])])
+            form_post_id = max([x.id for x in Post.objects.filter(title=form['title'].value())])
             new_post = Post.objects.get(id=form_post_id)
 
             # if no category found bound on that post

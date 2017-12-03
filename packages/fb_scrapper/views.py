@@ -89,8 +89,8 @@ def get_fb_scrapper_data(request):
             new_cat, created = Category.objects.update_or_create(name=cat_name)
             
             img_urls = form["selected_img"].value().split(",")
-            img_react = form["fb_img_reaction"].value().split(",")
-            img_share = form["fb_img_share"].value().split(",")
+            #img_react = form["fb_img_reaction"].value().split(",")
+            #img_share = form["fb_img_share"].value().split(",")
             
             for i, item in enumerate(img_urls):
                 dir = os.path.join(
@@ -121,8 +121,8 @@ def get_fb_scrapper_data(request):
                     img=img_dir,
                     publish_date=timezone.now(),
                     status="p",
-                    likes=img_react[i],
-                    shares=img_share[i]
+                    #likes=img_react[i],
+                    #shares=img_share[i]
                 )
                 p.save()
                 
@@ -172,9 +172,6 @@ def scrapper_ajax(request):
             }
         
         print("json data dicchi ajax re ...", jd)
-        
-        # jd = get_fb_json_data(fb_input_data)
-        # print("baal koro?" if not jd else "maal ta hocche: ", jd)
         
         return JsonResponse(jd)
     
@@ -274,8 +271,18 @@ def scrap_data(api_ver="v2.11", page="", limit="100", fields=("full_picture",), 
     
     r = requests.get(url)
     json_data = json.loads(r.text)
-    print("returned JSON data from facebook: ", json_data)
+    #print("returned JSON data from facebook: ", ((json_data["data"]['shares']['count']) + int(json_data['reactions']['summary'][
+    # 'viewer_reaction'])))
+    # print(
+    #     # (json_data["data"]['shares']['count']),
+    #     json_data['data'][0]#['reactions']['summary']['viewer_reaction']['total_count']
+    # )
+    for k in json_data['data']:
+        share = (k['shares']['count']/10) if k.get('shares') else 0
+        likes = (k['reactions']['summary']['total_count']/100) if k['reactions']['summary']['total_count'] else 0
+        k['score'] = share+likes
     
+    print("fb json data", json_data)
     return json_data
 
 
