@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django',
     'main_app',
     'dashboard',
     'fb_scrapper',
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -70,7 +72,11 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                
                 'main_app.homepage_context_processors.header',
+                
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -147,4 +153,34 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # login
 LOGIN_URL = '/login'
+LOGOUT_URL = '/logout'
 LOGIN_REDIRECT_URL = '/dashboard/'
+
+# social auth
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_LOGIN_ERROR_URL = LOGIN_URL
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL
+SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+
+# fb
+# 9moja app
+# SOCIAL_AUTH_FACEBOOK_KEY = '1659905954049233'  # App ID
+# SOCIAL_AUTH_FACEBOOK_SECRET = 'f33c1cdc6c24f53587bb4466e1d17896'  # App Secret
+#testing
+SOCIAL_AUTH_FACEBOOK_KEY = '361495860961861'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = 'a9255cff275001c025d19f69924eef6e'  # App Secret
+SOCIAL_AUTH_TWITTER_KEY = 'dULiZCPsWc5u2OA086itWw2M2'  # App ID
+SOCIAL_AUTH_TWITTER_SECRET = 'Yr9xXLlda9NfaPKA4ghCqmD9ZyybcDSlMiNz55CFmrgo8IfGYb'  # App Secret
+
+# for dokku
+if DATABASE_URL:
+    SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('DOKKU_FB_APP_ID')
+    SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('DOKKU_FB_APP_SECRET')
+    SOCIAL_AUTH_TWITTER_KEY = os.environ.get('DOKKU_TW_APP_ID')
+    SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('DOKKU_TW_APP_SECRET')

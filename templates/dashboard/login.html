@@ -79,6 +79,13 @@
                         <button type="submit" class="btn btn-success" value="login">{% trans 'নিবেদন করুন' %}</button>
                     </form>
                 </div>
+            
+                <div class="social-auth">
+                    <div id="fb_login">
+                        <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a><br>
+                        <a href="{% url 'social:begin' 'twitter' %}">Login with Twitter</a><br>
+                    </div>
+                </div>
             </div>
         </div>
     

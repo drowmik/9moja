@@ -71,6 +71,13 @@
 {% endblock %}
 
 <div id="dashboard_container">
+    
+    {% if user.is_authenticated %}
+        <div class="container">
+            <h1>Hello {{ user.username }}</h1>
+        </div>
+    {% endif %}
+    
     {% block main_container %}{% endblock %}
 </div>
 

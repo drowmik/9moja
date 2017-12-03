@@ -35,6 +35,8 @@ urlpatterns = [
     # default auth logout, redirect to main page
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
     
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
+    
     url(r'^', include('main_app.urls', namespace="main_app")),
     
 ]
