@@ -11,9 +11,10 @@ from .models import FacebookAuth
 from .forms import FbScrapperAuthForm, FbScrapperDataForm
 from core.settings import MEDIA_ROOT
 from main_app.models import Post, Category, Categorize
+from .utils import *
 
 
-# @login_required
+@login_required
 def home(request):
     auth = FacebookAuth.objects.all()
     
@@ -24,6 +25,7 @@ def home(request):
     return render(request, templ, ctx)
 
 
+@login_required
 def scrapper(request):
     templ = 'fb_scrapper/scrapper.html'  # template name
     ctx = {  # context
@@ -31,7 +33,7 @@ def scrapper(request):
     return render(request, templ, ctx)
 
 
-# @login_required
+@login_required
 def get_fb_scrapper_auth(request):
     token_expired = True  # initially assumed no token
     
@@ -53,6 +55,7 @@ def get_fb_scrapper_auth(request):
         else:
             # need to check if token expired or not
             token_details = get_long_token(
+                FacebookAuth,
                 secret_id=saved_auth.app_secret_id,
                 app_id=saved_auth.app_id,
                 temp_token=saved_auth.token
@@ -71,6 +74,7 @@ def get_fb_scrapper_auth(request):
     return render(request, templ, ctx)
 
 
+@login_required
 def get_fb_scrapper_data(request):
     if request.method == 'POST':
         form = FbScrapperDataForm(request.POST)
@@ -89,8 +93,8 @@ def get_fb_scrapper_data(request):
             new_cat, created = Category.objects.update_or_create(name=cat_name)
             
             img_urls = form["selected_img"].value().split(",")
-            #img_react = form["fb_img_reaction"].value().split(",")
-            #img_share = form["fb_img_share"].value().split(",")
+            # img_react = form["fb_img_reaction"].value().split(",")
+            # img_share = form["fb_img_share"].value().split(",")
             
             for i, item in enumerate(img_urls):
                 dir = os.path.join(
@@ -121,8 +125,8 @@ def get_fb_scrapper_data(request):
                     img=img_dir,
                     publish_date=timezone.now(),
                     status="p",
-                    #likes=img_react[i],
-                    #shares=img_share[i]
+                    # likes=img_react[i],
+                    # shares=img_share[i]
                 )
                 p.save()
                 
@@ -152,6 +156,7 @@ def get_fb_scrapper_data(request):
     return render(request, templ, ctx)
 
 
+@login_required
 def scrapper_ajax(request):
     if request.method == 'GET':
         ajax_data = request.GET
@@ -160,6 +165,7 @@ def scrapper_ajax(request):
         # if any auth is saved just change the token
         if saved_auth:
             jd = get_long_token(
+                FacebookAuth,
                 secret_id=saved_auth.app_secret_id,
                 app_id=saved_auth.app_id,
                 temp_token=ajax_data.get("temp_token")
@@ -182,6 +188,7 @@ def scrapper_ajax(request):
     })
 
 
+@login_required
 def get_data_ajax(request):
     if request.method == 'GET':
         page_data = request.GET
@@ -219,81 +226,3 @@ def get_data_ajax(request):
     return JsonResponse(jd)
 
 
-def get_long_token(secret_id=None, app_id=None, temp_token=None):
-    fb_dict_input = {
-        "grant_type": "fb_exchange_token",
-        "client_id": app_id,
-        "client_secret": secret_id,
-        "fb_exchange_token": temp_token
-    }
-    
-    # url = "https://graph.facebook.com/oauth/access_token?
-    # grant_type=fb_exchange_token&client_id=1234&client_secret=a92e&fb_exchange_token=EAAFIx
-    
-    # generating url to get facebook longtime token
-    url_prefix = "https://graph.facebook.com/oauth/access_token?"
-    url = url_prefix + '&'.join("{}={}".format(key, fb_dict_input[key]) for key in fb_dict_input)
-    
-    # print("the URL is: ---", url)
-    
-    r = requests.get(url)
-    json_data = json.loads(r.text)
-    print("returned JSON data from facebook: ", json_data)
-    if not json_data.get('error'):
-        token = json_data.get('access_token')
-        update_fb_auth_model(token)
-    return json_data
-
-
-def scrap_data(api_ver="v2.11", page="", limit="100", fields=("full_picture",), token=""):
-    if not token:
-        # token/ auth error
-        return {
-            "error": {
-                "message": "No Auth/Token found"
-            }
-        }
-    
-    if int(limit) > 100:
-        return {
-            "error": {
-                "message": "Maximum limit is 100"
-            }
-        }
-    
-    # https://graph.facebook.com/v2.6/oyvai/posts/?fields=full_picture&limit=20&access_token=
-    # generating url to to scrap data from facebook
-    url_prefix = "https://graph.facebook.com/" + api_ver + "/" + page + "/posts/?fields="
-    url = url_prefix + ','.join("{}".format(f) for f in fields)
-    url += "&access_token=" + token + "&limit=" + limit
-    
-    # print("the URL is: -----", url)
-    
-    r = requests.get(url)
-    json_data = json.loads(r.text)
-    #print("returned JSON data from facebook: ", ((json_data["data"]['shares']['count']) + int(json_data['reactions']['summary'][
-    # 'viewer_reaction'])))
-    # print(
-    #     # (json_data["data"]['shares']['count']),
-    #     json_data['data'][0]#['reactions']['summary']['viewer_reaction']['total_count']
-    # )
-    for k in json_data['data']:
-        share = (k['shares']['count']/10) if k.get('shares') else 0
-        likes = (k['reactions']['summary']['total_count']/100) if k['reactions']['summary']['total_count'] else 0
-        k['score'] = share+likes
-    
-    print("fb json data", json_data)
-    return json_data
-
-
-def update_fb_auth_model(new_token):
-    old_obj = FacebookAuth.objects.first()  # save old data for later usage
-    FacebookAuth.objects.all().delete()  # no need previous auth tokens
-    
-    # new instance with new token
-    obj = FacebookAuth(
-        token=new_token,
-        app_id=old_obj.app_id,
-        app_secret_id=old_obj.app_secret_id
-    )
-    obj.save()
