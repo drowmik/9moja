@@ -22,7 +22,7 @@
     {% block google_tag_manager %}{% endblock %}
     {% endcomment %}
     
-    <title>{% block title %}Daaaaaashboard !!{% endblock title %}</title>
+    <title>{% block title %}{% trans 'ড্যাশবোর্ড' %}{% endblock title %}</title>
     
     {% comment %}
     <link rel="shortcut icon" href="{% static 'dashboard/img/favicon.ico' %}">
@@ -31,6 +31,7 @@
     {% block css %}
         
         <link rel="stylesheet" href="{% static 'main_app/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'main_app/css/custom.css' %}">
     
     {% endblock %}
     
@@ -53,20 +54,20 @@
     {% block ime %}{% endblock %}
 
 </head>
-<body class="{% block body_class %}{% endblock body_class %}" {% block body_attr %}{% endblock body_attr %}>
+<body class="bg-light {% block body_class %}{% endblock body_class %}" {% block body_attr %}{% endblock body_attr %}>
 
 
 {% block header %}
 
     <ol class="breadcrumb">
-        <li class="breadcrumb-item active">Dashboard</li>
+        <li class="breadcrumb-item active">{% trans 'ড্যাশবোর্ড' %}</li>
     </ol>
 
 {% endblock header %}
 
 {% block header_logout %}
     <div class="logout_btn">
-        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+        <a href="{% url 'logout' %}" class="btn btn-outline-danger">{% trans 'লগআউট' %}</a>
     </div>
 {% endblock %}
 
@@ -74,7 +75,14 @@
     
     {% if user.is_authenticated %}
         <div class="container">
-            <h1>Hello {{ user.username }}</h1>
+            <div class="d-flex">
+                <div class="mr-auto">
+                    <h1>Hello {{ user.username }}</h1>
+                </div>
+                <div class="align-self-center">
+                    <a class="btn btn-warning" href="{% url 'dashboard:create_post' %}">{% trans '+ নতুন পোস্ট দিন' %}</a>
+                </div>
+            </div>
         </div>
     {% endif %}
     
@@ -82,7 +90,9 @@
 </div>
 
 
-{% block footer %}{% endblock %}
+{% block footer %}
+    {% include 'snippets/footer.html' %}
+{% endblock %}
 
 
 {% block js %}

@@ -1,5 +1,7 @@
 {% extends 'dashboard/base.html' %}
 
+{% load i18n %}
+
 {% block extra_css %}
     <style type="text/css">
         img {
@@ -11,44 +13,50 @@
 
 {% block main_container %}
     <div class="container">
-        <table class="table text-center">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Title</th>
-                <th scope="col">File</th>
-                <th scope="col">User</th>
-                <th scope="col">Date</th>
-                <th scope="col">Category</th>
-                <th scope="col">view</th>
-                <th scope="col">edit</th>
-            </tr>
-            </thead>
-            <tbody>
-            
-            {% for post in posts %}
+        {% if posts %}
+            <table class="table text-center">
+                <thead>
                 <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ post.title }}</td>
-                    <td><img src="{{ post.img.url }}" alt="{{ post.title }}"></td>
-                    <td>{{ post.user|default:"-" }}</td>
-                    <td>{{ post.publish_date }}</td>
-                    <td>
-                        
-                        {% for cat in post.get_categories %}
-                            {{ cat.category }}{% if not forloop.last %},{% endif %}
-                        {% endfor %}
-                    
-                    </td>
-                    <td><a href="{{ post.get_absolute_url }}">view</a></td>
-                    <td><a href="{% url 'dashboard:edit_post' post.id %}">edit</a></td>
+                    <th scope="col">#</th>
+                    <th scope="col">{% trans 'শিরনাম' %}</th>
+                    <th scope="col">{% trans 'ফাইল' %}</th>
+                    {% if user.is_superuser %}
+                        <th scope="col">{% trans 'ব্যবহারকারী' %}</th>
+                    {% endif %}
+                    <th scope="col">{% trans 'তারিখ' %}</th>
+                    <th scope="col">{% trans 'বিভাগ' %}</th>
+                    <th scope="col">{% trans 'বদলান' %}</th>
                 </tr>
-            {% endfor %}
-            
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                
+                {% for post in posts %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
+                        <td><img src="{{ post.img.url }}" alt="{{ post.title }}"></td>
+                        {% if user.is_superuser %}
+                            <td>{{ post.user|default:"-" }}</td>
+                        {% endif %}
+                        <td>{{ post.publish_date }}</td>
+                        <td>
+                            
+                            {% for cat in post.get_categories %}
+                                {{ cat.category }}{% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                        
+                        </td>
+                        <td><a href="{% url 'dashboard:edit_post' post.id %}">{% trans 'বদলান' %}</a></td>
+                    </tr>
+                {% endfor %}
+                
+                </tbody>
+            </table>
+        {% else %}
         
-        <a href="{% url 'dashboard:create_post' %}">create post</a>
+        {% endif %}
+        
+        <a href="{% url 'dashboard:create_post' %}">{% trans 'নতুন মজা তৈরি করুন' %}</a>
     </div>
 
 {% endblock %}

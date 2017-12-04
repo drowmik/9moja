@@ -14,7 +14,10 @@ EDIT_OR_CREATE = {
 
 @login_required
 def home(request):
-    posts = Post.objects.order_by('-publish_date')
+    if request.user:
+        posts = Post.objects.filter(user=request.user)
+    else:
+        posts = Post.objects.order_by('-publish_date')
     
     templ = 'dashboard/index.html'  # template name
     ctx = {  # context

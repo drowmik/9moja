@@ -1,4 +1,4 @@
-.btn, .each-post,
+.each-post,
 [type="checkbox"] + label{
 	cursor: pointer
 }

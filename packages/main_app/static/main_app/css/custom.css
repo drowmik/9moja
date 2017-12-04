@@ -104,6 +104,13 @@ section.section {
     box-shadow: none !important;
 }
 
+footer{
+    min-height:60px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
 @media (min-width: 992px) {
     .top-social-ul > li {
         padding-left: 5px;
