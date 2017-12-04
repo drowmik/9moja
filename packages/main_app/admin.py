@@ -1,6 +1,13 @@
 from django.contrib import admin
-from .models import Post, Category, Categorize, STATUS_CHOICES
+from .models import UserActivity, Post, Category, Categorize, STATUS_CHOICES
 
+
+#admin.site.register(UserActivity)
+@admin.register(UserActivity)
+class UserActivityAdmin(admin.ModelAdmin):
+    list_display = ['user', 'uploads', 'likes', 'shares']
+    
+    #list_display_links = ['id', 'name']
 
 
 @admin.register(Post)

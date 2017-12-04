@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
-from main_app.models import Post, Category, Categorize
+from main_app.models import UserActivity, Post, Category, Categorize
 from .forms import EditPostForm, CreatePostForm
 from django.contrib.auth import views as auth_views
 
@@ -70,8 +70,14 @@ def create_post(request):
         form = CreatePostForm(request.POST, request.FILES)
         if form.is_valid():
             f = form.save(commit=False)
-            f.user = request.user
-            f.save()
+            
+            user = request.user
+            f.user = user
+            f.save()  # saving post
+            
+            activity, create = UserActivity.objects.get_or_create(user=user)
+            activity.uploads += 1
+            activity.save()
             
             # should've use form.form but I don't know how to use along with model form
             # saving category when creating post
@@ -83,7 +89,7 @@ def create_post(request):
             # and get the post by id
             form_post_id = max([x.id for x in Post.objects.filter(title=form['title'].value())])
             new_post = Post.objects.get(id=form_post_id)
-
+            
             # if no category found bound on that post
             if not new_post.get_categories():
                 cat, create = Category.objects.get_or_create(name="বিভাগহীন")
@@ -109,6 +115,8 @@ def create_post(request):
     return render(request, templ, ctx)
 
 
+# this will call only on a login required view,
+# so no need to check login
 def update_category(post, cat_list):
     cat_list = list(map(int, cat_list))  # all categories
     all_cat_list = list(Category.objects.values_list('id', flat=True))  # categories assigned for this post
