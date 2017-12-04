@@ -14,3 +14,11 @@ class CreatePostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'img']
+
+    def clean_title(self):
+        """
+        If somebody enters into this form ' hello ',
+        the extra whitespace will be stripped.
+        but not space between character
+        """
+        return self.cleaned_data.get('title', '').rstrip().lstrip()

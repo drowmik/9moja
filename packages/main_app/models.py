@@ -1,29 +1,8 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth import get_user_model
 from django.urls import reverse
-from django.utils import six
-from django.utils.functional import keep_lazy
-from django.utils.safestring import SafeText, mark_safe
 from django.db.models.signals import post_save
-import re, unicodedata, string
-
-STATUS_CHOICES = (
-    ('p', 'Published'),
-    ('u', 'Unpublished'),
-    ('a', 'Archived'),
-)
-
-User = get_user_model()
-
-
-# unicode allowed
-@keep_lazy(six.text_type, SafeText)
-def custom_slugify(value):
-    value = unicodedata.normalize('NFKC', value)
-    punc = set(string.punctuation)  # set of punctuations
-    v = ''.join(ch for ch in value if ch not in punc)  # remove punctuations first
-    return mark_safe(re.sub(r'[-\s]+', '-', v, flags=re.U))  # slugify including different language
+from .utils import *
 
 
 class UserActivity(models.Model):
@@ -44,6 +23,12 @@ class UserActivity(models.Model):
 
 
 def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Creating Instance of UserActivity when a new user Created
+    Should be used in signals
+    But not working
+    I left it for later use
+    """
     if created:
         UserActivity.objects.create(user=instance)
 

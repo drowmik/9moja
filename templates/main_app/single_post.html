@@ -6,6 +6,15 @@
         <div class="row">
             <div class="col">
                 <h1>{{ post.title }}</h1>
+                <ul class="nav">
+                    
+                    {% for cat in post.get_categories %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ cat.category.get_absolute_url }}">{{ cat.category }}</a>
+                        </li>
+                    {% endfor %}
+                
+                </ul>
                 <img src="{{ media_url }}" alt="{{ post.slug }}">
             </div>
         </div>

@@ -42,7 +42,7 @@
                         <td>
                             
                             {% for cat in post.get_categories %}
-                                {{ cat.category }}{% if not forloop.last %},{% endif %}
+                                <a href="{{ cat.category.get_absolute_url }}">{{ cat.category }}</a>{% if not forloop.last %},{% endif %}
                             {% endfor %}
                         
                         </td>
