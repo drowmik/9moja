@@ -43,7 +43,15 @@ INSTALLED_APPS = [
     'main_app',
     'dashboard',
     'fb_scrapper',
+    
+    #comment
+    'django.contrib.sites',
+    'django_comments',
+    
 ]
+
+# comment
+SITE_ID = 10
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

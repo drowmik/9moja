@@ -1,5 +1,7 @@
 {% extends 'main_app/base.html' %}
 
+{% load comments i18n %}
+
 
 {% block main_container %}
     <div class="container">
@@ -16,6 +18,63 @@
                 
                 </ul>
                 <img src="{{ media_url }}" alt="{{ post.slug }}">
+            </div>
+        </div>
+        
+        
+        <div class="row">
+            <div class="col">
+                
+                
+                {% get_comment_count for main_app.post post.id as comment_count %}
+                <p>{{ comment_count }} comments</p>
+                
+                {% get_comment_list for main_app.post post.id as comment_list %}
+                {% for comment in comment_list %}
+                    <div class="row">
+                        <div class="col">{{ comment.comment }}</div>
+                        <div class="col-12">
+                            <p class="mb-0">{{ comment.user_name }}</p>
+                            <p class="mb-0 font-italic">{{ comment.submit_date }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                {% endfor %}
+                
+                
+                
+                
+                {% get_comment_form for main_app.post post.id as form %}
+                <!-- A context variable called form is created with the necessary hidden
+                fields, timestamps and security hashes -->
+                
+                <form action="{% comment_form_target %}" method="post">
+                    
+                    {% csrf_token %}
+                    
+                    <input type="hidden" name="{{ form.content_type.name }}" value="main_app.post">
+                    <input type="hidden" name="{{ form.object_pk.name }}" value="{{ post.id }}">
+                    <input type="hidden" name="{{ form.security_hash.name }}" value="{{ form.security_hash.value }}">
+                    <input type="hidden" name="{{ form.timestamp.name }}" value="{{ form.timestamp.value }}">
+                    <input type="hidden" name="{{ form.name.name }}" value="{{ user.username }}">
+                    
+                    <div class="form-group">
+                        <label for="{{ form.email.name }}">{% trans 'ই-মেইল' %}</label>
+                        <input class="form-control" type="email" name="{{ form.email.name }}" value="{{ user.email }}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.comment.name }}">{% trans 'মন্তব্য' %}</label>
+                        <textarea
+                                class="form-control"
+                                id="{{ form.comment.name }}"
+                                name="{{ form.comment.name }}"
+                                placeholder="{% trans 'আপনার মূল্যবান মন্তব্য দিন' %}"></textarea>
+                    </div>
+                    
+                    <input type="submit" name="submit" value="Post" class="btn btn-primary">
+                </form>
+            
+            
             </div>
         </div>
     </div>

@@ -1,6 +1,6 @@
 {% extends 'main_app/base.html' %}
 
-{% load i18n %}
+{% load i18n comments %}
 
 {% block main_container %}
     
@@ -48,12 +48,13 @@
                                         <a href="javascript:void(0)" class="text-secondary">
                                             <span>{{ post.likes }}{% trans " পছন্দ" %}</span>
                                         </a>
-                                        <span>.</span>
+                                        {% comment %}<span>.</span>
                                         <a href="javascript:void(0)" class="text-secondary">
                                             <span>{{ post.shares }}{% trans " বার শেয়ার" %}</span>
-                                        </a>
-                                        {% comment %}<span>.</span>
-                                        <a href="#" class="text-secondary"><span>{% trans "৭৮৩ টি বক্তব্য" %}</span></a>{% endcomment %}
+                                        </a>{% endcomment %}
+                                        <span>.</span>
+                                        {% get_comment_count for main_app.post post.id as comment_count %}
+                                        <a href="#" class="text-secondary"><span>{{ comment_count }}{% trans " টি বক্তব্য" %}</span></a>
                                     </p>
                                     
                                     <ul class="nav article-actions">

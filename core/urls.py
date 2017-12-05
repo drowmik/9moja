@@ -37,6 +37,8 @@ urlpatterns = [
     
     url(r'^oauth/', include('social_django.urls', namespace='social')),
     
+    url(r'^comments/', include('django_comments.urls')),
+    
     url(r'^', include('main_app.urls', namespace="main_app")),
     
 ]
