@@ -1,8 +1,11 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 from django.http import Http404
-from .models import Post, Category
+from .models import Post, Category, UserExtended, UserPostRelation
 from .utils import *
+from django.http import JsonResponse
+
+# import json
 
 # multi used variables
 categories = Category.objects.all()  # limited
@@ -31,6 +34,20 @@ def index(request):
         # If page is not an integer, deliver first page.
         latest_posts = p.page(1)
         page = 1
+
+    if request.user.is_authenticated():
+        """
+        if logged in user
+        liked post will be marked in homepage
+        """
+        user = UserExtended.objects.get(user=request.user)
+        for p in latest_posts:
+            try:
+                p.have_like = "1" if UserPostRelation.objects.get(user=user, post=p) else "0"
+            except:
+                p.have_like = "0"
+    
+    #[print(x) for x in latest_posts]
     
     showing_item = 5
     extra = 2
@@ -120,3 +137,38 @@ def search(request):
         "err": err
     }
     return render(request, templ, ctx)
+
+
+def like_post(request):
+    if request.method == 'GET':
+        ajax_data = request.GET
+        pk = ajax_data.get("post_id")
+        jd = {}
+        
+        post = Post.objects.get(id=pk)
+        user = UserExtended.objects.get(user=request.user)
+        if ajax_data.get("is_liked") == "1":
+            # dislike
+            liking_post(user, post, UserPostRelation, False)
+            jd["is_liked"] = "0"
+        elif ajax_data.get("is_liked") == "0":
+            # like
+            liking_post(user, post, UserPostRelation, True)
+            jd["is_liked"] = "1"
+        else:
+            # empty response
+            # old value won't change
+            jd["is_liked"] = ajax_data.get("is_liked")
+            return JsonResponse(jd)
+        
+        #jd["likes"] = post.likes
+        
+        print(jd)
+        
+        return JsonResponse(jd)
+    
+    return JsonResponse({
+        "error": {
+            "message": "Unexpected Error"
+        }
+    })

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
-from main_app.models import UserActivity, Post, Category, Categorize
+from main_app.models import UserExtended, Post, Category, Categorize
 from .forms import EditPostForm, CreatePostForm
 from django.contrib.auth import views as auth_views
 from .utils import *
@@ -70,9 +70,7 @@ def create_post(request):
             f.user = user
             f.save()  # saving post
             
-            activity, create = UserActivity.objects.get_or_create(user=user)
-            activity.uploads += 1
-            activity.save()
+            upload_post(UserExtended, user)
             
             # should've use form.form but I don't know how to use along with model form
             # saving category when creating post
@@ -86,16 +84,24 @@ def create_post(request):
             new_post = Post.objects.get(id=form_post_id)
             
             # if no category found bound on that post
-            if not new_post.get_categories():
+            is_cat = False
+            for x in request.POST:
+                if x[:4] == cat_prefix:
+                    is_cat = True
+                    continue
+            
+            if is_cat:
+                [Categorize.objects.update_or_create(
+                    post=new_post,
+                    category=Category.objects.get(id=int(k[4:])),
+                ) for k in request.POST if k[:4] == cat_prefix]
+            else:
                 cat, create = Category.objects.get_or_create(name="বিভাগহীন")
                 Categorize.objects.update_or_create(
                     post=new_post,
                     category=cat,
                 )
-            [Categorize.objects.update_or_create(
-                post=new_post,
-                category=Category.objects.get(id=int(k[4:])),
-            ) for k in request.POST if k[:4] == cat_prefix]
+            
             return HttpResponseRedirect('/dashboard/')
     else:
         form = CreatePostForm()

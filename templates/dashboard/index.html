@@ -23,6 +23,7 @@
                     {% if user.is_superuser %}
                         <th scope="col">{% trans 'ব্যবহারকারী' %}</th>
                     {% endif %}
+                    <th scope="col">{% trans 'পোস্টের অবস্থা' %}</th>
                     <th scope="col">{% trans 'তারিখ' %}</th>
                     <th scope="col">{% trans 'বিভাগ' %}</th>
                     <th scope="col">{% trans 'বদলান' %}</th>
@@ -38,6 +39,15 @@
                         {% if user.is_superuser %}
                             <td>{{ post.user|default:"-" }}</td>
                         {% endif %}
+                        <td>
+                            {% if post.status == 'u' %}
+                                <span class="text-warning">{% trans 'ঝুলে আছে' %}</span>
+                            {% elif post.status == 'p' %}
+                                <span class="text-success">{% trans 'পাবলিশড' %}</span>
+                            {% else %}
+                                <span class="text-danger">{% trans 'দুষ্টু পোস্ট' %}</span>
+                            {% endif %}
+                        </td>
                         <td>{{ post.publish_date }}</td>
                         <td>
                             

@@ -5,37 +5,6 @@ from django.db.models.signals import post_save
 from .utils import *
 
 
-class UserActivity(models.Model):
-    user = models.ForeignKey(
-        User,
-        unique=True,
-        on_delete=models.CASCADE
-    )
-    
-    likes = models.IntegerField(default=0)
-    
-    shares = models.IntegerField(default=0)
-    
-    uploads = models.IntegerField(default=0)
-    
-    def __str__(self):
-        return self.user.username
-
-
-def create_user_profile(sender, instance, created, **kwargs):
-    """
-    Creating Instance of UserActivity when a new user Created
-    Should be used in signals
-    But not working
-    I left it for later use
-    """
-    if created:
-        UserActivity.objects.create(user=instance)
-
-
-post_save.connect(create_user_profile, sender=User)
-
-
 class Post(models.Model):
     user = models.ForeignKey(
         User,
@@ -138,3 +107,66 @@ class Categorize(models.Model):
     def __str__(self):
         data = {'category': self.category, 'post': self.post}
         return "{category} : {post}".format(**data)
+
+
+class UserExtended(models.Model):
+    user = models.ForeignKey(
+        User,
+        unique=True,
+        on_delete=models.CASCADE
+    )
+    
+    likes = models.IntegerField(default=0)
+    
+    shares = models.IntegerField(default=0)
+    
+    uploads = models.IntegerField(default=0)
+    
+    liked_post = models.ManyToManyField(
+        'main_app.Post',
+        through='UserPostRelation',
+        through_fields=(
+            'user',
+            'post',
+        ),
+    )
+    
+    def __str__(self):
+        return self.user.username
+    
+    def get_liked_post(self):
+        """
+        :return: list of liked post
+        """
+        return [x.post for x in self.userpostrelation_set.all()]
+
+
+# UserExtended function
+def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Creating Instance of UserExtended when a new user Created
+    Should be used in signals
+    But not working
+    I left it for later use
+    """
+    if created:
+        UserExtended.objects.create(user=instance)
+
+
+post_save.connect(create_user_profile, sender=User)  # UserExtended function end
+
+
+class UserPostRelation(models.Model):
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE
+    )
+    
+    user = models.ForeignKey(
+        UserExtended,
+        on_delete=models.CASCADE
+    )
+    
+    def __str__(self):
+        data = {'user': self.user, 'post': self.post}
+        return "{user} : {post}".format(**data)

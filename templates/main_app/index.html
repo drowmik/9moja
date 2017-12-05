@@ -20,35 +20,47 @@
                         
                         {% for post in posts %}
                             <article class="card mb-3 bg-light">
-                                <a href="{{ post.get_absolute_url }}" class="d-block article-link-media">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col-1 d-flex">
+                                            <div class="align-self-center border border-dark rounded-circle user-img bg-warning">
+                                                <i class="fa fa-user-o"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-11 d-flex">
+                                            <div class="align-self-center">
+                                                <h6 class="card-subtitle mb-2 text-muted d-inline-block">{{ post.publish_date }}</h6>
+                                                <h4 class="card-title mb-0">{{ post.user.username|default:"অশরীরী আত্মা" }}</h4></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {# liked will be showd from db #}
+                                <button type="button" class="d-block article-media">
                                     <img src="{{ post.img.url }}" alt="{{ post.title }}" class="w-100"/>
-                                </a>
+                                </button>
                                 <div class="card-footer mt-3">
                                     <a href="{{ post.get_absolute_url }}" class="d-block article-link-title">
                                         <h4 class="article-title">{{ post.title }}</h4>
                                     </a>
                                     
                                     <p class="article-status">
-                                        <a href="#" class="text-secondary">
+                                        <a href="javascript:void(0)" class="text-secondary">
                                             <span>{{ post.likes }}{% trans " পছন্দ" %}</span>
                                         </a>
                                         <span>.</span>
-                                        <a href="#" class="text-secondary">
+                                        <a href="javascript:void(0)" class="text-secondary">
                                             <span>{{ post.shares }}{% trans " বার শেয়ার" %}</span>
                                         </a>
                                         {% comment %}<span>.</span>
                                         <a href="#" class="text-secondary"><span>{% trans "৭৮৩ টি বক্তব্য" %}</span></a>{% endcomment %}
                                     </p>
                                     
-                                    {% comment %}<ul class="nav article-actions">
+                                    <ul class="nav article-actions">
                                         <li>
-                                            <button class="btn btn-outline-secondary" type="button">
+                                            <button class="btn btn-outline-secondary like_btn" data-id="{{ post.id }}"
+                                                    data-liked="{{ post.have_like }}" type="button">
                                                 <i class="fa fa-heart"></i>
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <button class="btn btn-outline-secondary" type="button">
-                                                <i class="fa fa-times"></i>
                                             </button>
                                         </li>
                                         <li>
@@ -61,7 +73,7 @@
                                                 <i class="fa fa-share-square-o"></i>
                                             </button>
                                         </li>
-                                    </ul>{% endcomment %}
+                                    </ul>
                                 </div>
                             </article>
                         {% endfor %}
@@ -70,13 +82,13 @@
                     
                     <nav id="pagination">
                         <ul class="pagination">
-        
+                            
                             {% if start_end.start %}
                                 <li class="page-item">
                                     <a class="page-link" href="?page=1">Start</a>
                                 </li>
                             {% endif %}
-        
+                            
                             {% for i in page_iter %}
                                 {% if i == '...' %}
                                     <li class="page-item disabled">
@@ -91,13 +103,13 @@
                                     </li>
                                 {% endif %}
                             {% endfor %}
-                        
+                            
                             {% if start_end.end %}
                                 <li class="page-item">
                                     <a class="page-link" href="?page={{ start_end.last_page }}">{{ start_end.last_page }}</a>
                                 </li>
                             {% endif %}
-
+                    
                     </nav>
                 </div>
                 
@@ -166,4 +178,62 @@
         </div>
     </section>
 
+{% endblock %}
+
+
+
+{% block extra_js %}
+    
+    {% if user.is_authenticated %}
+        <script type="text/javascript">
+            (function ($) {
+                var like_post = function (_t) {
+                    var post_id = _t.attr('data-id');
+                    var is_liked = _t.attr('data-liked');
+
+                    $.ajax({
+                        url: '{% url 'main_app:like_post' %}',
+                        method: 'GET',
+                        data: {
+                            "post_id": post_id,
+                            "is_liked": is_liked,
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data);
+                            _t.attr('data-liked', data['is_liked']);
+                            liked_color(data['is_liked'], _t)
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+                    });
+                };
+
+                var liked_color = function (_flag, _t) {
+                    if (parseInt(_flag) === 1) {
+                        _t.removeClass('btn-outline-secondary').addClass('btn-outline-danger')
+                    } else {
+                        _t.removeClass('btn-outline-danger').addClass('btn-outline-secondary')
+                    }
+                };
+
+                $('.article-media').click(function (e) {
+                    e.preventDefault();
+                    var lk_btn = $(this).parent('article').find('.like_btn');
+                    like_post(lk_btn);
+                });
+
+                $('.like_btn').click(function (e) {
+                    e.preventDefault();
+                    like_post($(this));
+                }).each(function () {
+                    var _this = $(this);
+                    liked_color(_this.attr('data-liked'), _this);
+                });
+
+            })(jQuery);
+        </script>
+    {% endif %}
+    
 {% endblock %}

@@ -39,3 +39,12 @@ def get_category_list_by_post(category_model, categorize_model, pst=None):
         })
     
     return cat_list
+
+
+def upload_post(user_model, user):
+    """
+    upload counter for user
+    """
+    activity = user_model.objects.get(user=user)
+    activity.uploads += 1
+    activity.save()

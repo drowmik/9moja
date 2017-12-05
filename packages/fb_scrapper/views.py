@@ -4,8 +4,7 @@ from django.contrib.auth.decorators import login_required
 from main_app.models import custom_slugify
 from django.urls import reverse
 from django.utils import timezone
-import requests, json, os
-import urllib.request
+import urllib.request, os
 
 from .models import FacebookAuth
 from .forms import FbScrapperAuthForm, FbScrapperDataForm

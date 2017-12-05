@@ -49,3 +49,30 @@ def long_pagination(current_page, total_pages, showing, extra, dots):
     
     return page_iter
 
+
+def liking_post(user, post, relation_model, is_liked=True):
+    """
+    when a user click like on a post, then this action will be triggered
+    """
+    try:
+        if is_liked:
+            r = relation_model(
+                user=user,
+                post=post
+            )
+            r.save()
+            post.likes += 1
+            user.likes += 1
+        else:
+            r = relation_model.objects.filter(
+                user=user,
+                post=post
+            )
+            r.delete()
+            post.likes -= 1
+            user.likes -= 1
+        user.save()
+        post.save()
+    except:
+        print("unexpected error!!")
+        return

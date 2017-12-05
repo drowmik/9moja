@@ -85,8 +85,8 @@ section.section {
     box-shadow: 2px 2px 10px 0px #0000003b;
 }
 
-.article-title {
-
+.user-img {
+    padding: 2px 7.15px;
 }
 
 .article-status {

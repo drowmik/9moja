@@ -10,6 +10,8 @@ urlpatterns = [
     
     url(r'^search/$', views.search, name='search'),
     
+    url(r'^like_post/$', views.like_post, name='like_post'),
+    
     # public page, so need a slug for better seo
     url(r'^(?P<pk>[\d]+)/(?P<slug>[-\S]+)/$', views.each_post, name='each_post'),
     
