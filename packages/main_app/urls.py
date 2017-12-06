@@ -1,12 +1,15 @@
 from django.conf.urls import url
 from . import views
 
-
 urlpatterns = [
     
     url(r'^$', views.index, name='index'),
     
     url(r'^coming-soon/$', views.coming_soon, name='coming_soon'),
+    
+    url(r'^popular-category/$', views.popular_categories, name='popular_categories'),
+    
+    url(r'^best_meme/$', views.best_meme, name='best_meme'),
     
     url(r'^search/$', views.search, name='search'),
     
@@ -16,5 +19,5 @@ urlpatterns = [
     url(r'^(?P<pk>[\d]+)/(?P<slug>[-\S]+)/$', views.each_post, name='each_post'),
     
     url(r'^(?P<slug>[-\S]+)/$', views.each_category, name='each_category'),
-    
+
 ]

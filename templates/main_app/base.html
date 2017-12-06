@@ -128,14 +128,12 @@
                                     <h3 class="mb-0" style="line-height: 1">{% trans "লোগো" %}</h3>
                                 </a>
                                 <ul class="nav">
-        
-                                    {% for p in hcp_dummy_pages %}
-                                        <li class="nav-item d-flex align-items-center">
-                                            <a class="nav-link" href="{% url 'main_app:coming_soon' %}">{{ p }}</a>
-                                        </li>
-                                    {% endfor %}
-    
-    
+                                    <li class="nav-item d-flex align-items-center">
+                                        <a class="nav-link" href="{% url 'main_app:best_meme' %}"
+                                            >{% trans 'জনপ্রিয় মিম' %}</a>
+                                        <a class="nav-link" href="{% url 'main_app:popular_categories' %}"
+                                            >{% trans 'জনপ্রিয় বিভাগ' %}</a>
+                                    </li>
                                     <li class="nav-item d-flex align-items-center">
                                         <a class="nav-link" href="{% url 'signup' %}">{% trans 'সাইন-আপ' %}</a>
                                     </li>

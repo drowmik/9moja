@@ -10,7 +10,7 @@ from django.http import JsonResponse
 
 # multi used variables
 categories = Category.objects.all()  # limited
-popular_posts = Post.objects.order_by('-likes')[:5]
+popular_posts = Post.objects.order_by('-likes')
 popular_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by('-like_count')
 
 
@@ -68,8 +68,8 @@ def index(request):
     templ = 'main_app/index.html'  # template name
     ctx = {  # context
         "posts": latest_posts,
-        "popular_posts": popular_posts,
-        "popular_cats": popular_cats,
+        "popular_posts": popular_posts[:5],
+        "popular_cats": popular_cats[:5],
         "start_end": start_end,
         "page_iter": pg_iter,
         "current_page": page,
@@ -120,8 +120,8 @@ def each_category(request, slug):
     ctx = {
         "is_category_template": True,
         "posts": posts_by_category,
-        "popular_posts": popular_posts,
-        "popular_cats": popular_cats,
+        "popular_posts": popular_posts[:5],
+        "popular_cats": popular_cats[:5],
         "pagination": p,
     }
     return render(request, templ, ctx)
@@ -190,3 +190,11 @@ def like_post(request):
             "message": "Unexpected Error"
         }
     })
+
+
+def popular_categories(request):
+    return each_category(request, popular_cats[0].slug)
+
+
+def best_meme(request):
+    return each_post(request, popular_posts[0].slug, popular_posts[0].id)
