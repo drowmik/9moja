@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.db.models import Sum
 from django.http import Http404
 from .models import Post, Category, UserExtended, UserPostRelation
 from .utils import *
@@ -9,6 +10,8 @@ from django.http import JsonResponse
 
 # multi used variables
 categories = Category.objects.all()  # limited
+popular_posts = Post.objects.order_by('-likes')[:5]
+popular_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by('-like_count')
 
 
 def index(request):
@@ -34,7 +37,7 @@ def index(request):
         # If page is not an integer, deliver first page.
         latest_posts = p.page(1)
         page = 1
-
+    
     if request.user.is_authenticated():
         """
         if logged in user
@@ -46,8 +49,6 @@ def index(request):
                 p.have_like = "1" if UserPostRelation.objects.get(user=user, post=p) else "0"
             except:
                 p.have_like = "0"
-    
-    #[print(x) for x in latest_posts]
     
     showing_item = 5
     extra = 2
@@ -67,7 +68,8 @@ def index(request):
     templ = 'main_app/index.html'  # template name
     ctx = {  # context
         "posts": latest_posts,
-        "categories": categories,
+        "popular_posts": popular_posts,
+        "popular_cats": popular_cats,
         "start_end": start_end,
         "page_iter": pg_iter,
         "current_page": page,
@@ -106,7 +108,8 @@ def each_category(request, slug):
     ctx = {
         "is_category_template": True,
         "posts": posts_by_category,
-        "categories": categories,
+        "popular_posts": popular_posts,
+        "popular_cats": popular_cats,
         "pagination": p,
     }
     return render(request, templ, ctx)
@@ -130,6 +133,9 @@ def search(request):
                 "cats": cats
             }
             err = None if posts or cats else "No result"
+        else:
+            # if no search keyword found, redirect to homepage
+            return redirect('/')
     
     templ = 'main_app/search.html'
     ctx = {
@@ -161,7 +167,7 @@ def like_post(request):
             jd["is_liked"] = ajax_data.get("is_liked")
             return JsonResponse(jd)
         
-        #jd["likes"] = post.likes
+        # jd["likes"] = post.likes
         
         print(jd)
         

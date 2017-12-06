@@ -8,11 +8,13 @@
         <div class="row">
             <div class="col">
                 <h1>{{ post.title }}</h1>
-                <ul class="nav">
+                <ul class="nav mb-2">
                     
                     {% for cat in post.get_categories %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ cat.category.get_absolute_url }}">{{ cat.category }}</a>
+                            <a
+                                class="btn btn-outline-primary btn-sm"
+                                href="{{ cat.category.get_absolute_url }}">{{ cat.category }}</a>
                         </li>
                     {% endfor %}
                 
@@ -25,7 +27,8 @@
         <div class="row">
             <div class="col">
                 
-                
+                <p>{{ post.likes }}{% trans ' টি পছন্দ' %}</p>
+            
                 {% get_comment_count for main_app.post post.id as comment_count %}
                 <p>{{ comment_count }} comments</p>
                 
@@ -48,7 +51,7 @@
                 <!-- A context variable called form is created with the necessary hidden
                 fields, timestamps and security hashes -->
                 
-                <form action="{% comment_form_target %}" method="post">
+                <form action="{% comment_form_target %}" method="post" id="comment">
                     
                     {% csrf_token %}
                     

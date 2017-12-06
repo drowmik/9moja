@@ -89,6 +89,10 @@ section.section {
     padding: 2px 7.15px;
 }
 
+.post-data{
+    font-size: 12px;
+}
+
 .article-status {
     font-size: 11px;
 }

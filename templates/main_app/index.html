@@ -29,13 +29,16 @@
                                         </div>
                                         <div class="col-11 d-flex">
                                             <div class="align-self-center">
-                                                <h6 class="card-subtitle mb-2 text-muted d-inline-block">{{ post.publish_date }}</h6>
-                                                <h4 class="card-title mb-0">{{ post.user.username|default:"অশরীরী আত্মা" }}</h4></div>
+                                                <p class="card-title mb-0 font-italic"
+                                                    >{{ post.user.username|default:"অশরীরী আত্মা" }}</p>
+                                                <p class="card-subtitle mb-0 text-muted d-inline-block post-data"
+                                                    >{{ post.publish_date }}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                {# liked will be showd from db #}
+                                {# liked/not-liked icon will be showed from db #}
                                 <button type="button" class="d-block article-media">
                                     <img src="{{ post.img.url }}" alt="{{ post.title }}" class="w-100"/>
                                 </button>
@@ -54,7 +57,9 @@
                                         </a>{% endcomment %}
                                         <span>.</span>
                                         {% get_comment_count for main_app.post post.id as comment_count %}
-                                        <a href="#" class="text-secondary"><span>{{ comment_count }}{% trans " টি বক্তব্য" %}</span></a>
+                                        <a href="{{ post.get_absolute_url }}#comment" class="text-secondary">
+                                            <span>{{ comment_count }}{% trans " টি বক্তব্য" %}</span>
+                                        </a>
                                     </p>
                                     
                                     <ul class="nav article-actions">
@@ -65,9 +70,9 @@
                                             </button>
                                         </li>
                                         <li>
-                                            <button class="btn btn-outline-secondary" type="button">
+                                            <a href="{{ post.get_absolute_url }}#comment" class="btn btn-outline-secondary">
                                                 <i class="fa fa-commenting-o"></i>
-                                            </button>
+                                            </a>
                                         </li>
                                         <li>
                                             <button class="btn btn-outline-secondary" type="button">
@@ -120,7 +125,8 @@
                             <h2>{% trans "জনপ্রিয় মিমগুলো" %}</h2>
                             <ul class="nav row justify-content-md-center">
                                 
-                                {% for post in posts|slice:":5" %}
+                                {% comment %}{% for post in posts|slice:":5" %}{% endcomment %}
+                                {% for post in popular_posts %}
                                     {% if post.img %}
                                         <li class="mb-4">
                                             <a href="{{ post.get_absolute_url }}" class="d-block">
@@ -144,7 +150,7 @@
                         <div class="popular-categories">
                             <h2>{% trans "জনপ্রিয় বিভাগগুলো" %}</h2>
                             
-                            {% for cat in categories %}
+                            {% for cat in popular_cats %}
                                 <a
                                         href="{{ cat.get_absolute_url }}"
                                         class="d-inline-block mb-2 border rounded border-secondary category-link"
