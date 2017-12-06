@@ -76,15 +76,20 @@
                                 <div class="form_field_error form-input-error">{{ form.password.errors|join:" " }}</div>
                             {% endif %}
                         </div>
+                    
                         <button type="submit" class="btn btn-success" value="login">{% trans 'নিবেদন করুন' %}</button>
+                    
+                        <div class="sign-up">
+                            <p class="mt-3 d-inline-block">{% trans 'একাউন্ট খুলতে সাইন-আপ করুন' %}</p>
+                            <a
+                                href="{% url 'signup' %}"
+                                class="btn btn-primary d-inline-block">{% trans 'সাইন-আপ' %}</a>
+                        </div>
                     </form>
                 </div>
             
                 <div class="social-auth">
-                    <div id="fb_login">
-                        <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a><br>
-                        <a href="{% url 'social:begin' 'twitter' %}">Login with Twitter</a><br>
-                    </div>
+                    {% include 'snippets/social-auth-links.html' %}
                 </div>
             </div>
         </div>

@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, JsonResponse
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from main_app.models import UserExtended, Post, Category, Categorize
-from .forms import EditPostForm, CreatePostForm
+from .forms import EditPostForm, CreatePostForm, SignUpForm
 from django.contrib.auth import views as auth_views
 from .utils import *
 
@@ -21,11 +22,32 @@ def home(request):
     return render(request, templ, ctx)
 
 
-def login(request, **kwargs):
+def log_in(request, **kwargs):
     if request.user.is_authenticated():
         return HttpResponseRedirect('/dashboard')
     else:
         return auth_views.login(request, **kwargs)
+
+
+
+def signup(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/dashboard')
+    else:
+        if request.method == 'POST':
+            form = SignUpForm(request.POST)
+            if form.is_valid():
+                form.save()
+                username = form.cleaned_data.get('username')
+                raw_password = form.cleaned_data.get('password1')
+                user = authenticate(username=username, password=raw_password)
+                login(request, user)
+                return redirect('/dashboard')
+            else:
+                form = SignUpForm()
+        else:
+             form = SignUpForm()
+        return render(request, 'dashboard/sign-up.html', {'form': form})
 
 
 @login_required

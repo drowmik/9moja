@@ -83,11 +83,13 @@
                         </ul>
                         <ul class="navbar-nav top-social-ul">
     
+                            {% comment %}
+                            {# social links will available later #}
                             {% for s in hcp_socials %}
                                 <li class="nav-item active">
                                     <a href="#" class="btn btn-outline-success"><i class="{{ s }}"></i></a>
                                 </li>
-                            {% endfor %}
+                            {% endfor %}{% endcomment %}
                             
                             <li class="nav-item active">
                                 <form class="form-inline my-2 my-lg-0" method="get" action="{% url 'main_app:search' %}">
@@ -134,6 +136,9 @@
                                     {% endfor %}
     
     
+                                    <li class="nav-item d-flex align-items-center">
+                                        <a class="nav-link" href="{% url 'signup' %}">{% trans 'সাইন-আপ' %}</a>
+                                    </li>
                                     <li class="nav-item d-flex align-items-center">
                                         <a class="nav-link" href="{% url 'login' %}">{% trans 'লগইন' %}</a>
                                     </li>

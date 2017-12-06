@@ -58,10 +58,15 @@
                     <input type="hidden" name="{{ form.timestamp.name }}" value="{{ form.timestamp.value }}">
                     <input type="hidden" name="{{ form.name.name }}" value="{{ user.username }}">
                     
-                    <div class="form-group">
-                        <label for="{{ form.email.name }}">{% trans 'ই-মেইল' %}</label>
-                        <input class="form-control" type="email" name="{{ form.email.name }}" value="{{ user.email }}"/>
-                    </div>
+                    {% if user.email %}
+                        <input type="hidden" name="{{ form.email.name }}" value="{{ user.email }}">
+                    {% else %}
+                        <div class="form-group">
+                            <label for="{{ form.email.name }}">{% trans 'ই-মেইল' %}</label>
+                            <input class="form-control" type="email" name="{{ form.email.name }}" value="{{ user.email }}"/>
+                        </div>
+                    {% endif %}
+                    
                     <div class="form-group">
                         <label for="{{ form.comment.name }}">{% trans 'মন্তব্য' %}</label>
                         <textarea

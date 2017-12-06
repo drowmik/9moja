@@ -29,8 +29,9 @@ urlpatterns = [
     
     url(r'^admin/', admin.site.urls),
 
-    # need condition (if logged in redirect to dashboard)
-    url(r'^login/$', dash_views.login, {'template_name': 'dashboard/login.html'}, name='login'),
+    url(r'^sign-up/$', dash_views.signup, name='signup'),
+
+    url(r'^login/$', dash_views.log_in, {'template_name': 'dashboard/login.html'}, name='login'),
     
     # default auth logout, redirect to main page
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
