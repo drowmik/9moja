@@ -13,8 +13,8 @@
                     {% for cat in post.get_categories %}
                         <li class="nav-item">
                             <a
-                                class="btn btn-outline-primary btn-sm"
-                                href="{{ cat.category.get_absolute_url }}">{{ cat.category }}</a>
+                                    class="btn btn-outline-primary btn-sm"
+                                    href="{{ cat.category.get_absolute_url }}">{{ cat.category }}</a>
                         </li>
                     {% endfor %}
                 
@@ -28,9 +28,47 @@
             <div class="col">
                 
                 <p>{{ post.likes }}{% trans ' টি পছন্দ' %}</p>
+                
             
+            
+            
+            
+                <div id="share" class="mb-2">
+                    
+                    <a href="{{ share_urls.gp }}"
+                       class="btn btn-outline-danger d-inline-block btn-sm gplus-share">
+                        {#<img src="{% static 'texteditor/tinymce/skins/lightgray/img/google-share.png' %}" alt="">#}
+                        {% trans 'গুগলে শেয়ার করুন' %}
+                    </a>
+                    
+                    <div class="d-inline-block twt">
+                        <a
+                            class="btn btn-outline-primary btn-sm twitter-share-button"
+                            href="{{ share_urls.twt }}">
+                            {% trans ' টুইট করুন' %}
+                        </a>
+                    </div>
+                    <iframe
+                            class="fb"
+                            src="{{ share_urls.fb }}"
+                            width="69"
+                            height="20"
+                            data-size="large"
+                            style="border:none;overflow:hidden"
+                            scrolling="no"
+                            frameborder="0"
+                            allowTransparency="true">
+                    </iframe>
+                </div>
+            
+            
+            
+            
+            
+            
+                
                 {% get_comment_count for main_app.post post.id as comment_count %}
-                <p>{{ comment_count }} comments</p>
+                <p>{{ comment_count }}{% trans ' টি পছন্দ' %}</p>
                 
                 {% get_comment_list for main_app.post post.id as comment_list %}
                 {% for comment in comment_list %}

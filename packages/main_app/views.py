@@ -78,15 +78,27 @@ def index(request):
 
 
 def each_post(request, slug, pk):
+    share_urls = {}
     try:
         post = Post.objects.get(id=pk)
+        
+        full_url = str(request.scheme) + "://" + str(request.get_host()) + str(post.get_absolute_url())
+
+        share_urls["fb"] = "https://www.facebook.com/plugins/share_button.php?href=" + \
+             full_url + \
+             "&layout=button_count&size=small&mobile_iframe=true&width=70&height=30&appId"
+        share_urls["twt"] = "http://twitter.com/share?text=visit www.9moja.com for more&url=" + \
+                            full_url +"&hashtags=মজা,নয়মজা,ফানি,9moja,funny,meme,bangla_meme"
+        share_urls["gp"] = "https://plus.google.com/share?url=" + full_url
+        
     except Post.DoesNotExist:
         raise Http404("This does not exist")
     
     templ = 'main_app/single_post.html'  # template name
     ctx = {  # context
         'post': post,
-        'media_url': post.img.url
+        'media_url': post.img.url,
+        'share_urls': share_urls,
     }
     return render(request, templ, ctx)
 
