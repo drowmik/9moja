@@ -48,6 +48,12 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django_comments',
     
+    #cronjob
+    "django_cron",
+]
+
+CRON_CLASSES = [
+    "fbs_cron.cron_fb.FbScrapperCron",
 ]
 
 # comment

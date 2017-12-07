@@ -1,5 +1,7 @@
 from django import forms
 from main_app.models import Post
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 
 class EditPostForm(forms.ModelForm):
@@ -20,11 +22,6 @@ class CreatePostForm(forms.ModelForm):
         but not space between character
         """
         return self.cleaned_data.get('title', '').rstrip().lstrip()
-
-
-
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 
 
 class SignUpForm(UserCreationForm):

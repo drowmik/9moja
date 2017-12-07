@@ -51,14 +51,13 @@
                         <input type="hidden" name="next" value="{{ next }}">
                         
                         <div class="form-group">
-                            <label for="{{ form.username.id_for_label }}">{% trans 'ইমেইল অথবা ইউজারনেম' %}</label>
+                            <label for="{{ form.username.id_for_label }}">{% trans 'ইউজারনেম' %}</label>
                             <input
                                     type="text" id="{{ form.username.id_for_label }}"
-                                    placeholder="{% trans 'ইমেইল অথবা ইউজারনেম দিন' %}"
+                                    placeholder="{% trans 'ইউজারনেম দিন' %}"
                                     class="form-control {% if form.username.errors %}invalid{% endif %} ms-form-control ms-round"
                                     name="{{ form.username.html_name }}"
-                                    value="{{ form.username.value|default:'' }}"
-                                    aria-describedby="emailHelp">
+                                    value="{{ form.username.value|default:'' }}">
                             {% if  form.username.errors %}
                                 <div class="form_field_error form-input-error">{{ form.username.errors|join:" " }}</div>
                             {% endif %}
