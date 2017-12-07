@@ -1,4 +1,5 @@
 import requests, json
+from .models import FacebookAuth
 
 
 def get_long_token(fb_auth_model, secret_id=None, app_id=None, temp_token=None):
@@ -60,20 +61,42 @@ def scrap_data(api_ver="v2.11", page="", limit="100", fields=("full_picture",), 
     url = url_prefix + ','.join("{}".format(f) for f in fields)
     url += "&access_token=" + token + "&limit=" + limit
     
-    print("the fb graph api URL is: ---", url)
-    
+    return get_data_by_url(url)
+
+
+def get_data_by_url(url):
     r = requests.get(url)
-    json_data = json.loads(r.text)
-    # print("returned JSON data from facebook: ", ((json_data["data"]['shares']['count']) + int(json_data['reactions']['summary'][
-    # 'viewer_reaction'])))
-    # print(
-    #     # (json_data["data"]['shares']['count']),
-    #     json_data['data'][0]#['reactions']['summary']['viewer_reaction']['total_count']
-    # )
-    for k in json_data['data']:
-        share = (k['shares']['count'] / 10) if k.get('shares') else 0
-        likes = (k['reactions']['summary']['total_count'] / 100) if k['reactions']['summary']['total_count'] else 0
-        k['score'] = share + likes
+    data = json.loads(r.text)
+    for k in data['data']:
+        if k['type'] == 'photo':
+            share = (k['shares']['count'] / 10) if k.get('shares') else 0
+            likes = (k['reactions']['summary']['total_count'] / 100) if k['reactions']['summary']['total_count'] else 0
+            k['score'] = share + likes
+        else:
+            # remove non photo objects
+            data['data'].remove(k)
     
-    print("fb json data", json_data)
-    return json_data
+    # sort the json data by the score
+    data['data'].sort(key=lambda d: d.get('score', 111))
+    
+    return data
+
+
+def get_data_by_page_name(page=None, direct_url=None):
+    if direct_url:
+        jd = get_data_by_url(direct_url)
+    else:
+        token = FacebookAuth.objects.first().token
+        fields = {
+            "full_picture",
+            "type",
+            "reactions.summary(true)",
+            "shares",
+        }
+        jd = scrap_data(
+            page=page,
+            fields=fields,
+            token=token
+        )
+    
+    return jd

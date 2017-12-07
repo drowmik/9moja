@@ -26,7 +26,7 @@ class FacebookData(models.Model):
         blank=True,
     )
     
-    # items scrapped from facebook (4 digit number
+    # items scrapped from facebook (4 digit number)
     media_file_counter = models.CharField(
         max_length=4,
         null=True,
@@ -35,3 +35,17 @@ class FacebookData(models.Model):
     
     def __str__(self):
         return self.page
+
+
+class ScrappedData(models.Model):
+    # facebook post id
+    post_id = models.CharField(
+        max_length=50,
+        unique=True,
+    )
+    
+    likes = models.IntegerField()
+    
+    shares = models.IntegerField()
+    
+    score = models.IntegerField()

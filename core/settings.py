@@ -56,6 +56,13 @@ CRON_CLASSES = [
     "fbs_cron.cron_fb.FbScrapperCron",
 ]
 
+# add fb page here
+FB_PAGE_SCRAP_FOR_CRON = [
+    'oyvai',
+    'Mr420.Funny',
+    'MojalosssNew',
+]
+
 # comment
 SITE_ID = 10
 
