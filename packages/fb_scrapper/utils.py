@@ -134,6 +134,26 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
         
         img_dir = os.path.join(timezone.now().date().isoformat(), slug + ".jpg")
         
+        if img_details:
+            # getting all post_id in an dict
+            # but each post_id is in tuple
+            # converting tuple into string
+            old_f = [''.join(t) for t in [x for x in ScrappedData.objects.all().values_list('post_id')]]
+            
+            # save only if the image is new
+            if img_details['id'][i] not in old_f:
+                f = ScrappedData(
+                    post_id=img_details['id'][i],
+                    shares=img_details['shares'][i],
+                    likes=img_details['likes'][i],
+                    score=img_details['score'][i],
+                )
+                f.save()
+            else:
+                return None
+        else:
+            return None
+        
         # download the image
         # scrapped data from facebook always jpg
         urllib.request.urlretrieve(item, os.path.join(dir, slug + ".jpg"))
@@ -147,15 +167,6 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
             status="p",
         )
         p.save()
-        if img_details:
-            # id should've checked not duplicated !! Important !!!!
-            f = ScrappedData(
-                post_id=img_details['id'][i],
-                shares=img_details['shares'][i],
-                likes=img_details['likes'][i],
-                score=img_details['score'][i],
-            )
-            f.save()
         
         new_cat, created = Category.objects.update_or_create(name=category_name)
         
