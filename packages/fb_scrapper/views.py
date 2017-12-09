@@ -3,13 +3,8 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from main_app.models import custom_slugify
 from django.urls import reverse
-from django.utils import timezone
-import urllib.request, os
 
-from .models import FacebookAuth
 from .forms import FbScrapperAuthForm, FbScrapperDataForm
-from core.settings import MEDIA_ROOT
-from main_app.models import Post, Category, Categorize
 from .utils import *
 
 
@@ -81,59 +76,11 @@ def get_fb_scrapper_data(request):
             form.save()
             cat_name = custom_slugify(value=form["name"].value())
             
-            # posts under this category for unique image name
-            try:
-                count = Categorize.objects.filter(
-                    category=Category.objects.get(name=cat_name)
-                ).__len__()
-            except:
-                count = 0
-            
-            new_cat, created = Category.objects.update_or_create(name=cat_name)
-            
             img_urls = form["selected_img"].value().split(",")
             # img_react = form["fb_img_reaction"].value().split(",")
             # img_share = form["fb_img_share"].value().split(",")
             
-            for i, item in enumerate(img_urls):
-                dir = os.path.join(
-                    MEDIA_ROOT,  # media/
-                    timezone.now().date().isoformat(),  # YYYY-MM-DD/
-                )  # directory string
-                
-                # create directory if not exists
-                if not os.path.exists(dir):
-                    os.makedirs(dir)
-                
-                # unique image name
-                if count:
-                    slug = cat_name + "-" + str(count + i)
-                else:
-                    slug = cat_name + "-" + str(i)
-                
-                img_dir = os.path.join(timezone.now().date().isoformat(), slug + ".jpg")
-                
-                # download the image
-                # scrapped data from facebook always jpg
-                urllib.request.urlretrieve(item, os.path.join(dir, slug + ".jpg"))
-                
-                # creating a post instance and save
-                p = Post(
-                    slug=slug,
-                    title=slug,
-                    img=img_dir,
-                    publish_date=timezone.now(),
-                    status="p",
-                    # likes=img_react[i],
-                    # shares=img_share[i]
-                )
-                p.save()
-                
-                # connecting post and category
-                Categorize.objects.update_or_create(
-                    post=p,
-                    category=Category.objects.get(id=new_cat.id),
-                )
+            save_fb_scrapper_all_img_by_url(img_urls, cat_name)
             
             return HttpResponseRedirect(reverse('main_app:each_category', args=[cat_name]))
     else:
@@ -223,5 +170,3 @@ def get_data_ajax(request):
         }
     
     return JsonResponse(jd)
-
-

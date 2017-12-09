@@ -57,11 +57,11 @@ CRON_CLASSES = [
 ]
 
 # add fb page here
-FB_PAGE_SCRAP_FOR_CRON = [
-    'oyvai',
-    'Mr420.Funny',
-    'MojalosssNew',
-]
+FB_PAGE_SCRAP_FOR_CRON = {
+    'oyvai': 'অয় ভাই',
+    'Mr420.Funny': 'মিঃ ৪২০',
+    'MojalosssNew': 'মজা লস',
+}
 
 # comment
 SITE_ID = 10

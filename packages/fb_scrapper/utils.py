@@ -1,5 +1,8 @@
-import requests, json
-from .models import FacebookAuth
+import urllib.request, requests, json, os
+from core.settings import MEDIA_ROOT
+from django.utils import timezone
+from main_app.models import Post, Category, Categorize
+from .models import FacebookAuth, ScrappedData
 
 
 def get_long_token(fb_auth_model, secret_id=None, app_id=None, temp_token=None):
@@ -69,8 +72,8 @@ def get_data_by_url(url):
     data = json.loads(r.text)
     for k in data['data']:
         if k['type'] == 'photo':
-            share = (k['shares']['count'] / 10) if k.get('shares') else 0
-            likes = (k['reactions']['summary']['total_count'] / 100) if k['reactions']['summary']['total_count'] else 0
+            share = (k.get('shares')['count'] / 10) if k.get('shares') else 0
+            likes = (k.get('reactions').get('summary')['total_count'] / 100) if k.get('reactions').get('summary')['total_count'] else 0
             k['score'] = share + likes
         else:
             # remove non photo objects
@@ -93,6 +96,8 @@ def get_data_by_page_name(page=None, direct_url=None):
             "reactions.summary(true)",
             "shares",
         }
+        
+        # default limit 100
         jd = scrap_data(
             page=page,
             fields=fields,
@@ -100,3 +105,62 @@ def get_data_by_page_name(page=None, direct_url=None):
         )
     
     return jd
+
+
+def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=None):
+    for i, item in enumerate(img_url_list):
+        dir = os.path.join(
+            MEDIA_ROOT,  # media/
+            timezone.now().date().isoformat(),  # YYYY-MM-DD/
+        )  # directory string
+        
+        # create directory if not exists
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+        
+        # posts under this category for unique image name
+        try:
+            count = Categorize.objects.filter(
+                category=Category.objects.get(name=category_name)
+            ).__len__()
+        except:
+            count = 0
+        
+        # unique image name
+        if count:
+            slug = category_name + "-" + str(count + i)
+        else:
+            slug = category_name + "-" + str(i)
+        
+        img_dir = os.path.join(timezone.now().date().isoformat(), slug + ".jpg")
+        
+        # download the image
+        # scrapped data from facebook always jpg
+        urllib.request.urlretrieve(item, os.path.join(dir, slug + ".jpg"))
+        
+        # creating a post instance and save
+        p = Post(
+            slug=slug,
+            title=slug,
+            img=img_dir,
+            publish_date=timezone.now(),
+            status="p",
+        )
+        p.save()
+        if img_details:
+            # id should've checked not duplicated !! Important !!!!
+            f = ScrappedData(
+                post_id=img_details['id'][i],
+                shares=img_details['shares'][i],
+                likes=img_details['likes'][i],
+                score=img_details['score'][i],
+            )
+            f.save()
+        
+        new_cat, created = Category.objects.update_or_create(name=category_name)
+        
+        # connecting post and category
+        Categorize.objects.update_or_create(
+            post=p,
+            category=Category.objects.get(id=new_cat.id),
+        )
