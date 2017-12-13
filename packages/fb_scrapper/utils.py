@@ -120,8 +120,9 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
         
         # posts under this category for unique image name
         try:
+            _cat, _c = Category.objects.get_or_create(name=category_name)
             count = Categorize.objects.filter(
-                category=Category.objects.get(name=category_name)
+                category=_cat
             ).__len__()
         except:
             count = 0
@@ -150,9 +151,9 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
                 )
                 f.save()
             else:
-                return None
+                print("img_details not in old f")
         else:
-            return None
+            print("no img_details")
         
         # download the image
         # scrapped data from facebook always jpg
