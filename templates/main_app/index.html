@@ -86,14 +86,80 @@
                     
                     </div>
                     
+                
+                
+                
+                
+                
+                
+                
+            {# pagination by debu #}
+            {% comment %}{% if per_page_objs.paginator.num_pages > 1 %}
+                <nav id="pagination">
+                    <ul class="pagination">
+            
+                    <li class="{% if not per_page_objs.has_previous %}disabled{% endif %}">
+                        <a {% if per_page_objs.has_previous %}
+                            href="{% url 'outgoing:campaign'  per_page_objs.previous_page_number %}"
+                        {% else %}
+                            href="javascript:void(0)"
+                        {% endif %}
+                            aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                
+                    <li class="{% if per_page_objs.number == 1 %}disabled{% endif %}">
+                        <a href="{% url 'outgoing:campaign' %}">Start</a>
+                    </li>
+            
+                    {% for i in page_range %}
+                        <li class="{% if per_page_objs.number == forloop.counter %}active{% endif %}">
+                            <a href="{% url 'outgoing:campaign'  forloop.counter %}">{{ forloop.counter }}</a>
+                        </li>
+                    {% endfor %}
+            
+                
+                    <li class="{% if per_page_objs.number == per_page_objs.paginator.num_pages %}disabled{% endif %}">
+                        <a href="{% url 'outgoing:campaign' per_page_objs.paginator.num_pages %}">End</a>
+                    </li>
+                
+                    <li class="{% if not per_page_objs.has_next %}disabled{% endif %}">
+                        <a {% if per_page_objs.has_next %}
+                            href="{% url 'outgoing:campaign' per_page_objs.next_page_number %}"
+                        {% else %}
+                            href="javascript:void(0)"
+                        {% endif %}
+                            aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    </ul>
+                </nav>
+            {% endcomment %}
+                
+                
+                
+                
+                
+                
+                
+                
+                {% if posts.paginator.num_pages > 1 %}
                     <nav id="pagination">
                         <ul class="pagination">
                             
-                            {% if start_end.start %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page=1">Start</a>
+                                
+                                    {% if posts.number == 1 %}
+                                        <span class="page-link bg-light text-secondary">{% trans 'প্রথম' %}</span>
+                                    {% else %}
+                                        <a class="page-link" href="?page=1">{% trans 'প্রথম' %}</a>
+                                    {% endif %}
+                                    
                                 </li>
-                            {% endif %}
+                            
                             
                             {% for i in page_iter %}
                                 {% if i == '...' %}
@@ -109,14 +175,20 @@
                                     </li>
                                 {% endif %}
                             {% endfor %}
-                            
-                            {% if start_end.end %}
+                        
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ start_end.last_page }}">{{ start_end.last_page }}</a>
+                                
+                                    {% if posts.number == posts.paginator.num_pages %}
+                                        <span class="page-link bg-light text-secondary">{% trans 'শেষ' %}</span>
+                                    {% else %}
+                                        <a class="page-link" href="?page={{ posts.paginator.num_pages }}">{% trans 'শেষ' %}</a>
+                                    {% endif %}
+                                    
                                 </li>
-                            {% endif %}
                         </ul>
                     </nav>
+                {% endif %}
+                
                 </div>
                 
                 <div class="col-md-3">

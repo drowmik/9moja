@@ -119,8 +119,9 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
             os.makedirs(dir)
         
         # posts under this category for unique image name
+        _cat, _c = Category.objects.get_or_create(name=category_name)
+        print(category_name)
         try:
-            _cat, _c = Category.objects.get_or_create(name=category_name)
             count = Categorize.objects.filter(
                 category=_cat
             ).__len__()
@@ -129,9 +130,9 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
         
         # unique image name
         if count:
-            slug = category_name + "-" + str(count + i)
+            slug = _cat.slug + "-" + str(count + i)
         else:
-            slug = category_name + "-" + str(i)
+            slug = _cat.slug + "-" + str(i)
         
         img_dir = os.path.join(timezone.now().date().isoformat(), slug + ".jpg")
         
@@ -169,10 +170,10 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
         )
         p.save()
         
-        new_cat, created = Category.objects.update_or_create(name=category_name)
+        #new_cat, created = Category.objects.update_or_create(name=category_name)
         
         # connecting post and category
         Categorize.objects.update_or_create(
             post=p,
-            category=Category.objects.get(id=new_cat.id),
+            category=Category.objects.get(id=_cat.id),
         )

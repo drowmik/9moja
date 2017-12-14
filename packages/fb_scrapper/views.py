@@ -82,7 +82,7 @@ def get_fb_scrapper_data(request):
             
             save_fb_scrapper_all_img_by_url(img_urls, cat_name)
             
-            return HttpResponseRedirect(reverse('main_app:each_category', args=[cat_name]))
+            return HttpResponseRedirect(reverse('main_app:each_category', args=[Category.objects.get(name=cat_name).slug]))
     else:
         if not FacebookAuth.objects.first():
             return HttpResponseRedirect('/fbs/scrapper-auth-form/')

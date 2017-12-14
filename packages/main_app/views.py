@@ -6,17 +6,17 @@ from .models import Post, Category, UserExtended, UserPostRelation
 from .utils import *
 from django.http import JsonResponse
 
-# import json
-
 # multi used variables
 categories = Category.objects.all()  # limited
 popular_posts = Post.objects.order_by('-likes')
 popular_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by('-like_count')
+pagination_item = 5
+post_per_page = 5
 
 
 def index(request):
     posts = Post.objects.order_by('-publish_date').filter(status="p")  # showing only published posts
-    p = Paginator(posts, 10)  # show 10 post per page
+    p = Paginator(posts, post_per_page)
     total_pages = p.num_pages  # or last page
     
     # pagination
@@ -50,27 +50,18 @@ def index(request):
             except:
                 p.have_like = "0"
     
-    showing_item = 5
-    extra = 2
     pg_iter = long_pagination(
         current_page=page,
         total_pages=total_pages,
-        showing=showing_item,
-        extra=2,
-        dots='...'
+        showing=pagination_item,
+        extra=int((pagination_item - 1) / 2)  # extra page link before and after active page
     )
     
-    start_end = {
-        "start": True if page > extra + 1 else False,  # start button appears
-        "end": True if (page + extra) < total_pages else False,  # end button appears
-        "last_page": total_pages,
-    }
     templ = 'main_app/index.html'  # template name
     ctx = {  # context
         "posts": latest_posts,
         "popular_posts": popular_posts[:5],
         "popular_cats": popular_cats[:5],
-        "start_end": start_end,
         "page_iter": pg_iter,
         "current_page": page,
     }
@@ -83,14 +74,14 @@ def each_post(request, slug, pk):
         post = Post.objects.get(id=pk)
         
         full_url = str(request.scheme) + "://" + str(request.get_host()) + str(post.get_absolute_url())
-
-        share_urls["fb"] = "https://www.facebook.com/plugins/share_button.php?href=" + \
-             full_url + \
-             "&layout=button_count&size=small&mobile_iframe=true&width=70&height=30&appId"
-        share_urls["twt"] = "http://twitter.com/share?text=visit www.9moja.com for more&url=" + \
-                            full_url +"&hashtags=মজা,নয়মজা,ফানি,9moja,funny,meme,bangla_meme"
-        share_urls["gp"] = "https://plus.google.com/share?url=" + full_url
         
+        share_urls["fb"] = "https://www.facebook.com/plugins/share_button.php?href=" + \
+                           full_url + \
+                           "&layout=button_count&size=small&mobile_iframe=true&width=70&height=30&appId"
+        share_urls["twt"] = "http://twitter.com/share?text=visit www.9moja.com for more&url=" + \
+                            full_url + "&hashtags=মজা,নয়মজা,ফানি,9moja,funny,meme,bangla_meme"
+        share_urls["gp"] = "https://plus.google.com/share?url=" + full_url
+    
     except Post.DoesNotExist:
         raise Http404("This does not exist")
     
@@ -114,7 +105,7 @@ def each_category(request, slug):
         p = Paginator(posts_by_category, 10)
     
     except Category.DoesNotExist:
-        raise Http404("This type of category does not exist!")
+        raise Http404(" দুঃখিত, এই নামের বিভাগ খুঁজে পাওয়া যায় নি!")
     
     templ = 'main_app/index.html'
     ctx = {
