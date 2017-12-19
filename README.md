@@ -8,7 +8,7 @@
 go to project directory/processors/ ,
 run _create_db.sh_
 
-### Set up cron: ###
+### cron test: ###
 
 go to project directory/processors/ ,
 run _start_cron.sh_
@@ -30,7 +30,7 @@ run _start_cron.sh_
   * `TOP_POST_NUMBER`
     * facebook top post (according to share and like) number
    
-### add cron job task ###
+### setup cron job task ###
 * chmod 755 <project_directory>/processors/start_cron.sh
 * open terminal and type `crontab -e`
 * add this line at the very bottom `0 */8 * * * <project_directory>/processors/start_cron.sh` (this will run every 8 hours)
