@@ -68,7 +68,11 @@ def scrap_data(api_ver="v2.11", page="", limit="100", fields=("full_picture",), 
 
 
 def get_data_by_url(url):
-    r = requests.get(url)
+    try:
+        r = requests.get(url)
+    except:
+        print("fucking invalid url... !!")
+        return
     data = json.loads(r.text)
     for k in data['data']:
         if k['type'] == 'photo':
@@ -120,7 +124,7 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
         
         # posts under this category for unique image name
         _cat, _c = Category.objects.get_or_create(name=category_name)
-        print(category_name)
+        # print(category_name)
         try:
             count = Categorize.objects.filter(
                 category=_cat
@@ -152,7 +156,7 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
                 )
                 f.save()
             else:
-                print("img_details not in old f")
+                print("this image was saved already")
         else:
             print("no img_details")
         
@@ -170,7 +174,7 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
         )
         p.save()
         
-        #new_cat, created = Category.objects.update_or_create(name=category_name)
+        # new_cat, created = Category.objects.update_or_create(name=category_name)
         
         # connecting post and category
         Categorize.objects.update_or_create(

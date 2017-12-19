@@ -178,7 +178,7 @@ def like_post(request):
         
         # jd["likes"] = post.likes
         
-        print(jd)
+        # print(jd)
         
         return JsonResponse(jd)
     

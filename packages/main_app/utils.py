@@ -39,11 +39,6 @@ def long_pagination(current_page, total_pages, showing, is_not_mobile=True):
     
     dots = '...'
     extra = int((showing - 1) / 2)  # extra page link before and after active page,
-
-    print("total_pages", total_pages)
-    print("showing", showing)
-    print("current_page", current_page)
-    print("extra", extra)
     
     if total_pages <= showing or current_page <= (extra + 1):
         # show all pages
@@ -92,5 +87,5 @@ def liking_post(user, post, relation_model, is_liked=True):
         user.save()
         post.save()
     except:
-        print("unexpected error!!")
+        print("unexpected error!! (main_app/utils.py - 90)")
         return

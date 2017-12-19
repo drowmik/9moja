@@ -143,7 +143,7 @@ def add_category(request):  # add new category and build relation with the post
     data = {}
     if request.method == 'POST':
         new_cat_name = request.POST["new_cat"]
-        print(request.POST)
+        # print(request.POST)
         # check if duplicate category
         all_cat_name = list(Category.objects.values_list('name', flat=True))
         if new_cat_name in all_cat_name:
