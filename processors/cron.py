@@ -3,8 +3,8 @@ import sys
 import signal
 import traceback
 
-DATA_MINING_PAGE_DEPTH = 3  # facebook data mining depth page number (100x value)
-TOP_POST_NUMBER = 2  # top post for each 100
+DATA_MINING_PAGE_DEPTH = 5  # facebook data mining depth page number (100x value)
+TOP_POST_NUMBER = 20  # top post for each 100
 
 DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(DIR)
