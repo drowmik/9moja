@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import FacebookAuth, FacebookData, ScrappedData
+from .models import FacebookAuth, FacebookData, ScrappedData, SocialAuth
 
 
 @admin.register(FacebookAuth)
@@ -19,3 +19,10 @@ class FacebookDataAdmin(admin.ModelAdmin):
 @admin.register(ScrappedData)
 class ScrappedDataAdmin(admin.ModelAdmin):
     list_display = ['id', 'post_id', 'likes', 'shares', 'score']
+
+
+@admin.register(SocialAuth)
+class SocialAuthAdmin(admin.ModelAdmin):
+    list_display = ['name', 'app_id', 'secret_id']
+    
+    list_display_links = ['name']

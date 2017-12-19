@@ -67,6 +67,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    # social auth by debu
+    'fb_scrapper.middleware.SocialAuthMiddleware',
+    
+    # social_django
     'social_django.middleware.SocialAuthExceptionMiddleware',
 
     # mobile device detection
