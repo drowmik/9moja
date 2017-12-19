@@ -29,7 +29,7 @@ def custom_slugify(value):
     return mark_safe(re.sub(r'[-\s]+', '-', v, flags=re.U))  # slugify including different language
 
 
-def long_pagination(current_page, total_pages, showing, extra):
+def long_pagination(current_page, total_pages, showing, is_not_mobile=True):
     """
         prev * * a * * next
         1. Total pages <= showing: show all pages
@@ -38,24 +38,32 @@ def long_pagination(current_page, total_pages, showing, extra):
     """
     
     dots = '...'
+    extra = int((showing - 1) / 2)  # extra page link before and after active page,
+
+    print("total_pages", total_pages)
+    print("showing", showing)
+    print("current_page", current_page)
+    print("extra", extra)
     
     if total_pages <= showing or current_page <= (extra + 1):
         # show all pages
         page_iter = [x for x in range(1, min(total_pages + 1, showing + 1))]
-        if current_page <= (extra + 1) and total_pages >= showing:
+        if is_not_mobile and (current_page <= (extra + 1) and total_pages >= showing):
             # show dots after pagination
             page_iter.append(dots)
     
     # have pages before and after
     elif (current_page + extra) < total_pages:
-        page_iter = [x for x in range(current_page - extra, current_page + 3)]
-        page_iter.insert(0, dots)
-        page_iter.append(dots)
+        page_iter = [x for x in range(current_page - extra, current_page + extra + 1)]
+        if is_not_mobile:
+            page_iter.insert(0, dots)
+            page_iter.append(dots)
     
     # only have pages before
     else:
         page_iter = [x for x in range(total_pages - showing + 1, total_pages + 1)]
-        page_iter.insert(0, dots)
+        if is_not_mobile:
+            page_iter.insert(0, dots)
     
     return page_iter
 

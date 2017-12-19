@@ -10,12 +10,18 @@ from django.http import JsonResponse
 categories = Category.objects.all()  # limited
 popular_posts = Post.objects.order_by('-likes')
 popular_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by('-like_count')
-pagination_item = 5
-post_per_page = 5
 
 
 def index(request):
     posts = Post.objects.order_by('-publish_date').filter(status="p")  # showing only published posts
+    
+    if request.is_mobile:
+        pagination_item = 3 # page number showing in pagination
+        post_per_page = 1
+    else:
+        pagination_item = 5 # page number showing in pagination
+        post_per_page = 5
+    
     p = Paginator(posts, post_per_page)
     total_pages = p.num_pages  # or last page
     
@@ -53,8 +59,8 @@ def index(request):
     pg_iter = long_pagination(
         current_page=page,
         total_pages=total_pages,
-        showing=pagination_item,
-        extra=int((pagination_item - 1) / 2)  # extra page link before and after active page
+        showing=pagination_item,    # page number showing in pagination
+        is_not_mobile=not request.is_mobile
     )
     
     templ = 'main_app/index.html'  # template name

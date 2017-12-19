@@ -47,13 +47,6 @@ INSTALLED_APPS = [
     #comment
     'django.contrib.sites',
     'django_comments',
-    
-    #cronjob
-    "django_cron",
-]
-
-CRON_CLASSES = [
-    "fbs_cron.cron_fb.FbScrapperCron",
 ]
 
 # add fb page here
@@ -75,6 +68,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+
+    # mobile device detection
+    'django_mobileesp.middleware.MobileDetectionMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -194,8 +190,8 @@ SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 # SOCIAL_AUTH_FACEBOOK_KEY = '1659905954049233'  # App ID
 # SOCIAL_AUTH_FACEBOOK_SECRET = 'f33c1cdc6c24f53587bb4466e1d17896'  # App Secret
 #testing
-SOCIAL_AUTH_FACEBOOK_KEY = '361495860961861'  # App ID
-SOCIAL_AUTH_FACEBOOK_SECRET = 'a9255cff275001c025d19f69924eef6e'  # App Secret
+SOCIAL_AUTH_FACEBOOK_KEY = '1659905954049233'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = 'f33c1cdc6c24f53587bb4466e1d17896'  # App Secret
 SOCIAL_AUTH_TWITTER_KEY = 'dULiZCPsWc5u2OA086itWw2M2'  # App ID
 SOCIAL_AUTH_TWITTER_SECRET = 'Yr9xXLlda9NfaPKA4ghCqmD9ZyybcDSlMiNz55CFmrgo8IfGYb'  # App Secret
 

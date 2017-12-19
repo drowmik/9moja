@@ -30,9 +30,9 @@
                                         <div class="col-11 d-flex">
                                             <div class="align-self-center">
                                                 <p class="card-title mb-0 font-italic"
-                                                    >{{ post.user.username|default:"অশরীরী আত্মা" }}</p>
+                                                >{{ post.user.username|default:"অশরীরী আত্মা" }}</p>
                                                 <p class="card-subtitle mb-0 text-muted d-inline-block post-data"
-                                                    >{{ post.publish_date }}</p>
+                                                >{{ post.publish_date }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -86,108 +86,49 @@
                     
                     </div>
                     
-                
-                
-                
-                
-                
-                
-                
-            {# pagination by debu #}
-            {% comment %}{% if per_page_objs.paginator.num_pages > 1 %}
-                <nav id="pagination">
-                    <ul class="pagination">
-            
-                    <li class="{% if not per_page_objs.has_previous %}disabled{% endif %}">
-                        <a {% if per_page_objs.has_previous %}
-                            href="{% url 'outgoing:campaign'  per_page_objs.previous_page_number %}"
-                        {% else %}
-                            href="javascript:void(0)"
-                        {% endif %}
-                            aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                
-                    <li class="{% if per_page_objs.number == 1 %}disabled{% endif %}">
-                        <a href="{% url 'outgoing:campaign' %}">Start</a>
-                    </li>
-            
-                    {% for i in page_range %}
-                        <li class="{% if per_page_objs.number == forloop.counter %}active{% endif %}">
-                            <a href="{% url 'outgoing:campaign'  forloop.counter %}">{{ forloop.counter }}</a>
-                        </li>
-                    {% endfor %}
-            
-                
-                    <li class="{% if per_page_objs.number == per_page_objs.paginator.num_pages %}disabled{% endif %}">
-                        <a href="{% url 'outgoing:campaign' per_page_objs.paginator.num_pages %}">End</a>
-                    </li>
-                
-                    <li class="{% if not per_page_objs.has_next %}disabled{% endif %}">
-                        <a {% if per_page_objs.has_next %}
-                            href="{% url 'outgoing:campaign' per_page_objs.next_page_number %}"
-                        {% else %}
-                            href="javascript:void(0)"
-                        {% endif %}
-                            aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    {% endif %}
-                    </ul>
-                </nav>
-            {% endcomment %}
-                
-                
-                
-                
-                
-                
-                
-                
-                {% if posts.paginator.num_pages > 1 %}
-                    <nav id="pagination">
-                        <ul class="pagination">
-                            
+                    {% if posts.paginator.num_pages > 1 %}
+                        <nav id="pagination">
+                            <ul class="pagination
+                                {% if request.is_mobile %} justify-content-center {% else %} justify-content-end{% endif %}"
+                            >
                                 <li class="page-item">
-                                
+                                    
                                     {% if posts.number == 1 %}
                                         <span class="page-link bg-light text-secondary">{% trans 'প্রথম' %}</span>
                                     {% else %}
                                         <a class="page-link" href="?page=1">{% trans 'প্রথম' %}</a>
                                     {% endif %}
-                                    
+                                
                                 </li>
-                            
-                            
-                            {% for i in page_iter %}
-                                {% if i == '...' %}
-                                    <li class="page-item disabled">
+                                
+                                
+                                {% for i in page_iter %}
+                                    {% if i == '...' %}
+                                        <li class="page-item disabled">
                                     <span class="page-link">
                                         {{ i }}
                                         <span class="sr-only">(current)</span>
                                     </span>
-                                    </li>
-                                {% else %}
-                                    <li class="page-item {% if i == current_page|add:"0" %}active{% endif %}">
-                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                        
-                                <li class="page-item">
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item {% if i == current_page|add:"0" %}active{% endif %}">
+                                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
                                 
+                                <li class="page-item">
+                                    
                                     {% if posts.number == posts.paginator.num_pages %}
                                         <span class="page-link bg-light text-secondary">{% trans 'শেষ' %}</span>
                                     {% else %}
                                         <a class="page-link" href="?page={{ posts.paginator.num_pages }}">{% trans 'শেষ' %}</a>
                                     {% endif %}
-                                    
+                                
                                 </li>
-                        </ul>
-                    </nav>
-                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
                 
                 </div>
                 
@@ -265,54 +206,54 @@
     
     {% if user.is_authenticated %}
         <script type="text/javascript">
-            (function ($) {
-                var like_post = function (_t) {
-                    var post_id = _t.attr('data-id');
-                    var is_liked = _t.attr('data-liked');
+			(function ($) {
+				var like_post = function (_t) {
+					var post_id = _t.attr('data-id');
+					var is_liked = _t.attr('data-liked');
 
-                    $.ajax({
-                        url: '{% url 'main_app:like_post' %}',
-                        method: 'GET',
-                        data: {
-                            "post_id": post_id,
-                            "is_liked": is_liked,
-                        },
-                        dataType: 'json',
-                        success: function (data) {
-                            console.log(data);
-                            _t.attr('data-liked', data['is_liked']);
-                            liked_color(data['is_liked'], _t)
-                        },
-                        error: function (e) {
-                            console.log(e);
-                        }
-                    });
-                };
+					$.ajax({
+						url: '{% url 'main_app:like_post' %}',
+						method: 'GET',
+						data: {
+							"post_id": post_id,
+							"is_liked": is_liked,
+						},
+						dataType: 'json',
+						success: function (data) {
+							console.log(data);
+							_t.attr('data-liked', data['is_liked']);
+							liked_color(data['is_liked'], _t)
+						},
+						error: function (e) {
+							console.log(e);
+						}
+					});
+				};
 
-                var liked_color = function (_flag, _t) {
-                    if (parseInt(_flag) === 1) {
-                        _t.removeClass('btn-outline-secondary').addClass('btn-outline-danger')
-                    } else {
-                        _t.removeClass('btn-outline-danger').addClass('btn-outline-secondary')
-                    }
-                };
+				var liked_color = function (_flag, _t) {
+					if (parseInt(_flag) === 1) {
+						_t.removeClass('btn-outline-secondary').addClass('btn-outline-danger')
+					} else {
+						_t.removeClass('btn-outline-danger').addClass('btn-outline-secondary')
+					}
+				};
 
-                $('.article-media').click(function (e) {
-                    e.preventDefault();
-                    var lk_btn = $(this).parent('article').find('.like_btn');
-                    like_post(lk_btn);
-                });
+				$('.article-media').click(function (e) {
+					e.preventDefault();
+					var lk_btn = $(this).parent('article').find('.like_btn');
+					like_post(lk_btn);
+				});
 
-                $('.like_btn').click(function (e) {
-                    e.preventDefault();
-                    like_post($(this));
-                }).each(function () {
-                    var _this = $(this);
-                    liked_color(_this.attr('data-liked'), _this);
-                });
+				$('.like_btn').click(function (e) {
+					e.preventDefault();
+					like_post($(this));
+				}).each(function () {
+					var _this = $(this);
+					liked_color(_this.attr('data-liked'), _this);
+				});
 
-            })(jQuery);
+			})(jQuery);
         </script>
     {% endif %}
-    
+
 {% endblock %}
