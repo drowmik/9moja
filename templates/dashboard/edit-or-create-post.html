@@ -1,5 +1,7 @@
 {% extends 'dashboard/base.html' %}
 
+{% load i18n %}
+
 {% block ime %}
     {% include "snippets/avro_js_plugin.html" %}
 {% endblock %}
@@ -8,11 +10,11 @@
     
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="{% url 'dashboard:home' %}">Dashboard</a>
+            <a href="{% url 'dashboard:home' %}">{% trans 'ড্যাশবোর্ড' %}</a>
         </li>
         <li class="breadcrumb-item active">
             <span class="text-capitalize">{{ type }}</span>
-            <span class="font-italic">{{ form.title.value|default:"New Post" }}</span>
+            <span class="font-italic">{{ form.title.value|default:"পোস্ট" }}</span>
         </li>
     </ol>
 

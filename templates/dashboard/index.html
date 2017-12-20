@@ -63,7 +63,7 @@
                 </tbody>
             </table>
         {% else %}
-        
+            <p class="text-italic"><i>{% trans "আপনি এতো নিরামিষ কেন?  একটাও মজার কিছু দিলেন না এখনো!!" %}</i></p>
         {% endif %}
         
         <a href="{% url 'dashboard:create_post' %}">{% trans 'নতুন মজা তৈরি করুন' %}</a>

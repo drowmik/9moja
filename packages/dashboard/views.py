@@ -44,7 +44,7 @@ def signup(request):
                 login(request, user)
                 return redirect('/dashboard')
             else:
-                form = SignUpForm()
+                print(form)
         else:
              form = SignUpForm()
         return render(request, 'dashboard/sign-up.html', {'form': form})

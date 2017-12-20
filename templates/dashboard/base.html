@@ -38,23 +38,52 @@
     
     {% block extra_css %}{% endblock %}
     
-    
-    <style>
-        .logout_btn {
-            position: absolute;
-            top: 7px;
-            right: 7px;
-        }
-        
-        .logout_btn .btn {
-            padding: 0.3rem 0.5rem;
-        }
-    </style>
-    
     {% block ime %}{% endblock %}
 
 </head>
 <body class="bg-light {% block body_class %}{% endblock body_class %}" {% block body_attr %}{% endblock body_attr %}>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-2">
+    <a class="navbar-brand" href="{% url 'main_app:index' %}">{% trans "মূল পাতা" %}</a>
+    <button class="navbar-toggler" type="button"
+            data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            {% comment %}<li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>{% endcomment %}
+        </ul>
+        {% block header_logout %}
+            <div class="logout_btn">
+                <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">{% trans 'লগআউট' %}</a>
+            </div>
+        {% endblock %}
+    </div>
+</nav>
 
 
 {% block header %}
@@ -65,11 +94,6 @@
 
 {% endblock header %}
 
-{% block header_logout %}
-    <div class="logout_btn">
-        <a href="{% url 'logout' %}" class="btn btn-outline-danger">{% trans 'লগআউট' %}</a>
-    </div>
-{% endblock %}
 
 <div id="dashboard_container">
     

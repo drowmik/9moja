@@ -12,7 +12,7 @@
     <div class="container pt-5">
         <h2>{% trans ' সাইন আপ' %}</h2>
         
-        
+        {{ form.non_field_errors }}
         <form method="post">
             
             {% csrf_token %}
@@ -21,19 +21,30 @@
                 <label for="{{ form.username.name }}">{% trans 'আপনার ইউজারনেম' %}</label>
                 <input
                         type="text"
-                        class="form-control"
+                        class="form-control {% if form.username.errors %}border-danger{% endif %}"
                         name="{{ form.username.name }}"
                         id="{{ form.username.name }}"
-                        placeholder="{% trans 'ইউজারনেম' %}">
+                        value="{{ form.username.value }}"
+                        placeholder="{% trans 'ইউজারনেম *' %}">
+                {{ form.username.errors }}
+                {% comment %}{% if form.username.errors %}
+                    <p class="text-danger">{% trans "নাম ছাড়া আপনাকে চিনবো কিভাবে?" %}</p>
+                {% endif %}{% endcomment %}
             </div>
             
             <div class="form-group">
                 <label for="{{ form.email.name }}">{% trans 'ইমেইল' %}</label>
                 <input
                         type="email"
-                        class="form-control"
+                        class="form-control {% if form.email.errors %}border-danger{% endif %}"
+                        name="{{ form.email.name }}"
                         id="{{ form.email.name }}"
-                        placeholder="{% trans 'ইমেইল' %}">
+                        value="{{ form.email.value }}"
+                        placeholder="{% trans 'ইমেইল *' %}">
+                {{ form.email.errors }}
+                {% comment %}{% if form.email.errors %}
+                    <p class="text-danger">{% trans " ঠিকঠাক ইমেইল না দিলে তো মহা বিপদ!" %}</p>
+                {% endif %}{% endcomment %}
             </div>
             
             <div class="form-row">
@@ -41,19 +52,27 @@
                     <label for="{{ form.password1.name }}">{% trans 'পাসওয়ার্ড' %}</label>
                     <input
                             type="password"
-                            class="form-control"
+                            class="form-control {% if form.password1.errors %}border-danger{% endif %}"
                             name="{{ form.password1.name }}"
                             id="{{ form.password1.name }}"
-                            placeholder="{% trans 'পাসওয়ার্ড' %}">
+                            placeholder="{% trans 'পাসওয়ার্ড*' %}">
+                    {{ form.password1.errors }}
+                {% comment %}{% if form.password1.errors %}
+                    <p class="text-danger">{% trans "আপনার গোপন জিনিসে সমস্যা আছে" %}</p>
+                {% endif %}{% endcomment %}
                 </div>
                 <div class="form-group col-md-6">
                     <label for="{{ form.password2.name }}">{% trans 'পাসওয়ার্ড আবার দিন' %}</label>
                     <input
                             type="password"
-                            class="form-control"
+                            class="form-control {% if form.password2.errors %}border-danger{% endif %}"
                             name="{{ form.password2.name }}"
                             id="{{ form.password2.name }}"
                             placeholder="{% trans 'আবার পাসওয়ার্ড দিন' %}">
+                    {{ form.password2.errors }}
+                    {% comment %}{% if form.password2.errors %}
+                        <p class="text-danger">{% trans "আপনার গোপন জিনিস মিলে নাই" %}</p>
+                    {% endif %}{% endcomment %}
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">{% trans ' সাইন আপ করুন' %}</button>

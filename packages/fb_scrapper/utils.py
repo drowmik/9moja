@@ -134,7 +134,8 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
         
         # unique image name
         if img_details:
-            slug = _cat.slug + "-" + img_details['id'][i]
+            # removing character after underscore(_) from post id before adding
+            slug = _cat.slug + "-" + str(img_details['id'][i]).split("_", 1)[-1]
         else:
             slug = count + i
         

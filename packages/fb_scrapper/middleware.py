@@ -12,7 +12,7 @@ class SocialAuthMiddleware:
         # the view (and later middleware) are called.
         
         all_auths = SocialAuth.objects.all()
-        print(all_auths)
+        # print(all_auths)
         if all_auths:
             for auth in all_auths:
                 if (auth.name).lower() == "facebook":
