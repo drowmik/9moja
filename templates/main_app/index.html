@@ -22,7 +22,7 @@
                             {% for post in posts %}
                                 {% if post.is_img_exists %}
                                     
-                                    <div class="col-sm-6 mb-3">
+                                    <div class="col-sm-6 mb-3" id="{{ forloop.counter }}9moja">
                                         <article class="card bg-white h-100 justify-content-between border border-dark">
                                             <div class="card-header bg-dark text-white">
                                                 <div class="row">
@@ -43,9 +43,21 @@
                                             </div>
                                             
                                             {# liked/not-liked icon will be showed from db #}
-                                            <button type="button" class="d-block article-media">
+                                            {% comment %}<button type="button" class="d-block article-media">
                                                 <img src="{{ post.img.url }}" alt="{{ post.title }}" class="w-100"/>
-                                            </button>
+                                            </button>{% endcomment %}
+                                            
+                                            
+                                            {# lightbox #}
+                                            <a class="lightbox d-block article-media" href="#9moja-{{ forloop.counter }}">
+                                                <img src="{{ post.img.url }}" class="w-100"/>
+                                            </a>
+                                            <div class="lightbox-target" id="9moja-{{ forloop.counter }}">
+                                                <img src="{{ post.img.url }}"/>
+                                                <a class="lightbox-close" href="#{{ forloop.counter }}9moja"></a>
+                                            </div>
+                                            
+                                            
                                             <div class="card-footer mt-3">
                                                 <a href="{{ post.get_absolute_url }}" class="d-block article-link-title">
                                                     <span class="article-title">{{ post.title }}</span>
@@ -246,8 +258,8 @@
 					}
 				};
 
-				$('.article-media').click(function (e) {
-					e.preventDefault();
+				$('.article-media').click(function () {
+					//e.preventDefault();
 					var lk_btn = $(this).parent('article').find('.like_btn');
 					like_post(lk_btn);
 				});

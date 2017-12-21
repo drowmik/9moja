@@ -76,16 +76,18 @@ def liking_post(user, post, relation_model, is_liked=True):
             r.save()
             post.likes += 1
             user.likes += 1
-        else:
-            r = relation_model.objects.filter(
-                user=user,
-                post=post
-            )
-            r.delete()
-            post.likes -= 1
-            user.likes -= 1
-        user.save()
-        post.save()
+            
+        # no disliking initially... muhuhhahahahah
+        # else:
+        #     r = relation_model.objects.filter(
+        #         user=user,
+        #         post=post
+        #     )
+        #     r.delete()
+        #     post.likes -= 1
+        #     user.likes -= 1
+        # user.save()
+        # post.save()
     except:
         print("unexpected error!! (main_app/utils.py - 90)")
         return

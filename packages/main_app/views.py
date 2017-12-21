@@ -162,11 +162,13 @@ def like_post(request):
         
         post = Post.objects.get(id=pk)
         user = UserExtended.objects.get(user=request.user)
-        if ajax_data.get("is_liked") == "1":
+
+        # initially no disliking !!! :D :D
+        #if ajax_data.get("is_liked") == "1":
             # dislike
-            liking_post(user, post, UserPostRelation, False)
-            jd["is_liked"] = "0"
-        elif ajax_data.get("is_liked") == "0":
+            # liking_post(user, post, UserPostRelation, False)
+            # jd["is_liked"] = "0"
+        if ajax_data.get("is_liked") == "0":
             # like
             liking_post(user, post, UserPostRelation, True)
             jd["is_liked"] = "1"
