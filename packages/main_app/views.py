@@ -15,12 +15,7 @@ popular_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_
 def index(request):
     posts = Post.objects.order_by('-publish_date').filter(status="p")  # showing only published posts
     
-    if request.is_mobile:
-        pagination_item = 3 # page number showing in pagination
-        post_per_page = 4
-    else:
-        pagination_item = 5 # page number showing in pagination
-        post_per_page = 8
+    post_per_page = get_post_per_page(request)
     
     p = Paginator(posts, post_per_page)
     total_pages = p.num_pages  # or last page
@@ -62,7 +57,7 @@ def index(request):
     pg_iter = long_pagination(
         current_page=page,
         total_pages=total_pages,
-        showing=pagination_item,    # page number showing in pagination
+        showing=get_page_number_in_pagination(request),    # page number showing in pagination
         is_not_mobile=not request.is_mobile
     )
     
@@ -112,22 +107,65 @@ def each_category(request, slug):
     try:
         category = Category.objects.get(slug=slug)
         
-        relation = category.categorize_set.all()
+        posts_by_category = Post.objects.filter(categorize__category=category)
         
-        posts_by_category = [cp.post for cp in relation]
+        post_per_page = get_post_per_page(request)
         
-        p = Paginator(posts_by_category, 10)
+        p = Paginator(posts_by_category, post_per_page)
+        total_pages = p.num_pages  # or last page
+
+        # pagination
+        if request.GET.get('page'):
+            try:
+                page = int(request.GET.get('page'))
+            except:
+                page = 1
+
+        # if direct homepage
+        else:
+            page = 1
+
+        try:
+            categorized_post = p.page(page)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            categorized_post = p.page(total_pages)
+            page = total_pages
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            categorized_post = p.page(1)
+            page = 1
+
+        if request.user.is_authenticated():
+            """
+            if logged in user
+            liked post will be marked in homepage
+            """
+            user = UserExtended.objects.get(user=request.user)
+            for p in categorized_post:
+                try:
+                    p.have_like = "1" if UserPostRelation.objects.get(user=user, post=p) else "0"
+                except:
+                    p.have_like = "0"
+
+        pg_iter = long_pagination(
+            current_page=page,
+            total_pages=total_pages,
+            showing=get_page_number_in_pagination(request),  # page number showing in pagination
+            is_not_mobile=not request.is_mobile
+        )
     
     except Category.DoesNotExist:
-        raise Http404(" দুঃখিত, এই নামের বিভাগ খুঁজে পাওয়া যায় নি!")
+        raise Http404("আপনার এহেন বোকামির জন্য আমরা শোক প্রকাশ করছি।কারণ, এই নামের বিভাগ খুঁজে পাওয়া যায় নি!")
     
     templ = 'main_app/index.html'
     ctx = {
         "is_category_template": True,
-        "posts": posts_by_category,
+        "posts": categorized_post,
         "popular_posts": popular_posts[:5],
         "popular_cats": popular_cats[:5],
-        "pagination": p,
+        "page_iter": pg_iter,
+        "current_page": page,
     }
     return render(request, templ, ctx)
 

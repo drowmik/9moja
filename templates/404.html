@@ -1,0 +1,44 @@
+{% extends 'main_app/base.html' %}
+
+{% load i18n %}
+
+{% block main_container %}
+    
+    <section class="section">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-sm-12">
+                    
+                    
+                    <div class="sidebar-search justify-content-center">
+                        <form class="form-inline my-2 my-lg-0" method="get" action="{% url 'main_app:search' %}">
+                            
+                            <div class="input-group">
+                                <input
+                                        type="search"
+                                        class="form-control"
+                                        name="q"
+                                        placeholder="{% trans "এইখানে খুঁজুন" %}"
+                                        aria-label="Search"
+                                        aria-describedby="sidebar_search">
+                                <button type="submit" class="input-group-addon" id="sidebar_search">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        
+                        </form>
+                    </div>
+                    
+                    
+                    <h3 class="text-center">{% trans "আপনার এহেন বোকামির জন্য আমরা শোক প্রকাশ করছি।কারণ, এই নামের বিভাগ খুঁজে পাওয়া যায় নি!" %}
+                        <span>
+                                <a href="{% url 'main_app:index' %}">{% trans "ঘরে ফিরে যান" %}</a>
+                            </span>
+                    </h3>
+                
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

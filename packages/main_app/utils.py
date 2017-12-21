@@ -77,17 +77,27 @@ def liking_post(user, post, relation_model, is_liked=True):
             post.likes += 1
             user.likes += 1
             
-        # no disliking initially... muhuhhahahahah
-        # else:
-        #     r = relation_model.objects.filter(
-        #         user=user,
-        #         post=post
-        #     )
-        #     r.delete()
-        #     post.likes -= 1
-        #     user.likes -= 1
-        # user.save()
-        # post.save()
+            # no disliking initially... muhuhhahahahah
+            # else:
+            #     r = relation_model.objects.filter(
+            #         user=user,
+            #         post=post
+            #     )
+            #     r.delete()
+            #     post.likes -= 1
+            #     user.likes -= 1
+            # user.save()
+            # post.save()
     except:
         print("unexpected error!! (main_app/utils.py - 90)")
         return
+
+
+def get_page_number_in_pagination(req):
+    """page number showing in pagination"""
+    return 3 if req.is_mobile else 5
+
+
+def get_post_per_page(req):
+    """post per page"""
+    return 4 if req.is_mobile else 8

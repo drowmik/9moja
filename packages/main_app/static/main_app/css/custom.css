@@ -125,6 +125,53 @@ section.section {
     box-shadow: none !important;
 }
 
+a.article-media{
+    max-height: 450px;
+    overflow: hidden;
+    position: relative;
+}
+
+a.article-media:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background-color: #00000070;
+    position: absolute;
+    left: 0;
+    top: 0;
+    text-align: center;
+    opacity: 0;
+    -webkit-transition: opacity 0.3s linear;
+    -moz-transition: opacity 0.3s linear;
+    -ms-transition: opacity 0.3s linear;
+    -o-transition: opacity 0.3s linear;
+    transition: opacity 0.3s linear;
+
+}
+
+a.article-media:hover:after,
+a.article-media:hover:before{
+    opacity: 1;
+}
+
+a.article-media:before {
+    content: 'পুরোটা দেখতে এখানে চাপুন';
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    color: #fff;
+    font-size: 30px;
+    text-align: center;
+    opacity: 0;
+    z-index: 3;
+}
+
 /* light box */
 /* Styles the lightbox, removes it from sight and adds the fade-in transition */
 
@@ -284,6 +331,15 @@ footer {
         width: auto;
     }
 }
+
+@media (max-width: 991px){
+    .navbar-brand,
+    ul.nav.navbar-nav li {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+}
+
 @media (min-width: 992px) {
     .top-social-ul > li {
         padding-left: 5px;
