@@ -17,10 +17,10 @@ def index(request):
     
     if request.is_mobile:
         pagination_item = 3 # page number showing in pagination
-        post_per_page = 1
+        post_per_page = 4
     else:
         pagination_item = 5 # page number showing in pagination
-        post_per_page = 5
+        post_per_page = 8
     
     p = Paginator(posts, post_per_page)
     total_pages = p.num_pages  # or last page

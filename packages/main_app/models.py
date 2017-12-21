@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.urls import reverse
 from django.db.models.signals import post_save
 from .utils import *
+import os
 
 
 class Post(models.Model):
@@ -56,6 +57,9 @@ class Post(models.Model):
                 str(self.slug)
             ]
         )
+    
+    def is_img_exists(self):
+        return os.path.isfile(self.img.path)
 
 
 class Category(models.Model):

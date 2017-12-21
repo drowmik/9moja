@@ -4,10 +4,19 @@
 }
 
 body {
-    background-color: #f5eeee;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAQCAAAAAApT+BJAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAADCSURBVBjTdc9LTsQwEITh3207VhwTRZxi7n8H7sAd0PBMSFp2eliwAMlQqyrV6nMP/J3A5Wc8Xn4f6CfWJq3e4GnUeDZGNoHVWYbmwwBly7uzRa0IZGkH25xigTqGUCcrugockvwctPpn0HPF/KtZEvAtcKYa3wtIazLZ/ducAsRjL7JmygE5qBM9vVX3n8NdO8F3Dy9xS0qvEY3LbUq9Ru7WPdap18hpyYZrr5Ga1T7oNdIq1ReItz1Gzb4ckJdx+AJ+z3PmrUb0YgAAAABJRU5ErkJggg==');
     position: relative;
     padding-bottom: 100px;
     min-height: 100vh;
+}
+
+button.navbar-toggler {
+    position: absolute;
+    top: -45px;
+    right: 0;
+    background: #fff;
+    padding: 0.3rem;
+    border-radius: 50%;
 }
 
 img {
@@ -25,9 +34,16 @@ img {
 }
 
 .sidebar-img {
-    height: 120px;
-    width: 120px;
+    /*height: 120px;
+    width: 120px;*/
     overflow: hidden;
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.sidebar-img>img {
+    border: 5px solid #fff;
+    width: 120px;
 }
 
 .category-link {
@@ -118,6 +134,21 @@ footer {
     bottom: 0;
 }
 
+@media (max-width: 576px){
+    button.navbar-toggler{
+        top: -52px;
+    }
+    .navbar-toggler-icon{
+        width: 1.4rem;
+        height: 1.4rem;
+    }
+}
+
+@media (max-width: 767px){
+    .navbar input{
+        width: auto;
+    }
+}
 @media (min-width: 992px) {
     .top-social-ul > li {
         padding-left: 5px;
