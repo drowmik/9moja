@@ -27,7 +27,10 @@ def index(request):
     
     # pagination
     if request.GET.get('page'):
-        page = int(request.GET.get('page'))
+        try:
+            page = int(request.GET.get('page'))
+        except:
+            page = 1
     
     # if direct homepage
     else:
@@ -91,9 +94,14 @@ def each_post(request, slug, pk):
     except Post.DoesNotExist:
         raise Http404("This does not exist")
     
+    from_page = request.GET.get('from_page') if request.method == 'GET' else 1
+    
     templ = 'main_app/single_post.html'  # template name
     ctx = {  # context
         'post': post,
+        "popular_posts": popular_posts[:5],
+        "popular_cats": popular_cats[:5],
+        'from_page': from_page,
         'media_url': post.img.url,
         'share_urls': share_urls,
     }

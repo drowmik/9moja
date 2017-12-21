@@ -2,124 +2,184 @@
 
 {% load comments i18n %}
 
-
 {% block main_container %}
     <div class="container">
         <div class="row">
-            <div class="col">
-                <h1>{{ post.title }}</h1>
-                <ul class="nav mb-2">
-                    
-                    {% for cat in post.get_categories %}
-                        <li class="nav-item">
-                            <a
-                                    class="btn btn-outline-primary btn-sm"
-                                    href="{{ cat.category.get_absolute_url }}">{{ cat.category }}</a>
-                        </li>
-                    {% endfor %}
-                
-                </ul>
-                <img src="{{ media_url }}" alt="{{ post.slug }}">
+            <div class="col-12">
+                <a href="/?page={{ from_page }}">
+                    <h4 class="text-primary font-weight-bold mt-4 mb-4 d-inline-block">
+                        <i class="fa fa-arrow-left"></i> {% trans " আগের পেইজে ফেরত" %}</h4>
+                </a>
             </div>
-        </div>
-        
-        
-        <div class="row">
-            <div class="col">
-                
-                <p>{{ post.likes }}{% trans ' টি পছন্দ' %}</p>
-                
-            
-            
-            
-            
-                <div id="share" class="mb-2">
+            <div class="col-md-8">
+                <article id="each-article" class="p-3 bg-white">
+                    <h1>{{ post.title }}</h1>
+                    <ul class="nav mb-2">
+                        
+                        {% for cat in post.get_categories %}
+                            <li class="nav-item">
+                                <a
+                                        class="btn btn-outline-danger btn-sm"
+                                        href="{{ cat.category.get_absolute_url }}">{{ cat.category }}</a>
+                            </li>
+                        {% endfor %}
                     
-                    <a href="{{ share_urls.gp }}"
-                       class="btn btn-outline-danger d-inline-block btn-sm gplus-share">
-                        {#<img src="{% static 'texteditor/tinymce/skins/lightgray/img/google-share.png' %}" alt="">#}
-                        {% trans 'গুগলে শেয়ার করুন' %}
-                    </a>
+                    </ul>
+                    <img class="w-100" src="{{ media_url }}" alt="{{ post.title }}">
                     
-                    <div class="d-inline-block twt">
-                        <a
-                            class="btn btn-outline-primary btn-sm twitter-share-button"
-                            href="{{ share_urls.twt }}">
-                            {% trans ' টুইট করুন' %}
-                        </a>
-                    </div>
-                    <iframe
-                            class="fb"
-                            src="{{ share_urls.fb }}"
-                            width="69"
-                            height="20"
-                            data-size="large"
-                            style="border:none;overflow:hidden"
-                            scrolling="no"
-                            frameborder="0"
-                            allowTransparency="true">
-                    </iframe>
-                </div>
-            
-            
-            
-            
-            
-            
-                
-                {% get_comment_count for main_app.post post.id as comment_count %}
-                <p>{{ comment_count }}{% trans ' টি পছন্দ' %}</p>
-                
-                {% get_comment_list for main_app.post post.id as comment_list %}
-                {% for comment in comment_list %}
-                    <div class="row">
-                        <div class="col">{{ comment.comment }}</div>
-                        <div class="col-12">
-                            <p class="mb-0">{{ comment.user_name }}</p>
-                            <p class="mb-0 font-italic">{{ comment.submit_date }}</p>
+                    <div class="col-12">
+                        
+                        <div id="share" class="my-2 d-flex text-center row">
+                            
+                            <div id="fb" class="col-md-4">
+                                <a
+                                        class="text-white py-2 d-inline-block"
+                                        href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}"
+                                        target="_blank"
+                                ><i class="fa fa-facebook-f"></i> {% trans ' শেয়ার দিন' %}</a>
+                            </div>
+                            
+                            <div id="gplus" class="col-md-4">
+                                <a
+                                        class="text-white py-2 d-inline-block"
+                                        target="_blank"
+                                        href="{{ share_urls.gp }}"
+                                ><i class="fa fa-google-plus"></i>{% trans ' শেয়ার দিন' %}
+                                </a>
+                            </div>
+                            
+                            <div id="twt" class="col-md-4">
+                                <a
+                                        class="text-white py-2 d-inline-block"
+                                        target="_blank"
+                                        href="{{ share_urls.twt }}"
+                                ><i class="fa fa-twitter"></i> {% trans ' করুন' %}</a>
+                            </div>
+                            
+                            {% comment %}<iframe
+                                    class="fb"
+                                    src="{{ share_urls.fb }}"
+                                    width="69"
+                                    height="20"
+                                    data-size="large"
+                                    style="border:none;overflow:hidden"
+                                    scrolling="no"
+                                    frameborder="0"
+                                    allowTransparency="true">
+                            </iframe>{% endcomment %}
+                        
                         </div>
+                        
+                        
+                        {% if user.is_authenticated %}
+                            {% get_comment_count for main_app.post post.id as comment_count %}
+                            
+                            <p class="text-secondary d-inline-block">
+                                {{ post.likes }}{% trans ' টি' %}
+                                <span class="text-danger"><i class="fa fa-heart"></i></span>
+                            </p>
+                            
+                            <span class="mx-3">.</span>
+                            
+                            <p class="text-secondary d-inline-block">{{ comment_count }}{% trans ' টি মন্তব্য' %}</p>
+                            
+                            {% get_comment_list for main_app.post post.id as comment_list %}
+                            {% for comment in comment_list %}
+                                <div class="each-comment border border-dark p-2">
+                                    <div class="row">
+                                        <div class="col">{{ comment.comment }}</div>
+                                        <div class="col-12">
+                                            <p class="mb-0">{{ comment.user_name }}</p>
+                                            <p class="mb-0 font-italic">{{ comment.submit_date }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                            {% endfor %}
+                            
+                            {% get_comment_form for main_app.post post.id as form %}
+                            <!-- A context variable called form is created with the necessary hidden
+                            fields, timestamps and security hashes -->
+                            
+                            <form action="{% comment_form_target %}" method="post" id="comment">
+                                
+                                {% csrf_token %}
+                                
+                                <input type="hidden" name="{{ form.content_type.name }}" value="main_app.post">
+                                <input type="hidden" name="{{ form.object_pk.name }}" value="{{ post.id }}">
+                                <input type="hidden" name="{{ form.security_hash.name }}" value="{{ form.security_hash.value }}">
+                                <input type="hidden" name="{{ form.timestamp.name }}" value="{{ form.timestamp.value }}">
+                                <input type="hidden" name="{{ form.name.name }}" value="{{ user.username }}">
+                                
+                                {% if user.email %}
+                                    <input type="hidden" name="{{ form.email.name }}" value="{{ user.email }}">
+                                {% else %}
+                                    <div class="form-group">
+                                        <label for="{{ form.email.name }}">{% trans 'ই-মেইল' %}</label>
+                                        <input
+                                                class="form-control"
+                                                type="email"
+                                                id="{{ form.email.name }}"
+                                                name="{{ form.email.name }}"
+                                                placeholder="{% trans 'আপনার ইমেইল আইডি' %}"/>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.comment.name }}">{% trans 'মন্তব্য' %}</label>
+                                    <textarea
+                                            class="form-control"
+                                            id="{{ form.comment.name }}"
+                                            name="{{ form.comment.name }}"
+                                            placeholder="{% trans 'আপনার মূল্যবান মন্তব্য দিন' %}"></textarea>
+                                </div>
+                                
+                                <input type="submit" name="submit" value="Post" class="btn btn-primary">
+                            </form>
+                            
+                            
+                            {% comment %}<script type="text/javascript">
+                                (function ($) {
+
+                                    $('#comment').submit(function (e) {
+                                        e.preventDefault();
+                                        $.ajax({
+                                            url: '{% comment_form_target %}',
+                                            method: 'POST',
+                                            data: {
+                                                "{{ form.content_type.name }}": "main_app.post",
+                                                "{{ form.object_pk.name }}": "{{ post.id }}",
+                                                "{{ form.security_hash.name }}": "{{ form.security_hash.value }}",
+                                                "{{ form.timestamp.name }}": "{{ form.timestamp.value }}",
+                                                "{{ form.name.name }}": "{{ user.username }}",
+                                                "{{ form.email.name }}": "{{ form.email.value }}",
+                                                "{{ form.comment.name }}": "{{ form.comment.value }}",
+                                            },
+                                            success: function (data) {
+                                                console.log(data);
+                                            },
+                                            error: function (e) {
+                                                console.log(e);
+                                            }
+                                        });
+                                    })
+
+                                })(jQuery);
+                            </script>{% endcomment %}
+                        
+                        {% else %}
+                            <p>{% trans 'মন্তব্য দেখতে এবং করতে ' %}
+                                <span><a href="{% url 'login' %}">{% trans 'লগইন' %}</a></span>
+                                <span>{% trans ' করুন' %}</span>
+                            </p>
+                        {% endif %}
                     </div>
-                    <hr>
-                {% endfor %}
-                
-                
-                
-                
-                {% get_comment_form for main_app.post post.id as form %}
-                <!-- A context variable called form is created with the necessary hidden
-                fields, timestamps and security hashes -->
-                
-                <form action="{% comment_form_target %}" method="post" id="comment">
-                    
-                    {% csrf_token %}
-                    
-                    <input type="hidden" name="{{ form.content_type.name }}" value="main_app.post">
-                    <input type="hidden" name="{{ form.object_pk.name }}" value="{{ post.id }}">
-                    <input type="hidden" name="{{ form.security_hash.name }}" value="{{ form.security_hash.value }}">
-                    <input type="hidden" name="{{ form.timestamp.name }}" value="{{ form.timestamp.value }}">
-                    <input type="hidden" name="{{ form.name.name }}" value="{{ user.username }}">
-                    
-                    {% if user.email %}
-                        <input type="hidden" name="{{ form.email.name }}" value="{{ user.email }}">
-                    {% else %}
-                        <div class="form-group">
-                            <label for="{{ form.email.name }}">{% trans 'ই-মেইল' %}</label>
-                            <input class="form-control" type="email" name="{{ form.email.name }}" value="{{ user.email }}"/>
-                        </div>
-                    {% endif %}
-                    
-                    <div class="form-group">
-                        <label for="{{ form.comment.name }}">{% trans 'মন্তব্য' %}</label>
-                        <textarea
-                                class="form-control"
-                                id="{{ form.comment.name }}"
-                                name="{{ form.comment.name }}"
-                                placeholder="{% trans 'আপনার মূল্যবান মন্তব্য দিন' %}"></textarea>
-                    </div>
-                    
-                    <input type="submit" name="submit" value="Post" class="btn btn-primary">
-                </form>
+                </article>
+            </div>
             
+            <div class="col-md-4">
+                
+                {% include 'main_app/snippets/sidebar.html' %}
             
             </div>
         </div>

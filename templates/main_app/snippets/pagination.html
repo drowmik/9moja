@@ -1,0 +1,43 @@
+{% load i18n %}
+
+{% if posts.paginator.num_pages > 1 %}
+    <nav id="pagination">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                
+                {% if posts.number == 1 %}
+                    <span class="page-link bg-light text-secondary">{% trans 'প্রথম' %}</span>
+                {% else %}
+                    <a class="page-link" href="?page=1">{% trans 'প্রথম' %}</a>
+                {% endif %}
+            
+            </li>
+            
+            
+            {% for i in page_iter %}
+                {% if i == '...' %}
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            {{ i }}
+                            <span class="sr-only">(current)</span>
+                        </span>
+                    </li>
+                {% else %}
+                    <li class="page-item {% if i == current_page|add:"0" %}active{% endif %}">
+                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            
+            <li class="page-item">
+                
+                {% if posts.number == posts.paginator.num_pages %}
+                    <span class="page-link bg-light text-secondary">{% trans 'শেষ' %}</span>
+                {% else %}
+                    <a class="page-link" href="?page={{ posts.paginator.num_pages }}">{% trans 'শেষ' %}</a>
+                {% endif %}
+            
+            </li>
+        </ul>
+    </nav>
+{% endif %}
