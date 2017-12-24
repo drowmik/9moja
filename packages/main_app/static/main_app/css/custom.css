@@ -21,13 +21,8 @@ body {
     min-height: 100vh;
 }
 
-ul.nav.navbar-nav > li:not(:first-child):not(:last-child):after {
-    content: '';
-    width: 2px;
-    height: 20px;
-    position: absolute;
-    display: block;
-    border-left: 1.5px solid rgba(52, 58, 64, 0.4196078431372549);
+#collapsible_navbar .nav-link:hover {
+    color: #000 !important;
 }
 
 button.navbar-toggler {
@@ -99,7 +94,7 @@ aside.sidebar hr {
 }
 
 .navbar-brand img {
-    width: 50px;
+    width: 85px;
 }
 
 #collapsible_navbar {
@@ -422,6 +417,15 @@ footer {
 @media (min-width: 992px) {
     .container {
         max-width: 940px
+    }
+
+    ul.nav.navbar-nav > li:not(:first-child):not(:last-child):after {
+        content: '';
+        width: 2px;
+        height: 20px;
+        position: absolute;
+        display: block;
+        border-left: 1.5px solid rgba(52, 58, 64, 0.4196078431372549);
     }
 
     .top-social-ul > li {
