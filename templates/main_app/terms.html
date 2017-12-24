@@ -1,0 +1,55 @@
+{% extends 'main_app/base.html' %}
+
+{% load i18n %}
+
+{% block main_container %}
+    <section id="terms" class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    
+                    <h1>{% trans "শর্তাবলী এবং সীমাবদ্ধতা" %}</h1>
+                    
+                    <hr class="mt-0 border-dark">
+                    
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <div class="terms-li">
+                                <h3 class="d-inline-block border border-top-0 border-left-0 border-right-0 border-dark font-italic"
+                                >{% trans "১। প্রারম্ভিকা" %}</h3>
+                                <p
+                                >{% trans "নয়মজা ওয়েবসাইটে আপনাকে স্বাগতম। বাংলাদেশের একমাত্র এবং সবচেয়ে বড় মিম সাইট। এখানে আপনি আমাদের নিজেদের বানানো, সামাজিক মাধ্যমগুলোর সব জনপ্রিয় মজার মিম/ছবি এবং আপনারা নিজেদের দেয়া মিমগুলোও খুঁজে পাবেন। বাংলাদেশের ইতিহাস ও ঐতিহ্য, সংস্কৃতি, মুক্তিসংগ্রাম ও অসাম্প্রদায়িকতার মতো বিষয়গুলিকে আক্রমণ করে বানানো মিম লেখা মন্তব্য বা অন্যান্য উপাদান নয়মজা থেকে এডমিনগণ যে কোন সময় অপসারণ করার ক্ষমতা রাখেন।" %}</p>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <div class="terms-li">
+                                <h3 class="d-inline-block border border-top-0 border-left-0 border-right-0 border-dark font-italic"
+                                >{% trans "২। নতুন ব্যবহারকারী এবং পোস্ট" %}</h3>
+                                <p
+                                >{% trans "যে কেউ নতুন একাউন্ট খুলে মিম কিংবা ছবি পোস্ট পারবেন।কিন্তু অন্য কোন ওয়েবসাইটকিংবা কিংবা সামাজিক মাধ্যম থেকে নকল করা পোস্ট এপ্রুভ বা প্রকাশ না হওয়ার সম্ভাবনা বেশী। নতুন একাউন্ট খোলার ক্ষেত্রে ফেসবুক গুগল এবং টুইটারের সাহায্য নিয়ে একাউন্ট খুলতে পারবেন।" %}</p>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <div class="terms-li">
+                                <h3 class="d-inline-block border border-top-0 border-left-0 border-right-0 border-dark font-italic"
+                                >{% trans "৩। ডিজাইন গ্রহস্বত্ব" %}</h3>
+                                <p
+                                >{% trans "আপনি আমাদের পুর্বলিখিত শর্তানুযায়ী এই সাইটের ডিজাইন কিংবা পন বা লেআউট নকল করতে পারবেন না।অন্যথায় অন্যথায় সেটি সাইটের শর্তাবলীর বিরুদ্ধাচারন বলে গন্য হবে।" %}</p>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <div class="terms-li">
+                                <h3 class="d-inline-block border border-top-0 border-left-0 border-right-0 border-dark font-italic"
+                                >{% trans "৪। সংশোধন বা মতামত" %}</h3>
+                                <p
+                                >{% trans "নয়মজা সম্পর্কিত যেকোনো সংশোধন বা মতামত জানাতে আমাদের মেইল করুনঃ" %}
+                                    <span><a href="mailto:admin@concitus.com">{% trans "এখানে" %}</a></span></p>
+                            </div>
+                        </li>
+                    </ul>
+                
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

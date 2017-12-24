@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 from core import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from dashboard import views as dash_views
+from main_app import views as main_views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -30,6 +31,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     url(r'^sign-up/$', dash_views.signup, name='signup'),
+
+    url(r'^terms/$', main_views.terms, name='terms'),
 
     url(r'^login/$', dash_views.log_in, {'template_name': 'dashboard/login.html'}, name='login'),
     

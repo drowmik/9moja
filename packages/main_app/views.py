@@ -243,3 +243,7 @@ def popular_categories(request):
 
 def best_meme(request):
     return each_post(request, popular_posts[0].slug, popular_posts[0].id)
+
+
+def terms(request):
+    return render(request, 'main_app/terms.html')
