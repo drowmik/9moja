@@ -13,6 +13,10 @@
     display: block !important;
 }
 
+input[type="password"] {
+    font-family: 'sans-serif' !important;
+}
+
 body {
     font-family: 'banglafont', 'Siyam Rupali', 'Siyam Rupali ANSI', 'SansSerif' !important;
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAQCAAAAAApT+BJAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAADCSURBVBjTdc9LTsQwEITh3207VhwTRZxi7n8H7sAd0PBMSFp2eliwAMlQqyrV6nMP/J3A5Wc8Xn4f6CfWJq3e4GnUeDZGNoHVWYbmwwBly7uzRa0IZGkH25xigTqGUCcrugockvwctPpn0HPF/KtZEvAtcKYa3wtIazLZ/ducAsRjL7JmygE5qBM9vVX3n8NdO8F3Dy9xS0qvEY3LbUq9Ru7WPdap18hpyYZrr5Ga1T7oNdIq1ReItz1Gzb4ckJdx+AJ+z3PmrUb0YgAAAABJRU5ErkJggg==');
