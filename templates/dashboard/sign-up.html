@@ -116,7 +116,7 @@
             });
 
             auth2.then(function () {
-                var button = document.getElementById("g-plus-login");
+                var button = document.getElementById("gplus");
                 console.log("User is signed-in in Google+ platform?", auth2.isSignedIn.get() ? "Yes" : "No");
 
                 auth2.attachClickHandler(button, {}, function (googleUser) {
