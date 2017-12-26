@@ -8,44 +8,15 @@
 {% block header %}{% endblock %}
 {% block header_logout %}{% endblock %}
 
-{% block extra_css %}
-    <style>
-        form {
-            padding: 25px
-        }
-        
-        .login-form-wrapper {
-            background: #fffddd;
-            border: 1px solid #93a4b5;
-        }
-        
-        .login-form-wrapper > h3 {
-            background: #93a4b5;
-            padding: 12px;
-            color: #fffddd;
-        }
-        
-        .h100vh{
-            min-height: 100vh;
-        }
-        
-        @media (max-width: 480px) {
-            form {
-                padding: 10px
-            }
-        }
-    </style>
-{% endblock extra_css %}
-
 {% block main_container %}
     <div class="container">
         <div class="row justify-content-md-center align-items-center h100vh">
-            <div class="col col-md-6">
+            <div class="col col-md-7">
                 
-                <div class="login-form-wrapper">
-                    <h3 class="text-center">{% trans 'লগইন করুন' %}</h3>
+                <div class="login-form-wrapper bg-custom border border-dark">
+                    <h3 class="text-center py-3 bg-dark text-custom">{% trans 'লগইন করুন' %}</h3>
                     
-                    <form method="POST" action="">
+                    <form method="POST" action="" class="p-3">
                         
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{{ next }}">
@@ -85,11 +56,12 @@
                                 class="btn btn-primary d-inline-block">{% trans 'সাইন-আপ' %}</a>
                         </div>
                     </form>
+                
+                    <div class="social-auth px-4 py-1">
+                        {% include 'snippets/social-auth-links.html' %}
+                    </div>
                 </div>
             
-                <div class="social-auth">
-                    {% include 'snippets/social-auth-links.html' %}
-                </div>
             </div>
         </div>
     

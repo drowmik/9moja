@@ -6,10 +6,6 @@ from .models import Post, Category, UserExtended, UserPostRelation
 from .utils import *
 from django.http import JsonResponse
 
-# multi used variables
-categories = Category.objects.all()  # limited
-popular_posts = Post.objects.order_by('-likes')
-popular_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by('-like_count')
 
 
 def index(request):
@@ -60,12 +56,16 @@ def index(request):
         showing=get_page_number_in_pagination(request),    # page number showing in pagination
         is_not_mobile=not request.is_mobile
     )
+
+    popular_posts = Post.objects.order_by('-likes')[:5]
+    popular_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by(
+        '-like_count')[:5]
     
     templ = 'main_app/index.html'  # template name
     ctx = {  # context
         "posts": latest_posts,
-        "popular_posts": popular_posts[:5],
-        "popular_cats": popular_cats[:5],
+        "popular_posts": popular_posts,
+        "popular_cats": popular_cats,
         "page_iter": pg_iter,
         "current_page": page,
     }
@@ -91,11 +91,15 @@ def each_post(request, slug, pk):
     
     from_page = request.GET.get('from_page') if request.method == 'GET' else 1
     
+    popular_posts = Post.objects.order_by('-likes')[:5]
+    popular_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by(
+        '-like_count')[:5]
+    
     templ = 'main_app/single_post.html'  # template name
     ctx = {  # context
         'post': post,
-        "popular_posts": popular_posts[:5],
-        "popular_cats": popular_cats[:5],
+        "popular_posts": popular_posts,
+        "popular_cats": popular_cats,
         'from_page': from_page,
         'media_url': post.img.url,
         'share_urls': share_urls,
@@ -157,13 +161,17 @@ def each_category(request, slug):
     
     except Category.DoesNotExist:
         raise Http404("আপনার এহেন বোকামির জন্য আমরা শোক প্রকাশ করছি।কারণ, এই নামের বিভাগ খুঁজে পাওয়া যায় নি!")
+
+    popular_posts = Post.objects.order_by('-likes')[:5]
+    popular_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by(
+        '-like_count')[:5]
     
     templ = 'main_app/index.html'
     ctx = {
         "is_category_template": True,
         "posts": categorized_post,
-        "popular_posts": popular_posts[:5],
-        "popular_cats": popular_cats[:5],
+        "popular_posts": popular_posts,
+        "popular_cats": popular_cats,
         "page_iter": pg_iter,
         "current_page": page,
     }
@@ -238,11 +246,14 @@ def like_post(request):
 
 
 def popular_categories(request):
-    return each_category(request, popular_cats[0].slug)
+    popular_cat = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by(
+        '-like_count')[0]
+    return each_category(request, popular_cat.slug)
 
 
 def best_meme(request):
-    return each_post(request, popular_posts[0].slug, popular_posts[0].id)
+    popular_posts = Post.objects.order_by('-likes')[0]
+    return each_post(request, popular_posts.slug, popular_posts.id)
 
 
 def terms(request):

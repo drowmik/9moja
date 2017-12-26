@@ -2,6 +2,8 @@
 
 {% load comments i18n %}
 
+{% block title %}{{ post.title }}{% trans " | নয় মজা" %}{% endblock title %}
+
 {% block main_container %}
     <div class="container">
         <div class="row">
@@ -29,7 +31,7 @@
                     
                     <div class="col-12">
                         
-                        <div id="share" class="my-2 d-flex text-center row">
+                        <div id="share" class="my-4 d-flex text-center row">
                             
                             <div id="fb" class="col-md-4">
                                 <a

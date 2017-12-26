@@ -1,6 +1,27 @@
 {% load i18n %}
 
-<a class="btn btn-outline-dark my-2" href="{% url 'social:begin' 'facebook' %}">{% trans 'ফেসবুক দিয়ে লগইন করুন' %}</a>
-<br>
-<a class="btn btn-outline-dark mb-2" href="{% url 'social:begin' 'twitter' %}">{% trans ' টুইটার দিয়ে লগইন করুন' %}</a>
-<br>
+<div id="share" class="my-4 d-flex text-center row">
+    
+    <div id="fb" class="col-md-4">
+        <a class="text-white py-2 d-inline-block" href="{% url 'social:begin' 'facebook' %}">
+            <i class="fa fa-facebook-f"></i>
+            <span>{% trans "দিয়ে লগইন" %}</span>
+        </a>
+    </div>
+    
+    <div id="gplus" class="col-md-4">
+        <a class="text-white py-2 d-inline-block" href="#">
+            <i class="fa fa-google-plus"></i>
+            <span>{% trans ' দিয়ে লগইন' %}</span>
+        </a>
+    </div>
+    
+    <div id="twt" class="col-md-4">
+        <a class="text-white py-2 d-inline-block" href="{% url 'social:begin' 'twitter' %}">
+            <i class="fa fa-twitter"></i>
+            <span>{% trans ' দিয়ে লগইন' %}</span>
+        </a>
+    </div>
+
+
+</div>

@@ -112,6 +112,7 @@ def get_data_by_page_name(page=None, direct_url=None):
 
 
 def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=None):
+    total = 0
     for i, item in enumerate(img_url_list):
         dir = os.path.join(
             MEDIA_ROOT,  # media/
@@ -124,7 +125,7 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
         
         # posts under this category for unique image name
         _cat, _c = Category.objects.get_or_create(name=category_name)
-        # print(category_name)
+        
         try:
             count = Categorize.objects.filter(
                 category=_cat
@@ -132,14 +133,15 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
         except:
             count = 0
         
+        title = _cat.slug
+        slug = title + "-" + str(count+1)
+        
         # unique image name
         if img_details:
-            # removing character after underscore(_) from post id before adding
-            slug = _cat.slug + "-" + str(img_details['id'][i]).split("_", 1)[-1]
+            img_name = title + "-" + str(img_details['id'][i]) + ".jpg"
         else:
-            slug = count + i
-        
-        img_dir = os.path.join(timezone.now().date().isoformat(), slug + ".jpg")
+            img_name = slug + ".jpg"
+        img_dir = os.path.join(timezone.now().date().isoformat(), img_name)
         
         if img_details:
             # getting all post_id in an dict
@@ -164,22 +166,25 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
         
         # download the image
         # scrapped data from facebook always jpg
-        urllib.request.urlretrieve(item, os.path.join(dir, slug + ".jpg"))
+        urllib.request.urlretrieve(item, os.path.join(dir, img_name))
         
         # creating a post instance and save
         p = Post(
             slug=slug,
-            title=slug,
+            title=title,
             img=img_dir,
             publish_date=timezone.now(),
             status="p",
         )
         p.save()
         
-        print("{0} - image saved".format(p.title))
+        print("{0} - image saved".format(img_name))
         
         # connecting post and category
         Categorize.objects.update_or_create(
             post=p,
             category=Category.objects.get(id=_cat.id),
         )
+        total = i
+    
+    print("Scrapping ended. Total {0} images saved....".format(total))

@@ -16,6 +16,7 @@ class FacebookAuth(models.Model):
         return str(self.id)
 
 
+# this has been created for later usage... admin can add pages for scrapping (cron)
 class FacebookData(models.Model):
     page = models.CharField(max_length=50)  # page (get from url)
     
