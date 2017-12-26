@@ -11,13 +11,13 @@
 {% block main_container %}
     <div class="container pt-5">
         <div class="login-form-wrapper bg-custom border border-dark">
-        
+            
             <h3 class="text-center py-3 bg-dark text-custom">{% trans ' সাইন আপ' %}</h3>
             
             <form method="post" class="p-3">
-            
+                
                 {{ form.non_field_errors }}
-            
+                
                 {% csrf_token %}
                 
                 <div class="form-group">
@@ -30,9 +30,9 @@
                             value="{{ form.username.value|default:'' }}"
                             placeholder="{% trans 'ইউজারনেম *' %}">
                     
-                        {% if form.username.errors %}
-                            <div class="form_field_error text-danger form-input-error">{{ form.username.errors|join:" " }}</div>
-                        {% endif %}
+                    {% if form.username.errors %}
+                        <div class="form_field_error text-danger form-input-error">{{ form.username.errors|join:" " }}</div>
+                    {% endif %}
                 </div>
                 
                 <div class="form-group">
@@ -45,9 +45,9 @@
                             value="{{ form.email.value|default:'' }}"
                             placeholder="{% trans 'ইমেইল *' %}">
                     
-                        {% if form.email.errors %}
-                            <div class="form_field_error text-danger form-input-error">{{ form.email.errors|join:" " }}</div>
-                        {% endif %}
+                    {% if form.email.errors %}
+                        <div class="form_field_error text-danger form-input-error">{{ form.email.errors|join:" " }}</div>
+                    {% endif %}
                 </div>
                 
                 <div class="form-row">
@@ -59,7 +59,7 @@
                                 name="{{ form.password1.name }}"
                                 id="{{ form.password1.name }}"
                                 placeholder="{% trans 'পাসওয়ার্ড*' %}">
-                    
+                        
                         {% if form.password1.errors %}
                             <div class="form_field_error text-danger form-input-error">{{ form.password1.errors|join:" " }}</div>
                         {% endif %}
@@ -102,5 +102,43 @@
             var _t = $(this);
             _t.removeClass('border-danger').next().remove();
         })
+    </script>
+    
+    <script src="https://apis.google.com/js/api:client.js"></script>
+    
+    <script type="text/javascript">
+        gapi.load('auth2', function () {
+            var auth2;
+
+            auth2 = gapi.auth2.init({
+                client_id: "798674467883-3q4hjrc9uukrlq2q4cqi8rc1hndeh4u9.apps.googleusercontent.com",
+                //scope: "<PUT BACKEND SCOPE HERE>"
+            });
+
+            auth2.then(function () {
+                var button = document.getElementById("g-plus-login");
+                console.log("User is signed-in in Google+ platform?", auth2.isSignedIn.get() ? "Yes" : "No");
+
+                auth2.attachClickHandler(button, {}, function (googleUser) {
+                    // Send access-token to backend to finish the authenticate
+                    // with your application
+
+                    var authResponse = googleUser.getAuthResponse();
+                    var $form;
+                    var $input;
+
+                    $form = $("<form>");
+                    $form.attr("action", "/complete/google-plus");
+                    $form.attr("method", "post");
+                    $input = $("<input>");
+                    $input.attr("name", "id_token");
+                    $input.attr("value", authResponse.id_token);
+                    $form.append($input);
+                    // Add csrf-token if needed
+                    $(document.body).append($form);
+                    $form.submit();
+                });
+            });
+        });
     </script>
 {% endblock %}

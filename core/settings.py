@@ -189,6 +189,7 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.twitter.TwitterOAuth',
     'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GooglePlusAuth',
 
     'django.contrib.auth.backends.ModelBackend',
 )
@@ -204,8 +205,12 @@ SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 #testing
 SOCIAL_AUTH_FACEBOOK_KEY = '1659905954049233'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = 'f33c1cdc6c24f53587bb4466e1d17896'  # App Secret
+
 SOCIAL_AUTH_TWITTER_KEY = 'dULiZCPsWc5u2OA086itWw2M2'  # App ID
 SOCIAL_AUTH_TWITTER_SECRET = 'Yr9xXLlda9NfaPKA4ghCqmD9ZyybcDSlMiNz55CFmrgo8IfGYb'  # App Secret
+
+SOCIAL_AUTH_GOOGLE_PLUS_KEY = '798674467883-3q4hjrc9uukrlq2q4cqi8rc1hndeh4u9.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_PLUS_SECRET = 'zV3--9mPZyvCGzXPgR78IEYc'
 
 # for dokku
 if DATABASE_URL:

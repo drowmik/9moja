@@ -46,17 +46,17 @@
                                 <div class="form_field_error form-input-error">{{ form.password.errors|join:" " }}</div>
                             {% endif %}
                         </div>
-                    
+                        
                         <button type="submit" class="btn btn-success" value="login">{% trans 'নিবেদন করুন' %}</button>
-                    
+                        
                         <div class="sign-up">
                             <p class="mt-3 d-inline-block">{% trans 'একাউন্ট খুলতে সাইন-আপ করুন' %}</p>
                             <a
-                                href="{% url 'signup' %}"
-                                class="btn btn-primary d-inline-block">{% trans 'সাইন-আপ' %}</a>
+                                    href="{% url 'signup' %}"
+                                    class="btn btn-primary d-inline-block">{% trans 'সাইন-আপ' %}</a>
                         </div>
                     </form>
-                
+                    
                     <div class="social-auth px-4 py-1">
                         {% include 'snippets/social-auth-links.html' %}
                     </div>
@@ -65,6 +65,45 @@
             </div>
         </div>
     
-    
     </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://apis.google.com/js/api:client.js"></script>
+    
+    <script type="text/javascript">
+        gapi.load('auth2', function () {
+            var auth2;
+
+            auth2 = gapi.auth2.init({
+                client_id: "798674467883-3q4hjrc9uukrlq2q4cqi8rc1hndeh4u9.apps.googleusercontent.com",
+                //scope: "<PUT BACKEND SCOPE HERE>"
+            });
+
+            auth2.then(function () {
+                var button = document.getElementById("g-plus-login");
+                console.log("User is signed-in in Google+ platform?", auth2.isSignedIn.get() ? "Yes" : "No");
+
+                auth2.attachClickHandler(button, {}, function (googleUser) {
+                    // Send access-token to backend to finish the authenticate
+                    // with your application
+
+                    var authResponse = googleUser.getAuthResponse();
+                    var $form;
+                    var $input;
+
+                    $form = $("<form>");
+                    $form.attr("action", "/complete/google-plus");
+                    $form.attr("method", "post");
+                    $input = $("<input>");
+                    $input.attr("name", "id_token");
+                    $input.attr("value", authResponse.id_token);
+                    $form.append($input);
+                    // Add csrf-token if needed
+                    $(document.body).append($form);
+                    $form.submit();
+                });
+            });
+        });
+    </script>
 {% endblock %}
