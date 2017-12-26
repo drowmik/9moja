@@ -21,6 +21,15 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from dashboard import views as dash_views
 from main_app import views as main_views
 from django.contrib.auth import views as auth_views
+from django.views.generic import TemplateView
+from django.contrib.sitemaps.views import sitemap
+import main_app.sitemap
+
+sitemaps = {
+    'single_post': main_app.sitemap.MainSitemap,
+    'category': main_app.sitemap.CategorySitemap,
+    'others': main_app.sitemap.OtherSitemap,
+}
 
 urlpatterns = [
     
@@ -42,6 +51,10 @@ urlpatterns = [
     url(r'^oauth/', include('social_django.urls', namespace='social')),
     
     url(r'^comments/', include('django_comments.urls')),
+    
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    
+    url(r'^robots.txt$', TemplateView.as_view(template_name="robots.txt", content_type="text/plain"), name="robots_file"),
     
     url(r'^', include('main_app.urls', namespace="main_app")),
     

@@ -1,0 +1,13 @@
+Sitemap: {{ request.scheme }}://{{request.get_host}}{% url 'django.contrib.sitemaps.views.sitemap' %}
+
+User-agent: *
+Disallow: /fbs
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /static/admin
+Disallow: /static/fb_scrapper
+Disallow: /static/main_app/css
+Disallow: /static/main_app/fonts
+Disallow: /static/main_app/ime
+Disallow: /static/main_app/js
+
