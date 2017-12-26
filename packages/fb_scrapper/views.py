@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from main_app.models import custom_slugify
 from django.urls import reverse
 
@@ -8,7 +8,7 @@ from .forms import FbScrapperAuthForm, FbScrapperDataForm
 from .utils import *
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def home(request):
     auth = FacebookAuth.objects.all()
     
@@ -19,7 +19,7 @@ def home(request):
     return render(request, templ, ctx)
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def scrapper(request):
     templ = 'fb_scrapper/scrapper.html'  # template name
     ctx = {  # context
@@ -27,7 +27,7 @@ def scrapper(request):
     return render(request, templ, ctx)
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def get_fb_scrapper_auth(request):
     token_expired = True  # initially assumed no token
     
@@ -68,7 +68,7 @@ def get_fb_scrapper_auth(request):
     return render(request, templ, ctx)
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def get_fb_scrapper_data(request):
     if request.method == 'POST':
         form = FbScrapperDataForm(request.POST)
@@ -102,7 +102,7 @@ def get_fb_scrapper_data(request):
     return render(request, templ, ctx)
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def scrapper_ajax(request):
     if request.method == 'GET':
         ajax_data = request.GET
@@ -134,7 +134,7 @@ def scrapper_ajax(request):
     })
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def get_data_ajax(request):
     if request.method == 'GET':
         page_data = request.GET
