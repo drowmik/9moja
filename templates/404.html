@@ -2,6 +2,8 @@
 
 {% load i18n %}
 
+{% block og_description %}"আমি একটা বোকা!  আমার জন্য শোক প্রকাশ করুন।"{% endblock %}
+
 {% block main_container %}
     
     <section class="section">
@@ -30,7 +32,7 @@
                     </div>
                     
                     
-                    <h3 class="text-center">{% trans "আপনার এহেন বোকামির জন্য আমরা শোক প্রকাশ করছি।কারণ, এই নামের বিভাগ খুঁজে পাওয়া যায় নি!" %}
+                    <h3 class="text-center">{% trans "আপনার এহেন বোকামির জন্য আমরা শোক প্রকাশ করছি।কারণ, এই নামের কিছু খুঁজে পাওয়া যায় নি!" %}
                         <span>
                                 <a href="{% url 'main_app:index' %}">{% trans "ঘরে ফিরে যান" %}</a>
                             </span>

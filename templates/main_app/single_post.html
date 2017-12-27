@@ -2,7 +2,12 @@
 
 {% load comments i18n %}
 
-{% block title %}{{ post.title }}{% trans " | নয় মজা" %}{% endblock title %}
+{% block og_title %}বাংলার দেশী মিম - {{ post.title }}{% endblock %}
+{% block og_type %}image.gallery{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{request.get_host}}{{ post.get_absolute_url }}{% endblock %}
+{% block og_img %}{{ request.scheme }}://{{request.get_host}}{{ media_url }}{% endblock %}
+
+{% block title %}{{ post.title }}{% trans " | নয়মজা" %}{% endblock title %}
 
 {% block main_container %}
     <div class="container">

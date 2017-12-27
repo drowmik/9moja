@@ -3,30 +3,36 @@
 {% load static i18n %}
 
 <html lang="en">
-<head>
+<head  prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# image: http://ogp.me/ns/image#">
 
     {% block meta %}
         
         {% include 'snippets/meta_default.html' %}
-        <title>বাংলা মিমের মজার ভাণ্ডার - www.9moja.com</title>
-        <meta content="বাংলা মজার মেম এর দুনিয়ায় আপনাকে স্বাগতম। প্রতিদিন নতুন নতুন মজাতে মেতে উঠুন নয়মজাতে এবং খুঁজে নিন আপনার পছন্দের মেম অসংখ্য হাসির বিভাগ থেকে। কিংবা নিজেই আপনার তৈরি ব্যাঙ্গত্বক ছবি এবং দুষ্টু হাসির মেম প্রদান করুন এবং অন্যদের সেই মজা নিতে দিন!" name="description">
-        <meta content="মজা, খুশি, হাসি, ফান, মেম, মিম, মীম, ছবি, বাংলা ফান, জোকস, ১৮+, হাসির সাইট, হট, সেক্স, মেয়ে, ভাবী, ভাবি, দুষ্টু, fun, bangla fun, smile, hot, meme, sexy jokes, jokes, 18+ bangla, best bangla, hot jokes" name="keywords">
-        <meta property="og:title" content="বাংলা মিম মজা - www.9moja.com" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://www.9moja.com" />
-        <meta property="og:image" content="http://9moja.com/static/main_app/img/logo-183x80.png" />
+        
+        <meta name="description" content="বাংলা মজার মিম এর দুনিয়ায় আপনাকে স্বাগতম।
+        প্রতিদিন নতুন নতুন মজাতে মেতে উঠুন নয়মজাতে এবং খুঁজে নিন আপনার পছন্দের মিম অসংখ্য হাসির বিভাগ থেকে। কিংবা নিজেই আপনার তৈরি ব্যাঙ্গত্বক ছবি এবং দুষ্টু হাসির মিম প্রদান করুন এবং অন্যদের সেই মজা নিতে দিন!">
+        <meta name="keywords" content="মজা, খুশি, হাসি, ফান, মেম, মিম, মীম, ছবি, বাংলা ফান, জোকস, ১৮+, হাসির সাইট, হট, সেক্স, মেয়ে,
+        ভাবী, ভাবি, দুষ্টু, fun, bangla fun, smile, hot, meme, sexy jokes, jokes, 18+ bangla, best bangla, hot jokes {% block keyword %}{% endblock %}">
+        
+        <meta name="author" content="vimmaniac.com">
         <meta property="fb:app_id" content="1659905954049233" />
-        <meta property="og:site_name" content="নয়মজা" />
-        <meta property="og:description" content="প্রতিদিন নতুন নতুন মজাতে মেতে উঠুন নয়মজাতে এবং খুঁজে নিন আপনার পছন্দের মেম অসংখ্য হাসির বিভাগ থেকে। কিংবা নিজেই আপনার তৈরি ব্যাঙ্গত্বক ছবি এবং দুষ্টু হাসির মেম প্রদান করুন এবং অন্যদের সেই মজা নিতে দিন" />
+        
+        <meta property="og:title" content="{% block og_title %}বাংলার দেশী মিম - www.9moja.com{% endblock %}" />
+        <meta property="og:type" content="{% block og_type %}website{% endblock %}" />
+        <meta property="og:url" content="{% block og_url %}{{ request.scheme }}://{{request.get_host}}{% endblock %}" />
+        <meta property="og:image" content="{% block og_img %}{% static 'main_app/img/logo-183x80.png' %}{% endblock %}" />
+        <meta property="og:site_name" content="{% block og_site_name %}নয়মজা{% endblock %}" />
+        <meta property="og:description" content="{% block og_description %}প্রতিদিন নতুন নতুন মজাতে মেতে উঠুন নয়মজাতে এবং খুঁজে নিন আপনার পছন্দের মিম অসংখ্য হাসির বিভাগ থেকে।
+        কিংবা নিজেই আপনার তৈরি ব্যাঙ্গত্বক ছবি এবং দুষ্টু হাসির মিম প্রদান করুন এবং অন্যদের সেই মজা নিতে দিন{% endblock %}" />
+        
         <meta property="og:locale" content="bn_BD" />
         <meta property="og:locale:alternate" content="en_US" />
 
-    {% endblock %}
-    
-    
-    {% block extra_meta %}
         <meta name="google-site-verification" content="4rOiYZpo6TYMbfw4nwjZfWeFsQS46BqajPKQgHi2YCE" />
     {% endblock %}
+    
+    
+    {% block extra_meta %}{% endblock %}
     
     
     {% block google_analytics %}
@@ -49,7 +55,7 @@
     {% block google_tag_manager %}{% endblock %}
     
     
-    <title>{% block title %}{% trans "নয় মজা" %}{% endblock title %}</title>
+    <title>{% block title %}{% trans "বাংলার দেশী মিমের ভাণ্ডার - নয়মজা" %}{% endblock title %}</title>
     
     
     <link rel="shortcut icon" href="{% static 'main_app/img/favicon.ico' %}">
