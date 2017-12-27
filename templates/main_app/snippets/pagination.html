@@ -14,20 +14,42 @@
             </li>
             
             
-            {% for i in page_iter %}
-                {% if i == '...' %}
-                    <li class="page-item disabled">
-                        <span class="page-link">
-                            {{ i }}
-                            <span class="sr-only">(current)</span>
-                        </span>
-                    </li>
-                {% else %}
-                    <li class="page-item {% if i == current_page|add:"0" %}active{% endif %}">
-                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+            {% if request.is_mobile %}
+                {% if posts.number != 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ current_page|add:-1 }}">
+                            <i class="fa fa-caret-left"></i>
+                        </a>
                     </li>
                 {% endif %}
-            {% endfor %}
+                
+                <li class="page-item active">
+                    <a class="page-link" href="?page={{ current_page }}">{{ current_page }}</a>
+                </li>
+                
+                {% if posts.number != posts.paginator.num_pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ current_page|add:1 }}">
+                            <i class="fa fa-caret-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            {% else %}
+                {% for i in page_iter %}
+                    {% if i == '...' %}
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                {{ i }}
+                                <span class="sr-only">(current)</span>
+                            </span>
+                        </li>
+                    {% else %}
+                        <li class="page-item {% if i == current_page|add:"0" %}active{% endif %}">
+                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
             
             <li class="page-item">
                 

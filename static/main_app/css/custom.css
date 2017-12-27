@@ -417,6 +417,10 @@ footer {
         margin-left: auto !important;
         margin-right: auto !important;
     }
+
+    #top_category_nav .categories {
+        display: none;
+    }
 }
 
 @media (min-width: 768px) {
