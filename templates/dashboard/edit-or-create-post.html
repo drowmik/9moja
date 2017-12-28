@@ -46,7 +46,7 @@
                     </div>
                     
                     <div class="form-group border border-secondary p-2">
-                        <label class="mr-2">{% trans "মিমের ছবিটি এখানে আপলোড করুনঃ" %} {{ form.img.value|default:"" }}</label>
+                        <label class="mr-2">{% trans "মিমের ছবিটি এখানে আপলোড করুনঃ" %}</label>
                         <input
                                 type="file"
                                 accept="image/*"
@@ -60,7 +60,7 @@
                             <i class="fa fa-upload"></i>
                             <span>{% trans "ছবি পছন্দ করুন" %}</span>
                         </label>
-                        <span id="file_name"></span>
+                        <span id="file_name">{{ form.img.value|default:"" }}</span>
                     </div>
                     
                     
