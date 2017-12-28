@@ -365,6 +365,60 @@ footer {
     width: 20px
 }
 
+/* input file hack start */
+.input_file {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.input_file + label {
+    /*font-size: 1.25em;
+    font-weight: 700;*/
+}
+
+.input_file:focus + label,
+.input_file + label:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+/* Firefox Bug Fix */
+.input_file:focus + label,
+.input_file.has-focus + label {
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+}
+
+/* input file hack end */
+
+/* input checkbox hack start (dashboard > create post) */
+.cat_input_chkbox {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+}
+
+.cat_input_label {
+}
+
+/* Default State */
+.cat_input_label {
+    /* I added btn class for default */
+}
+
+/* Toggled State */
+.cat_input_chkbox:checked + .cat_input_label {
+    color: #fff;
+    background-color: #343a40;
+    border-color: #343a40;
+}
+
+/* input checkbox hack end */
+
 @media (max-width: 576px) {
     button.navbar-toggler {
         top: -52px;
@@ -426,11 +480,11 @@ footer {
         display: none;
     }
 
-    .logout_btn{
+    .logout_btn {
         margin-top: 10px;
     }
 
-    #greetings{
+    #greetings {
         font-size: 25px;
         font-weight: bold;
     }

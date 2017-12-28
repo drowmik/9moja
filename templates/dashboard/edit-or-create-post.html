@@ -26,14 +26,14 @@
     <div class="container">
         <div class="row">
             <div class="col bg-custom border border-dark py-3 mt-3">
-            
+                
                 <h3 class="text-success">{% trans "নতুন মিম পোস্ট করুন" %}</h3>
-            
+                
                 <form class="form mt-4" method="post" enctype="multipart/form-data">
                     
                     {% csrf_token %}
                     
-                    <div class="form-group">
+                    <div class="form-group border border-secondary p-2">
                         <label for="post_title">{% trans "মিমের নামঃ" %}</label>
                         <input
                                 type="text"
@@ -45,25 +45,34 @@
                         >
                     </div>
                     
-                    <div class="form-group">
-                        <label for="post_file">{% trans "মিমের ছবিটি এখানে আপলোড করুনঃ" %} {{ form.img.value|default:"" }}</label>
+                    <div class="form-group border border-secondary p-2">
+                        <label class="mr-2">{% trans "মিমের ছবিটি এখানে আপলোড করুনঃ" %} {{ form.img.value|default:"" }}</label>
                         <input
                                 type="file"
-                                class="form-control"
+                                accept="image/*"
+                                class="form-control input_file"
                                 id="post_file"
                                 name="{{ form.img.name }}"
                                 value="{{ form.img.value|default:"" }}"
                         >
+                        <br class="d-md-none">
+                        <label for="post_file" class="btn btn-outline-danger rounded-0">
+                            <i class="fa fa-upload"></i>
+                            <span>{% trans "ছবি পছন্দ করুন" %}</span>
+                        </label>
+                        <span id="file_name"></span>
                     </div>
                     
-                    <p>{% trans "বিভাগ চিহ্নিত করুনঃ" %}</p>
-                
-                    <ul class="all-cat-ul">
+                    
+                    <div class="all-cat-ul border border-secondary p-2 mb-3">
+                        
+                        <p>{% trans "বিভাগ চিহ্নিত করুনঃ" %}</p>
                         
                         {# not included in modelform, handled customly #}
                         {% for c in all_categories %}
-                            <li>
+                            <span class="d-inline-block mr-2">
                                 <input
+                                        class="cat_input_chkbox"
                                         type="checkbox"
                                         name="{{ category_prefix }}{{ c.category.id }}"
                                         value="{{ c.category.id }}"
@@ -72,11 +81,14 @@
                                         checked
                                         {% endif %}
                                 >
-                                <label for="cat-{{ forloop.counter }}">{{ c.category }}</label>
-                            </li>
+                                <label
+                                        class="cat_input_label btn btn-outline-dark btn-sm rounded-0"
+                                        for="{{ category_prefix }}{{ c.category.id }}"
+                                >{{ c.category }}</label>
+                            </span>
                         {% endfor %}
                     
-                    </ul>
+                    </div>
                     
                     <button type="submit" class="btn btn-primary mb-2">{% trans "পোস্ট দিন" %}</button>
                 </form>
@@ -86,7 +98,7 @@
                     {% csrf_token %}
                     
                     <input type="text" name="new_cat" class="pl-2" placeholder="{% trans "নতুন বিভাগের নাম" %}">
-                    <button type="submit" class="btn btn-outline-success btn-sm">+নতুন বিভাগ যোগ করুন</button>
+                    <button type="submit" class="btn btn-dark btn-sm rounded-0">+নতুন বিভাগ যোগ করুন</button>
                 </form>
             
             
@@ -108,7 +120,8 @@
                 var new_cat_input = $('input[name="new_cat"]');
                 var json_data = {};
                 json_data['new_cat'] = new_cat_input.val();
-                json_data['post_id'] = "{{ post.id|default:None }}";   {# if not editing, no post id will be delivered #}
+                json_data['post_id'] = "{{ post.id|default:None }}";
+                {# if not editing, no post id will be delivered #}
                 json_data['type'] = "{{ type }}";
 
                 $.ajax({
@@ -124,28 +137,32 @@
                     data: json_data,
                     success: function (data) {
                         var html;
-                        
+
                         {# if any error raised, error msg will be shown #}
-                        if (data["err"]){
+                        if (data["err"]) {
                             html =
-                                '<li class="text-danger new_cat_error">' +
-                                    data["err"] +
-                                '</li>'
-                        }else {     {# show new created category if no error #}
+                                '<span class="text-danger new_cat_error">' +
+                                data["err"] +
+                                '</span>'
+                        } else {     {# show new created category if no error #}
                             html =
-                                '<li>' +
-                                    '<input type="checkbox" ' +
-                                        'name="cat-' + data["id"] + '" ' +
-                                        'value="' + data["id"] + '" ' +
-                                        'id="cat-' + data["id"] + '" ' +
-                                        'checked' +
-                                    '> ' +
-                                    '<label for="cat-' + data["id"] + '">' + data["name"] + '</label>' +
-                                '</li>';
-                            
+                                '<span class="d-inline-block mr-2">' +
+                                '<input ' +
+                                'class="cat_input_chkbox" ' +
+                                'type="checkbox" ' +
+                                'name="cat-' + data["id"] + '" ' +
+                                'value="' + data["id"] + '" ' +
+                                'id="cat-' + data["id"] + '" ' +
+                                'checked' +
+                                '> ' +
+                                '<label ' +
+                                'class="cat_input_label btn btn-outline-dark btn-sm rounded-0" ' +
+                                'for="cat-' + data["id"] + '">' + data["name"] + '</label>' +
+                                '</span>';
+
                             $('li.new_cat_error').remove();
                         }
-                        
+
                         $('.all-cat-ul').append(html);
                         new_cat_input.val("");
                     },
@@ -154,8 +171,27 @@
                     }
                 })
             });
+
+            var input_file = $('.input_file');
+            input_file.on('change', function (e) {
+                var label = $(this).next('label');
+                var fileName = '';
+
+                if (e.target.value)
+                    fileName = e.target.value.split('\\').pop();
+
+                if (fileName)
+                    $('#file_name').html(fileName);
+                console.log(fileName);
+            });
+
+            // Firefox bug fix
+            input_file.on('focus', function () {
+                $(this).addClass('has-focus');
+            }).on('blur', function () {
+                $(this).removeClass('has-focus');
+            });
         })(jQuery)
     </script>
-    
     
 {% endblock %}

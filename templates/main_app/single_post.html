@@ -28,7 +28,7 @@
                     <ul class="nav mb-2">
                         
                         {% for cat in post.get_categories %}
-                            <li class="nav-item">
+                            <li class="nav-item pr-2">
                                 <a
                                         class="btn btn-outline-danger btn-sm"
                                         href="{{ cat.category.get_absolute_url }}">{{ cat.category }}</a>
