@@ -112,7 +112,7 @@ def each_category(request, slug):
     try:
         category = Category.objects.get(slug=slug)
         
-        posts_by_category = Post.objects.filter(categorize__category=category)
+        posts_by_category = Post.objects.filter(categorize__category=category).order_by('-publish_date')
         
         post_per_page = get_post_per_page(request)
         
