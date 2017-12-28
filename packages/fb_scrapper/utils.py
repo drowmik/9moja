@@ -187,4 +187,4 @@ def save_fb_scrapper_all_img_by_url(img_url_list, category_name, img_details=Non
         )
         total = i
     
-    print("Scrapping ended. Total {0} images saved....".format(total))
+    print("Scrapping ended. Total {0} images saved....".format(total+1))
