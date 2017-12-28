@@ -68,14 +68,16 @@ def liking_post(user, post, relation_model, is_liked=True):
     when a user click like on a post, then this action will be triggered
     """
     try:
-        if is_liked:
-            r = relation_model(
-                user=user,
-                post=post
-            )
-            r.save()
-            post.likes += 1
-            user.likes += 1
+        #if is_liked:
+        r = relation_model(
+            user=user,
+            post=post
+        )
+        post.likes += 1
+        user.likes += 1
+        r.save()
+        post.save()
+        user.save()
             
             # no disliking initially... muhuhhahahahah
             # else:
@@ -89,7 +91,7 @@ def liking_post(user, post, relation_model, is_liked=True):
             # user.save()
             # post.save()
     except:
-        print("unexpected error!! (main_app/utils.py - 90)")
+        print("unexpected error!! (print from: main_app/utils.py)")
         return
 
 
