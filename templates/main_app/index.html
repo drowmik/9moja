@@ -2,6 +2,10 @@
 
 {% load i18n comments %}
 
+{% block keyword %}
+    {% for cat in all_cats %}{{ cat.name }}, {% endfor %}
+{% endblock %}
+
 {% block main_container %}
     
     <section id="home_page_contents" class="section">

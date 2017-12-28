@@ -58,14 +58,15 @@ def index(request):
     )
 
     popular_posts = Post.objects.order_by('-likes')[:5]
-    popular_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by(
-        '-like_count')[:5]
+    all_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by(
+        '-like_count')
     
     templ = 'main_app/index.html'  # template name
     ctx = {  # context
         "posts": latest_posts,
         "popular_posts": popular_posts,
-        "popular_cats": popular_cats,
+        "popular_cats": all_cats[:5],
+        "all_cats": all_cats,
         "page_iter": pg_iter,
         "current_page": page,
     }

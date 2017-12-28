@@ -2,6 +2,10 @@
 
 {% load comments i18n %}
 
+{% block keyword %}
+    {% for cat in post.get_categories %}{{ cat.category }}, {% endfor %} {{ post.title }},
+{% endblock %}
+
 {% block og_title %}বাংলার দেশী মিম - {{ post.title }}{% endblock %}
 {% block og_type %}image.gallery{% endblock %}
 {% block og_url %}{{ request.scheme }}://{{request.get_host}}{{ post.get_absolute_url }}{% endblock %}
