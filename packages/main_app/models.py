@@ -3,7 +3,19 @@ from django.utils import timezone
 from django.urls import reverse
 from django.db.models.signals import post_save
 from .utils import *
-import os
+import os, datetime
+
+
+# post model function
+def get_image_path(instance, filename):
+    file_extension = os.path.splitext(filename)[1]
+    
+    # the format will be /path/to/media/<post_id>/<upload_date>/<post_title><file_extension>
+    return os.path.join(
+        datetime.datetime.now().strftime("%Y-%m-%d"),
+        str(instance.id),
+        str(instance.title + file_extension)
+    )
 
 
 class Post(models.Model):
@@ -33,7 +45,11 @@ class Post(models.Model):
         default='u'
     )
     
-    img = models.ImageField(upload_to="%Y-%m-%d")
+    img = models.ImageField(
+        upload_to=get_image_path,
+        blank=True,
+        null=True
+    )
     
     def __str__(self):
         return self.title
@@ -42,9 +58,15 @@ class Post(models.Model):
     def save(self, user=None, *args, **kwargs):
         if not self.id:
             self.slug = custom_slugify(value=self.title)
+            
+            backup_img = self.img
+            self.img = None
+            super(Post, self).save()    # saving post without img field
+            self.img = backup_img
+        
         if user:
             self.user = user
-        super(Post, self).save()  # saving the slug automatically
+        super(Post, self).save()  # saving the post finally
     
     def get_categories(self):
         return self.categorize_set.all()
