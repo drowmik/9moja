@@ -77,6 +77,9 @@ def each_post(request, slug, pk):
     share_urls = {}
     try:
         post = Post.objects.get(id=pk)
+
+        user = UserExtended.objects.get(user=request.user)
+        liking_post(user, post, UserPostRelation)
         
         full_url = str(request.scheme) + "://" + str(request.get_host()) + str(post.get_absolute_url())
         
@@ -88,7 +91,7 @@ def each_post(request, slug, pk):
         share_urls["gp"] = "https://plus.google.com/share?url=" + full_url
     
     except Post.DoesNotExist:
-        raise Http404("This does not exist")
+        raise Http404("দুঃখিত, কিছু পাওয়া যায় নি!")
     
     from_page = request.GET.get('from_page') if request.method == 'GET' else 1
     
@@ -225,7 +228,7 @@ def like_post(request):
             # jd["is_liked"] = "0"
         if ajax_data.get("is_liked") == "0":
             # like
-            liking_post(user, post, UserPostRelation, True)
+            liking_post(user, post, UserPostRelation)
             jd["is_liked"] = "1"
         else:
             # empty response

@@ -63,21 +63,26 @@ def long_pagination(current_page, total_pages, showing, is_not_mobile=True):
     return page_iter
 
 
-def liking_post(user, post, relation_model, is_liked=True):
+def liking_post(user, post, relation_model):
     """
     when a user click like on a post, then this action will be triggered
     """
     try:
-        #if is_liked:
-        r = relation_model(
-            user=user,
-            post=post
-        )
-        post.likes += 1
-        user.likes += 1
-        r.save()
-        post.save()
-        user.save()
+        old_r = relation_model.objects.filter(user=user, post=post)
+        is_liked = True if old_r else False
+    except:
+        is_liked = False
+    try:
+        if not is_liked:
+            r = relation_model(
+                user=user,
+                post=post
+            )
+            post.likes += 1
+            user.likes += 1
+            r.save()
+            post.save()
+            user.save()
             
             # no disliking initially... muhuhhahahahah
             # else:
