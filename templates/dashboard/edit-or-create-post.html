@@ -22,28 +22,31 @@
 
 
 {% block main_container %}
-    
+    {% block create_new_button %}{% endblock %}
     <div class="container">
         <div class="row">
-            <div class="col">
-                <form class="form" method="post" enctype="multipart/form-data">
+            <div class="col bg-custom border border-dark py-3 mt-3">
+            
+                <h3 class="text-success">{% trans "নতুন মিম পোস্ট করুন" %}</h3>
+            
+                <form class="form mt-4" method="post" enctype="multipart/form-data">
                     
                     {% csrf_token %}
                     
                     <div class="form-group">
-                        <label for="post_title">Post Title:</label>
+                        <label for="post_title">{% trans "মিমের নামঃ" %}</label>
                         <input
                                 type="text"
                                 class="form-control"
                                 id="post_title"
                                 name="{{ form.title.name }}"
                                 value="{{ form.title.value|default:"" }}"
-                                placeholder="Enter Title here.."
+                                placeholder="{% trans "এখানে মিমের নাম দিন..." %}"
                         >
                     </div>
                     
                     <div class="form-group">
-                        <label for="post_file">File name: {{ form.img.value|default:"" }}</label>
+                        <label for="post_file">{% trans "মিমের ছবিটি এখানে আপলোড করুনঃ" %} {{ form.img.value|default:"" }}</label>
                         <input
                                 type="file"
                                 class="form-control"
@@ -53,6 +56,8 @@
                         >
                     </div>
                     
+                    <p>{% trans "বিভাগ চিহ্নিত করুনঃ" %}</p>
+                
                     <ul class="all-cat-ul">
                         
                         {# not included in modelform, handled customly #}
@@ -73,15 +78,15 @@
                     
                     </ul>
                     
-                    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                    <button type="submit" class="btn btn-primary mb-2">{% trans "পোস্ট দিন" %}</button>
                 </form>
                 
-                <form method="post" id="add_cat_form">
+                <form method="post" id="add_cat_form" class="my-2">
                     
                     {% csrf_token %}
                     
-                    <input type="text" name="new_cat" class="mb-2">
-                    <button type="submit" class="btn btn-outline-success mb-2">+Add new category</button>
+                    <input type="text" name="new_cat" class="pl-2" placeholder="{% trans "নতুন বিভাগের নাম" %}">
+                    <button type="submit" class="btn btn-outline-success btn-sm">+নতুন বিভাগ যোগ করুন</button>
                 </form>
             
             

@@ -361,6 +361,10 @@ footer {
     font-size: 18px;
 }
 
+#dashboard_container img {
+    width: 20px
+}
+
 @media (max-width: 576px) {
     button.navbar-toggler {
         top: -52px;
@@ -421,6 +425,16 @@ footer {
     #top_category_nav .categories {
         display: none;
     }
+
+    .logout_btn{
+        margin-top: 10px;
+    }
+
+    #greetings{
+        font-size: 25px;
+        font-weight: bold;
+    }
+
 }
 
 @media (min-width: 768px) {
