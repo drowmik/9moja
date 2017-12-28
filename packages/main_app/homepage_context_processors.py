@@ -3,7 +3,7 @@ from .utils import social_site_font
 
 
 def header(request):
-    categories = Category.objects.all()
+    categories = Category.objects.exclude(post=None)
     
     return {
         "hcp_categories": categories,  # showing categories in header at base.html
