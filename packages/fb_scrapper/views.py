@@ -12,19 +12,15 @@ from .utils import *
 def home(request):
     auth = FacebookAuth.objects.all()
     
-    templ = 'fb_scrapper/index.html'  # template name
     ctx = {  # context
         "auth_info": auth
     }
-    return render(request, templ, ctx)
+    return render(request, 'fb_scrapper/index.html', ctx)
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def scrapper(request):
-    templ = 'fb_scrapper/scrapper.html'  # template name
-    ctx = {  # context
-    }
-    return render(request, templ, ctx)
+    return render(request, 'fb_scrapper/scrapper.html', {})
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -60,12 +56,11 @@ def get_fb_scrapper_auth(request):
                 token_expired = False
             form = FbScrapperAuthForm(instance=saved_auth)
     
-    templ = 'fb_scrapper/scrapper-auth-form.html'  # template name
     ctx = {  # context
         "form": form,
         "token_expired": token_expired
     }
-    return render(request, templ, ctx)
+    return render(request, 'fb_scrapper/scrapper-auth-form.html', ctx)
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -89,7 +84,6 @@ def get_fb_scrapper_data(request):
         else:
             form = FbScrapperDataForm()
     
-    templ = 'fb_scrapper/scrapper-data-form.html'  # template name
     ctx = {  # context
         "form": form,
         "fb_fields": {
@@ -99,7 +93,7 @@ def get_fb_scrapper_data(request):
             "3": "shares",
         },
     }
-    return render(request, templ, ctx)
+    return render(request, 'fb_scrapper/scrapper-data-form.html', ctx)
 
 
 @user_passes_test(lambda u: u.is_superuser)

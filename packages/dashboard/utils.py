@@ -1,7 +1,6 @@
 EDIT_OR_CREATE = {
     "edit": " বদলানো হচ্ছেঃ",
     "create": "নতুন",
-    "template": "dashboard/edit-or-create-post.html"
 }
 
 

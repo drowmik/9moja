@@ -15,11 +15,10 @@ def home(request):
     else:
         posts = Post.objects.order_by('-publish_date')
     
-    templ = 'dashboard/index.html'  # template name
     ctx = {  # context
         "posts": posts
     }
-    return render(request, templ, ctx)
+    return render(request, 'dashboard/index.html', ctx)
 
 
 def log_in(request, **kwargs):
@@ -69,14 +68,13 @@ def edit_post(request, pk):
     else:
         form = EditPostForm(instance=post)
     
-    templ = EDIT_OR_CREATE["template"]  # template name
     ctx = {  # context
         "post": post,
         "form": form,
         "type": EDIT_OR_CREATE["edit"],
         "all_categories": get_category_list_by_post(Category, Categorize, post),
     }
-    return render(request, templ, ctx)
+    return render(request, "dashboard/edit-or-create-post.html", ctx)
 
 
 @login_required
@@ -128,14 +126,13 @@ def create_post(request):
     else:
         form = CreatePostForm()
     
-    templ = EDIT_OR_CREATE["template"]  # template name
     ctx = {  # context
         "form": form,
         "type": EDIT_OR_CREATE["create"],
         "all_categories": get_category_list_by_post(Category, Categorize),
         "category_prefix": cat_prefix
     }
-    return render(request, templ, ctx)
+    return render(request, "dashboard/edit-or-create-post.html", ctx)
 
 
 @login_required

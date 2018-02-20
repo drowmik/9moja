@@ -61,7 +61,6 @@ def index(request):
     all_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by(
         '-like_count')
     
-    templ = 'main_app/index.html'  # template name
     ctx = {  # context
         "posts": latest_posts,
         "popular_posts": popular_posts,
@@ -70,7 +69,7 @@ def index(request):
         "page_iter": pg_iter,
         "current_page": page,
     }
-    return render(request, templ, ctx)
+    return render(request, 'main_app/index.html', ctx)
 
 
 def each_post(request, slug, pk):
@@ -99,7 +98,6 @@ def each_post(request, slug, pk):
     popular_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by(
         '-like_count')[:5]
     
-    templ = 'main_app/single_post.html'  # template name
     ctx = {  # context
         'post': post,
         "popular_posts": popular_posts,
@@ -108,7 +106,7 @@ def each_post(request, slug, pk):
         'media_url': post.img.url,
         'share_urls': share_urls,
     }
-    return render(request, templ, ctx)
+    return render(request, 'main_app/single_post.html', ctx)
 
 
 def each_category(request, slug):
@@ -170,7 +168,6 @@ def each_category(request, slug):
     popular_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by(
         '-like_count')[:5]
     
-    templ = 'main_app/index.html'
     ctx = {
         "is_category_template": True,
         "posts": categorized_post,
@@ -179,7 +176,7 @@ def each_category(request, slug):
         "page_iter": pg_iter,
         "current_page": page,
     }
-    return render(request, templ, ctx)
+    return render(request, 'main_app/index.html', ctx)
 
 
 def coming_soon(request):
@@ -204,12 +201,11 @@ def search(request):
             # if no search keyword found, redirect to homepage
             return redirect('/')
     
-    templ = 'main_app/search.html'
     ctx = {
         "result": result,
         "err": err
     }
-    return render(request, templ, ctx)
+    return render(request, 'main_app/search.html', ctx)
 
 
 def like_post(request):
