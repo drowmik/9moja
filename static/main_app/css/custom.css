@@ -13,6 +13,8 @@
     display: block !important;
 }
 
+th, td{vertical-align: middle !important}
+
 input[type="password"] {
     font-family: 'sans-serif' !important;
 }
@@ -517,6 +519,18 @@ footer {
 }
 
 /* bootstrap override */
+table tbody>tr:hover{
+    background: #eee;
+}
+.del-post-btn{
+    font-size:19px;
+    line-height:1
+}
+
+.del-post-btn:hover{
+    border-bottom: 2px solid;
+}
+
 @media (min-width: 992px) {
     .container {
         max-width: 940px

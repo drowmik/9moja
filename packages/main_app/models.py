@@ -51,6 +51,8 @@ class Post(models.Model):
         null=True
     )
     
+    nsfw = models.BooleanField(default=False)
+    
     def __str__(self):
         return self.title
     

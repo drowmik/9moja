@@ -90,7 +90,13 @@
                     
                     </div>
                     
-                    <button type="submit" class="btn btn-primary mb-2">{% trans "পোস্ট দিন" %}</button>
+                    <button type="submit" class="btn btn-primary mb-2">
+                        {% if is_edit %}
+                            {% trans "হালনাগাদ করুন" %}
+                        {% else %}
+                            {% trans "পোস্ট দিন" %}
+                        {% endif %}
+                    </button>
                 </form>
                 
                 <form method="post" id="add_cat_form" class="my-2">

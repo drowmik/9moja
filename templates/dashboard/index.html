@@ -19,6 +19,7 @@
                     <th scope="col">{% trans 'তারিখ' %}</th>
                     <th scope="col">{% trans 'বিভাগ' %}</th>
                     <th scope="col">{% trans 'বদলান' %}</th>
+                    <th scope="col">{% trans 'মুছুন' %}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -49,16 +50,55 @@
                         
                         </td>
                         <td><a href="{% url 'dashboard:edit_post' post.id %}">{% trans 'বদলান' %}</a></td>
+                        <td>
+                            <a href="#"
+                               data-href="{% url 'dashboard:delete_post' post.id %}"
+                               class="text-danger del-post-btn url-for-modal"
+                               data-toggle="modal"
+                               data-target="#delete_confirmation">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
                 
                 </tbody>
             </table>
         {% else %}
-            <p class="my-4"><i>{% trans "আপনি এতো নিরামিষ কেন?  একটাও মজার কিছু দিলেন না এখনো!!" %}</i></p>
+            <p class="my-4"><i>{% trans "আপনি এতো নিরামিষ কেন?  একটাও মজার কিছু দেখালেন না এখনো!!" %}</i></p>
         {% endif %}
         
         <a href="{% url 'dashboard:create_post' %}">{% trans 'নতুন মজা তৈরি করুন' %}</a>
+    
+        <!-- Modal - Delete confirmation box -->
+        <div class="modal fade" id="delete_confirmation" tabindex="-1" role="dialog" aria-labelledby="delete_confirmationTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">সতর্কবার্তা</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        আপনি সত্যি সত্যি এই মজা রাখতে চান না?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">রাখতে চাই</button>
+                        <a href="#" id="del_post_btn" class="btn btn-danger">মুছে ফেলতে চাই</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        $('.url-for-modal').click(function () {
+            var a = $(this).attr('data-href');
+            $('#del_post_btn').attr('href', a);
+        })
+    </script>
 {% endblock %}

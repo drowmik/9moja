@@ -1,19 +1,29 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from main_app.models import UserExtended, Post, Category, Categorize
 from .forms import EditPostForm, CreatePostForm, SignUpForm
 from django.contrib.auth import views as auth_views
 from .utils import *
+import os, shutil
 
 
 @login_required
 def home(request):
-    if request.user:
-        posts = Post.objects.filter(user=request.user).order_by('-publish_date')
-    else:
-        posts = Post.objects.order_by('-publish_date')
+    # if request.user:
+    posts = Post.objects.filter(user=request.user).order_by('-publish_date')
+    # else:
+    #     posts = Post.objects.order_by('-publish_date')
+    
+    
+    if request.user.is_superuser:
+        # filtering by user
+        # removing empty objects
+        p = list(filter(None, [Post.objects.filter(user=u) for u in User.objects.all()]))
+        print(p)
+    
     
     ctx = {  # context
         "posts": posts
@@ -55,7 +65,12 @@ def edit_post(request, pk):
     
     if request.method == 'POST':
         cat_in_post_dict = (request.POST).dict()
-        del cat_in_post_dict['csrfmiddlewaretoken'], cat_in_post_dict["title"], cat_in_post_dict['img']
+        print("cat_in_post_dict:  ", cat_in_post_dict, "    request: ", request.POST)
+        try:
+            del cat_in_post_dict['csrfmiddlewaretoken'], cat_in_post_dict["title"], cat_in_post_dict['img']
+        except:
+            pass
+        
         
         x = list(cat_in_post_dict.values())
         
@@ -72,9 +87,21 @@ def edit_post(request, pk):
         "post": post,
         "form": form,
         "type": EDIT_OR_CREATE["edit"],
+        "is_edit": True,
         "all_categories": get_category_list_by_post(Category, Categorize, post),
     }
     return render(request, "dashboard/edit-or-create-post.html", ctx)
+
+
+@login_required
+def delete_post(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    if post.is_img_exists():
+        shutil.rmtree(os.path.dirname(post.img.path))
+    else:
+        print("No img found when deleting post, awkward!!!")
+    post.delete()
+    return redirect('dashboard:home')
 
 
 @login_required
