@@ -54,7 +54,7 @@ class Post(models.Model):
     nsfw = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.title
+        return "{} - {}".format(self.id, self.title)
     
     # override models save method for slug saving:
     def save(self, user=None, *args, **kwargs):
@@ -196,5 +196,5 @@ class UserPostRelation(models.Model):
     )
     
     def __str__(self):
-        data = {'user': self.user, 'post': self.post}
-        return "{user} : {post}".format(**data)
+        data = {'user': self.user, 'post': self.post, 'post_id': self.post.id}
+        return "{user} : {post}({post_id})".format(**data)

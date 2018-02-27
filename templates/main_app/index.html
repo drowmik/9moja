@@ -52,15 +52,19 @@
                                             </button>{% endcomment %}
                                             
                                             
-                                            {# lightbox #}
-                                            <a class="lightbox d-block article-media" href="#9moja-{{ forloop.counter }}">
+                                            {# lightbox (not active now, using direct link on image) #}
+                                            {# only simple link in image #}
+                                            <a class="d-block article-media" href="{{ post.get_absolute_url }}?from_page={{ posts.number }}">
+                                                <img src="{{ post.img.url }}" class="w-100"/>
+                                            </a>
+                                            {% comment %}<a class="lightbox d-block article-media" href="#9moja-{{ forloop.counter }}">
                                                 <img src="{{ post.img.url }}" class="w-100"/>
                                             </a>
                                             <a class="lightbox-target" id="9moja-{{ forloop.counter }}"
                                                 href="#{{ forloop.counter }}9moja">
                                                 <img src="{{ post.img.url }}"/>
                                                 <span class="lightbox-close" href="#{{ forloop.counter }}9moja"></span>
-                                            </a>
+                                            </a>{% endcomment %}
                                             
                                             
                                             <div class="card-footer mt-3">
@@ -71,7 +75,7 @@
                                                 
                                                 <p class="article-status">
                                                     <a href="javascript:void(0)" class="text-secondary">
-                                                        <span>{{ post.likes }}{% trans " পছন্দ" %}</span>
+                                                        <span><span class="article-status-liked_count">{{ post.likes }}</span>{% trans " পছন্দ" %}</span>
                                                     </a>
                                                     {% comment %}<span>.</span>
                                                     <a href="javascript:void(0)" class="text-secondary">
@@ -87,10 +91,17 @@
                                                 
                                                 <ul class="nav article-actions">
                                                     <li>
-                                                        <button class="btn btn-outline-secondary like_btn" data-id="{{ post.id }}"
-                                                                data-liked="{{ post.have_like }}" type="button">
-                                                            <i class="fa fa-heart"></i>
-                                                        </button>
+                                                        {% if user.is_authenticated %}
+                                                            <button class="btn btn-outline-secondary like_btn" data-id="{{ post.id }}"
+                                                                    data-liked="{{ post.have_like }}" type="button">
+                                                                <i class="fa fa-heart"></i>
+                                                            </button>
+                                                        {% else %}
+                                                            <a class="btn btn-outline-secondary" href="{% url 'login' %}" target="_blank">
+                                                                <i class="fa fa-heart"></i>
+                                                            </a>
+                                                        {% endif %}
+                                                        
                                                     </li>
                                                     <li>
                                                         <a href="{{ post.get_absolute_url }}#comment?from_page={{ posts.number }}"
@@ -151,7 +162,7 @@
 						success: function (data) {
 							console.log(data);
 							_t.attr('data-liked', data['is_liked']);
-							liked_color(data['is_liked'], _t)
+							liked_color(data['is_liked'], _t, true)
 						},
 						error: function (e) {
 							console.log(e);
@@ -159,9 +170,13 @@
 					});
 				};
 
-				var liked_color = function (_flag, _t) {
+				var liked_color = function (_flag, _t, has_liked) {
 					if (parseInt(_flag) === 1) {
-						_t.removeClass('btn-outline-secondary').addClass('btn-outline-danger')
+						if (has_liked) {
+							var liked_count = _t.parents('.article-actions').prev().find('.article-status-liked_count');
+							liked_count.html(parseInt(liked_count.html()) + 1);
+						}
+						_t.removeClass('btn-outline-secondary').addClass('btn-outline-danger');
 					} else {
 						_t.removeClass('btn-outline-danger').addClass('btn-outline-secondary')
 					}
@@ -178,7 +193,7 @@
 					like_post($(this));
 				}).each(function () {
 					var _this = $(this);
-					liked_color(_this.attr('data-liked'), _this);
+					liked_color(_this.attr('data-liked'), _this, false);
 				});
 
 			})(jQuery);

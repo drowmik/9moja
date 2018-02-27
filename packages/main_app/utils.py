@@ -80,9 +80,15 @@ def liking_post(user, post, relation_model):
             )
             post.likes += 1
             user.likes += 1
+            
             r.save()
+            r.refresh_from_db()
+            
             post.save()
+            post.refresh_from_db()
+            
             user.save()
+            user.refresh_from_db()
             
             # no disliking initially... muhuhhahahahah
             # else:

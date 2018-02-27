@@ -77,8 +77,9 @@ def each_post(request, slug, pk):
     try:
         post = Post.objects.get(id=pk)
 
-        user = UserExtended.objects.get(user=request.user)
-        liking_post(user, post, UserPostRelation)
+        if request.user.is_authenticated:
+            user = UserExtended.objects.get(user=request.user)
+            liking_post(user, post, UserPostRelation)
         
         full_url = str(request.scheme) + "://" + str(request.get_host()) + str(post.get_absolute_url())
         

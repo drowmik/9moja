@@ -158,6 +158,14 @@ section.section {
     box-shadow: none !important;
 }
 
+.article-actions .btn-outline-danger:active,
+.article-actions .btn-outline-danger:focus,
+.article-actions .btn-outline-danger:hover {
+    background: none !important;
+    color: #dc3545 !important;
+    box-shadow: none !important;
+}
+
 a.article-media {
     max-height: 450px;
     overflow: hidden;
