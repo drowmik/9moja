@@ -43,6 +43,10 @@
                                 value="{{ form.title.value|default:"" }}"
                                 placeholder="{% trans "এখানে মিমের নাম দিন..." %}"
                         >
+                        {% for err in form.title.errors %}
+                            <span class="text-danger">{{ err|escape }}</span>
+                        {% endfor %}
+                        
                     </div>
                     
                     <div class="form-group border border-secondary p-2">
@@ -61,6 +65,11 @@
                             <span>{% trans "ছবি পছন্দ করুন" %}</span>
                         </label>
                         <span id="file_name">{{ form.img.value|default:"" }}</span>
+                        <p>
+                            {% for err in form.img.errors %}
+                                <span class="text-danger">{{ err|escape }}</span>
+                            {% endfor %}
+                        </p>
                     </div>
                     
                     

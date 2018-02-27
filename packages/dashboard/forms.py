@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from main_app.models import Post
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -11,6 +12,12 @@ class EditPostForm(forms.ModelForm):
 
 
 class CreatePostForm(forms.ModelForm):
+    title = forms.CharField(
+        error_messages={
+            'required': 'নাম ছাড়া যায়না চেনা!'
+        }
+    )
+    
     class Meta:
         model = Post
         fields = ['title', 'img']
@@ -21,7 +28,18 @@ class CreatePostForm(forms.ModelForm):
         the extra whitespace will be stripped.
         but not space between character
         """
-        return self.cleaned_data.get('title', '').rstrip().lstrip()
+        title = self.cleaned_data.get('title')
+        if title:
+            return title.rstrip().lstrip()
+        else:
+            raise ValidationError('নাম ছাড়া যায়না চেনা!')
+    
+    def clean_img(self):
+        img = self.cleaned_data.get('img')
+        if img:
+            return img
+        else:
+            raise ValidationError('ছবি বিনা না আসে মজা!')
 
 
 class SignUpForm(UserCreationForm):
