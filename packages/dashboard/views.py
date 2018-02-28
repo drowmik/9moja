@@ -13,7 +13,7 @@ import os, shutil
 @login_required
 def home(request):
     # if request.user:
-    posts = Post.objects.filter(user=request.user).order_by('-publish_date')
+    posts = [Post.objects.filter(user=request.user).order_by('-publish_date')]
     # else:
     #     posts = Post.objects.order_by('-publish_date')
     
@@ -21,8 +21,9 @@ def home(request):
     if request.user.is_superuser:
         # filtering by user
         # removing empty objects
-        p = list(filter(None, [Post.objects.filter(user=u) for u in User.objects.all()]))
-        print(p)
+        posts = list(filter(None, [Post.objects.filter(user=u) for u in User.objects.all()]))
+        posts.append(Post.objects.filter(user=None))
+        print(posts)
     
     
     ctx = {  # context

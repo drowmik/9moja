@@ -6,70 +6,85 @@
 {% block main_container %}
     <div class="container">
         {% if posts %}
-            <table class="table text-center bg-light d-lg-table table-bordered table-responsive">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">{% trans 'শিরনাম' %}</th>
-                    <th scope="col">{% trans 'ফাইল' %}</th>
-                    {% if user.is_superuser %}
-                        <th scope="col">{% trans 'ব্যবহারকারী' %}</th>
-                    {% endif %}
-                    <th scope="col">{% trans 'পোস্টের অবস্থা' %}</th>
-                    <th scope="col">{% trans 'তারিখ' %}</th>
-                    <th scope="col">{% trans 'বিভাগ' %}</th>
-                    <th scope="col">{% trans 'বদলান' %}</th>
-                    <th scope="col">{% trans 'মুছুন' %}</th>
-                </tr>
-                </thead>
-                <tbody>
-                
-                {% for post in posts %}
-                    <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
-                        <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
-                        <td><img src="{{ post.img.url }}" alt="{{ post.title }}"></td>
-                        {% if user.is_superuser %}
-                            <td>{{ post.user|default:"-" }}</td>
+            <div id="accordion">
+                {% for all_post in posts %}
+                    <div>
+                        {% if  posts|length is not 1 %}
+                            <button class="btn btn-primary mb-3 w-100 {% if forloop.counter is not 1 %}collapsed{% endif %}" data-toggle="collapse"
+                                    data-target="#collapse-{{ forloop.counter }}">
+                                {{ all_post.first.user|default:"Posts from Facebook cron" }}
+                            </button>
                         {% endif %}
-                        <td>
-                            {% if post.status == 'u' %}
-                                <span class="text-warning">{% trans 'ঝুলে আছে' %}</span>
-                            {% elif post.status == 'p' %}
-                                <span class="text-success">{% trans 'পাবলিশড' %}</span>
-                            {% else %}
-                                <span class="text-danger">{% trans 'দুষ্টু পোস্ট' %}</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ post.publish_date }}</td>
-                        <td>
-                            
-                            {% for cat in post.get_categories %}
-                                <a href="{{ cat.category.get_absolute_url }}">{{ cat.category }}</a>{% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        
-                        </td>
-                        <td><a href="{% url 'dashboard:edit_post' post.id %}">{% trans 'বদলান' %}</a></td>
-                        <td>
-                            <a href="#"
-                               data-href="{% url 'dashboard:delete_post' post.id %}"
-                               class="text-danger del-post-btn url-for-modal"
-                               data-toggle="modal"
-                               data-target="#delete_confirmation">
-                                <i class="fa fa-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
+                        <div class="collapse {% if forloop.counter is 1 %}show{% endif %}"
+                             id="collapse-{{ forloop.counter }}" data-parent="#accordion">
+                            <table class="table text-center bg-light d-lg-table table-bordered table-responsive">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">{% trans 'শিরনাম' %}</th>
+                                    <th scope="col">{% trans 'ফাইল' %}</th>
+                                    {% if user.is_superuser %}
+                                        <th scope="col">{% trans 'ব্যবহারকারী' %}</th>
+                                    {% endif %}
+                                    <th scope="col">{% trans 'পোস্টের অবস্থা' %}</th>
+                                    <th scope="col">{% trans 'তারিখ' %}</th>
+                                    <th scope="col">{% trans 'বিভাগ' %}</th>
+                                    <th scope="col">{% trans 'বদলান' %}</th>
+                                    <th scope="col">{% trans 'মুছুন' %}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                
+                                {% for post in all_post %}
+                                    <tr>
+                                        <th scope="row">{{ forloop.counter }}</th>
+                                        <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
+                                        <td><img src="{{ post.img.url }}" alt="{{ post.title }}"></td>
+                                        {% if user.is_superuser %}
+                                            <td>{{ post.user|default:"-" }}</td>
+                                        {% endif %}
+                                        <td>
+                                            {% if post.status == 'u' %}
+                                                <span class="text-warning">{% trans 'ঝুলে আছে' %}</span>
+                                            {% elif post.status == 'p' %}
+                                                <span class="text-success">{% trans 'পাবলিশড' %}</span>
+                                            {% else %}
+                                                <span class="text-danger">{% trans 'দুষ্টু পোস্ট' %}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ post.publish_date }}</td>
+                                        <td>
+                                            
+                                            {% for cat in post.get_categories %}
+                                                <a href="{{ cat.category.get_absolute_url }}">{{ cat.category }}</a>{% if not forloop.last %},{% endif %}
+                                            {% endfor %}
+                                        
+                                        </td>
+                                        <td><a href="{% url 'dashboard:edit_post' post.id %}">{% trans 'বদলান' %}</a></td>
+                                        <td>
+                                            <a href="#"
+                                               data-href="{% url 'dashboard:delete_post' post.id %}"
+                                               class="text-danger del-post-btn url-for-modal"
+                                               data-toggle="modal"
+                                               data-target="#delete_confirmation">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 {% endfor %}
-                
-                </tbody>
-            </table>
+            </div>
         {% else %}
             <p class="my-4"><i>{% trans "আপনি এতো নিরামিষ কেন?  একটাও মজার কিছু দেখালেন না এখনো!!" %}</i></p>
         {% endif %}
         
         <a href="{% url 'dashboard:create_post' %}">{% trans 'নতুন মজা তৈরি করুন' %}</a>
-    
+        
         <!-- Modal - Delete confirmation box -->
         <div class="modal fade" id="delete_confirmation" tabindex="-1" role="dialog" aria-labelledby="delete_confirmationTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
