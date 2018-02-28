@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test
 from main_app.models import custom_slugify
 from django.urls import reverse
@@ -20,7 +20,7 @@ def home(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def scrapper(request):
-    return render(request, 'fb_scrapper/scrapper.html', {})
+    return redirect('fbs:scrapper_data_form')
 
 
 @user_passes_test(lambda u: u.is_superuser)

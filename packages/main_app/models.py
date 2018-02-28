@@ -84,6 +84,8 @@ class Post(models.Model):
     
     def is_img_exists(self):
         return os.path.isfile(self.img.path)
+    # making that function object's boolean value is true, so the admin panel's can show this as a boolean
+    is_img_exists.boolean = True
 
 
 class Category(models.Model):

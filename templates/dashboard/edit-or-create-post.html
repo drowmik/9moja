@@ -46,8 +46,22 @@
                         {% for err in form.title.errors %}
                             <span class="text-danger">{{ err|escape }}</span>
                         {% endfor %}
-                        
+                    
                     </div>
+                    
+                    {% if request.user.is_superuser %}
+                        <div class="border border-secondary p-2 mb-3">
+                            <label for="{{ form.status.auto_id }}">{% trans "অবস্থা হালনাগাদ করুনঃ" %}</label>
+                            <select class="custom-select" name="{{ form.status.name }}" id="{{ form.status.auto_id }}">
+                                {% for value, text in form.status.field.choices %}
+                                    <option value="{{ value }}"
+                                        {% if form.status.value == value %}selected=""{% endif %}
+                                    >{{ text }}</option>
+                                {% endfor %}
+                            </select>
+    
+                        </div>
+                    {% endif %}
                     
                     <div class="form-group border border-secondary p-2">
                         <label class="mr-2">{% trans "মিমের ছবিটি এখানে আপলোড করুনঃ" %}</label>
@@ -208,5 +222,4 @@
             });
         })(jQuery)
     </script>
-    
 {% endblock %}

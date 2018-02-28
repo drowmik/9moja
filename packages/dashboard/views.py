@@ -17,14 +17,11 @@ def home(request):
     # else:
     #     posts = Post.objects.order_by('-publish_date')
     
-    
     if request.user.is_superuser:
         # filtering by user
         # removing empty objects
         posts = list(filter(None, [Post.objects.filter(user=u) for u in User.objects.all()]))
         posts.append(Post.objects.filter(user=None))
-        print(posts)
-    
     
     ctx = {  # context
         "posts": posts
@@ -37,7 +34,6 @@ def log_in(request, **kwargs):
         return HttpResponseRedirect('/dashboard')
     else:
         return auth_views.login(request, **kwargs)
-
 
 
 def signup(request):
@@ -56,7 +52,7 @@ def signup(request):
             else:
                 print(form)
         else:
-             form = SignUpForm()
+            form = SignUpForm()
         return render(request, 'dashboard/sign-up.html', {'form': form})
 
 
@@ -68,10 +64,9 @@ def edit_post(request, pk):
         cat_in_post_dict = (request.POST).dict()
         print("cat_in_post_dict:  ", cat_in_post_dict, "    request: ", request.POST)
         try:
-            del cat_in_post_dict['csrfmiddlewaretoken'], cat_in_post_dict["title"], cat_in_post_dict['img']
+            del cat_in_post_dict['csrfmiddlewaretoken'], cat_in_post_dict["title"], cat_in_post_dict['img'], cat_in_post_dict['status']
         except:
             pass
-        
         
         x = list(cat_in_post_dict.values())
         

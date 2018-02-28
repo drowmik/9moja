@@ -10,7 +10,11 @@
                 {% for all_post in posts %}
                     <div>
                         {% if  posts|length is not 1 %}
-                            <button class="btn btn-primary mb-3 w-100 {% if forloop.counter is not 1 %}collapsed{% endif %}" data-toggle="collapse"
+                            <button class="btn
+                                        {% if all_post.first.user == request.user %}btn-success{% else %}btn-primary{% endif %}
+                                        mb-3 w-100
+                                        {% if forloop.counter is not 1 %}collapsed{% endif %}"
+                                    data-toggle="collapse"
                                     data-target="#collapse-{{ forloop.counter }}">
                                 {{ all_post.first.user|default:"Posts from Facebook cron" }}
                             </button>
@@ -29,7 +33,7 @@
                                     <th scope="col">{% trans 'পোস্টের অবস্থা' %}</th>
                                     <th scope="col">{% trans 'তারিখ' %}</th>
                                     <th scope="col">{% trans 'বিভাগ' %}</th>
-                                    <th scope="col">{% trans 'বদলান' %}</th>
+                                    <th scope="col">{% trans 'হালনাগাদ' %}</th>
                                     <th scope="col">{% trans 'মুছুন' %}</th>
                                 </tr>
                                 </thead>
@@ -60,7 +64,7 @@
                                             {% endfor %}
                                         
                                         </td>
-                                        <td><a href="{% url 'dashboard:edit_post' post.id %}">{% trans 'বদলান' %}</a></td>
+                                        <td><a href="{% url 'dashboard:edit_post' post.id %}">{% trans 'হালনাগাদ' %}</a></td>
                                         <td>
                                             <a href="#"
                                                data-href="{% url 'dashboard:delete_post' post.id %}"

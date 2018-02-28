@@ -17,7 +17,7 @@ class UserPostRelationAdmin(admin.ModelAdmin):
 class PostAdmin(admin.ModelAdmin):
     # date_hierarchy = 'publish_date'
     
-    list_display = ['id', 'title', 'likes', 'status', 'publish_date']
+    list_display = ['id', 'title', 'likes', 'status', 'publish_date', 'is_img_exists']
     
     list_display_links = ['id', 'title']
     
