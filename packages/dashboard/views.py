@@ -8,6 +8,9 @@ from .forms import EditPostForm, CreatePostForm, SignUpForm
 from django.contrib.auth import views as auth_views
 from .utils import *
 import os, shutil
+from django.conf import settings
+from processors.water_mark import WaterMarker
+from urllib.parse import unquote
 
 
 @login_required
@@ -108,10 +111,17 @@ def create_post(request):
         form = CreatePostForm(request.POST, request.FILES)
         if form.is_valid():
             f = form.save(commit=False)
-            
             user = request.user
             f.user = user
             f.save()  # saving post
+            
+            try:
+                img_path = os.path.join(settings.BASE_DIR, unquote(f.img.url.strip('/')))
+                water_mark = WaterMarker(img_path, os.path.join(settings.BASE_DIR, 'media/temp/marker.png'))
+                water_mark.water_mark()
+            except:
+                print("water mark is not successful")
+                pass
             
             upload_post(UserExtended, user)
             

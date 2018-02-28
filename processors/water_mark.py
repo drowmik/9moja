@@ -67,7 +67,8 @@ class WaterMarker():
         base_img = Image.open(self.base_img, 'r')
         marker_img = Image.open(self.resized_img(), 'r')  # resized image based on base image
         
-        set_pos = (0, 0)
+        # setting position on the bottle right corner
+        set_pos = (base_img.width-marker_img.width, base_img.height-marker_img.height)
         
         new_base_img = Image.new('RGBA', base_img.size, (0, 0, 0, 0))
         
