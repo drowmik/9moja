@@ -26,9 +26,10 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">{% trans 'শিরনাম' %}</th>
-                                    <th scope="col">{% trans 'ফাইল' %}</th>
+                                    <th scope="col">{% trans 'ছবি' %}</th>
                                     {% if user.is_superuser %}
                                         <th scope="col">{% trans 'ব্যবহারকারী' %}</th>
+                                        <th scope="col">{% trans 'দুষ্টু?' %}</th>
                                     {% endif %}
                                     <th scope="col">{% trans 'পোস্টের অবস্থা' %}</th>
                                     <th scope="col">{% trans 'তারিখ' %}</th>
@@ -46,6 +47,13 @@
                                         <td><img src="{{ post.img.url }}" alt="{{ post.title }}"></td>
                                         {% if user.is_superuser %}
                                             <td>{{ post.user|default:"-" }}</td>
+                                            <td>
+                                            {% if post.nsfw %}
+                                                <i class="fa fa-check-circle text-success"></i>
+                                            {% else %}
+                                                <i class="fa fa-times-circle text-danger"></i>
+                                            {% endif %}
+                                            </td>
                                         {% endif %}
                                         <td>
                                             {% if post.status == 'u' %}
@@ -56,7 +64,7 @@
                                                 <span class="text-danger">{% trans 'দুষ্টু পোস্ট' %}</span>
                                             {% endif %}
                                         </td>
-                                        <td>{{ post.publish_date }}</td>
+                                        <td><span class="font-12px">{{ post.publish_date }}</span></td>
                                         <td>
                                             
                                             {% for cat in post.get_categories %}

@@ -20,7 +20,7 @@ def home(request):
     if request.user.is_superuser:
         # filtering by user
         # removing empty objects
-        posts = list(filter(None, [Post.objects.filter(user=u) for u in User.objects.all()]))
+        posts = list(filter(None, [Post.objects.filter(user=u).order_by('-publish_date') for u in User.objects.all()]))
         posts.append(Post.objects.filter(user=None))
     
     ctx = {  # context
@@ -64,7 +64,7 @@ def edit_post(request, pk):
         cat_in_post_dict = (request.POST).dict()
         print("cat_in_post_dict:  ", cat_in_post_dict, "    request: ", request.POST)
         try:
-            del cat_in_post_dict['csrfmiddlewaretoken'], cat_in_post_dict["title"], cat_in_post_dict['img'], cat_in_post_dict['status']
+            del cat_in_post_dict['csrfmiddlewaretoken'], cat_in_post_dict["title"], cat_in_post_dict['img'], cat_in_post_dict['status'], cat_in_post_dict['nsfw']
         except:
             pass
         

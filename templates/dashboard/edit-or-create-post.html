@@ -59,7 +59,11 @@
                                     >{{ text }}</option>
                                 {% endfor %}
                             </select>
-    
+                        </div>
+                        
+                        <div class="border border-secondary p-2 mb-3">
+                            <label for="{{ form.nsfw.auto_id }}">এটি কি দুষ্টু পোস্ট?</label>
+                            {{ form.nsfw }}
                         </div>
                     {% endif %}
                     
@@ -74,7 +78,7 @@
                                 value="{{ form.img.value|default:"" }}"
                         >
                         <br class="d-md-none">
-                        <label for="post_file" class="btn btn-outline-danger rounded-0">
+                        <label for="post_file" class="btn btn-outline-success rounded-0">
                             <i class="fa fa-upload"></i>
                             <span>{% trans "ছবি পছন্দ করুন" %}</span>
                         </label>

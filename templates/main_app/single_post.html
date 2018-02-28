@@ -40,7 +40,14 @@
                         {% endfor %}
                     
                     </ul>
-                    <img class="w-100" src="{{ media_url }}" alt="{{ post.title }}">
+                    {% if post.nsfw and not request.user.is_authenticated %}
+                        <div class="w-100 text-center nsfw">
+                            <h2>দুষ্টু পোস্ট</h2>
+                            <p>দেখতে চাইলে লগইন করুন</p>
+                        </div>
+                    {% else %}
+                        <img class="w-100" src="{{ media_url }}" alt="{{ post.title }}">
+                    {% endif %}
                     
                     <div class="col-12">
                         

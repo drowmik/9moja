@@ -51,7 +51,10 @@ class Post(models.Model):
         null=True
     )
     
-    nsfw = models.BooleanField(default=False)
+    nsfw = models.BooleanField(
+        default=False,
+        verbose_name="Not Safe for Work"
+    )
     
     def __str__(self):
         return "{} - {}".format(self.id, self.title)

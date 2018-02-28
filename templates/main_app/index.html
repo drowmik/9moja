@@ -54,9 +54,16 @@
                                             
                                             {# lightbox (not active now, using direct link on image) #}
                                             {# only simple link in image #}
-                                            <a class="d-block article-media" href="{{ post.get_absolute_url }}?from_page={{ posts.number }}">
-                                                <img src="{{ post.img.url }}" class="w-100"/>
-                                            </a>
+                                            {% if post.nsfw and not request.user.is_authenticated %}
+                                                <a class="text-center nsfw" target="_blank" href="{% url 'login' %}?next={{ post.get_absolute_url }}">
+                                                    <h2>দুষ্টু পোস্ট</h2>
+                                                    <p>দেখতে চাইলে লগইন করুন</p>
+                                                </a>
+                                            {% else %}
+                                                <a class="d-block article-media" href="{{ post.get_absolute_url }}?from_page={{ posts.number }}">
+                                                    <img src="{{ post.img.url }}" class="w-100"/>
+                                                </a>
+                                            {% endif %}
                                             {% comment %}<a class="lightbox d-block article-media" href="#9moja-{{ forloop.counter }}">
                                                 <img src="{{ post.img.url }}" class="w-100"/>
                                             </a>
@@ -97,11 +104,11 @@
                                                                 <i class="fa fa-heart"></i>
                                                             </button>
                                                         {% else %}
-                                                            <a class="btn btn-outline-secondary" href="{% url 'login' %}" target="_blank">
+                                                            <a class="btn btn-outline-secondary" href="{% url 'login' %}?next={{ post.get_absolute_url }}" target="_blank">
                                                                 <i class="fa fa-heart"></i>
                                                             </a>
                                                         {% endif %}
-                                                        
+                                                    
                                                     </li>
                                                     <li>
                                                         <a href="{{ post.get_absolute_url }}#comment?from_page={{ posts.number }}"
@@ -132,7 +139,7 @@
                 <div class="col-md-3">
                     
                     {% include 'main_app/snippets/sidebar.html' %}
-                    
+                
                 </div>
             </div>
         </div>
