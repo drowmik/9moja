@@ -62,7 +62,14 @@
 {% block header %}
 
     <ol class="breadcrumb">
-        <li class="breadcrumb-item active">{% trans 'ড্যাশবোর্ড' %}</li>
+        {% if is_fav_page %}
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:home' %}">{% trans 'ড্যাশবোর্ড' %}</a>
+            </li>
+            <li class="breadcrumb-item active">{% trans 'প্রিয় মিম' %}</li>
+        {% else %}
+            <li class="breadcrumb-item active">{% trans 'ড্যাশবোর্ড' %}</li>
+        {% endif %}
     </ol>
 
 {% endblock header %}
@@ -74,11 +81,17 @@
         <div class="container">
             <div class="d-flex">
                 <div class="mr-auto">
-                    <h1 id="greetings">Hello {{ user.username }}</h1>
+                    <h2 id="greetings">স্বাগতম {{ user.username }} &nbsp;
+                        {% if is_fav_page %}<span>  আপনার প্রিয় মিমগুলো</span>{% endif %}
+                    </h2>
+                    
                 </div>
                 
                 {% block create_new_button %}
                     <div class="align-self-center">
+                        {% if user.is_authenticated %}
+                            <a class="btn btn-info" href="{% url 'dashboard:fav_post' %}">{% trans "প্রিয় মিমগুলো" %}</a>
+                        {% endif %}
                         <a class="btn btn-warning" href="{% url 'dashboard:create_post' %}">{% trans '+ নতুন পোস্ট দিন' %}</a>
                     </div>
                 {% endblock %}

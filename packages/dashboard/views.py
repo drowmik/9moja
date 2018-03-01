@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from main_app.models import UserExtended, Post, Category, Categorize
+from main_app.models import UserExtended, Post, Category, Categorize, UserPostRelation
 from .forms import EditPostForm, CreatePostForm, SignUpForm
 from django.contrib.auth import views as auth_views
 from .utils import *
@@ -28,6 +28,18 @@ def home(request):
     
     ctx = {  # context
         "posts": posts
+    }
+    return render(request, 'dashboard/index.html', ctx)
+
+
+@login_required
+def fav_post(request):
+    u = UserExtended.objects.get(user=request.user)
+    posts = [[r.post for r in UserPostRelation.objects.filter(user=u)]] # bcoz 2d list used in template
+    
+    ctx = {  # context
+        "posts": posts,
+        "is_fav_page": True
     }
     return render(request, 'dashboard/index.html', ctx)
 
