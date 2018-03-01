@@ -1,8 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, JsonResponse
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from main_app.utils import get_post_per_page, long_pagination, get_page_number_in_pagination
 from main_app.models import UserExtended, Post, Category, Categorize, UserPostRelation
 from .forms import EditPostForm, CreatePostForm, SignUpForm
 from django.contrib.auth import views as auth_views
@@ -16,18 +18,104 @@ from urllib.parse import unquote
 @login_required
 def home(request):
     # if request.user:
-    posts = [Post.objects.filter(user=request.user).order_by('-publish_date')]
+    posts = Post.objects.filter(user=request.user).order_by('-publish_date')
     # else:
     #     posts = Post.objects.order_by('-publish_date')
     
-    if request.user.is_superuser:
-        # filtering by user
-        # removing empty objects
-        posts = list(filter(None, [Post.objects.filter(user=u).order_by('-publish_date') for u in User.objects.all()]))
-        posts.append(Post.objects.filter(user=None))
+    # if request.user.is_superuser:
+    #     # filtering by user
+    #     # removing empty objects
+    #     posts = list(filter(None, [Post.objects.filter(user=u).order_by('-publish_date') for u in User.objects.all()]))
+    #     posts.append(Post.objects.filter(user=None))
+    
+    post_per_page = get_post_per_page(request)
+    p = Paginator(posts, post_per_page)
+    total_pages = p.num_pages  # or last page
+
+    # pagination
+    if request.GET.get('page'):
+        try:
+            page = int(request.GET.get('page'))
+        except:
+            page = 1
+
+    # if direct homepage
+    else:
+        page = 1
+
+    try:
+        latest_posts = p.page(page)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        latest_posts = p.page(total_pages)
+        page = total_pages
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        latest_posts = p.page(1)
+        page = 1
+
+    pg_iter = long_pagination(
+        current_page=page,
+        total_pages=total_pages,
+        showing=get_page_number_in_pagination(request),  # page number showing in pagination
+        is_not_mobile=not request.is_mobile
+    )
     
     ctx = {  # context
-        "posts": posts
+        "posts": latest_posts,
+        'page_iter': pg_iter,
+        "current_page": page,
+    }
+    return render(request, 'dashboard/index.html', ctx)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def user_based_post(request, pk):
+    # that will collect facebook cron posts
+    if pk == '0':
+        posts = Post.objects.filter(user=None).order_by('-publish_date')
+    else:
+        posts = Post.objects.filter(user=User(id=pk)).order_by('-publish_date')
+    
+    post_per_page = get_post_per_page(request)
+
+    p = Paginator(posts, post_per_page)
+    total_pages = p.num_pages  # or last page
+
+    # pagination
+    if request.GET.get('page'):
+        try:
+            page = int(request.GET.get('page'))
+        except:
+            page = 1
+
+    # if direct homepage
+    else:
+        page = 1
+
+    try:
+        latest_posts = p.page(page)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        latest_posts = p.page(total_pages)
+        page = total_pages
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        latest_posts = p.page(1)
+        page = 1
+
+    pg_iter = long_pagination(
+        current_page=page,
+        total_pages=total_pages,
+        showing=get_page_number_in_pagination(request),  # page number showing in pagination
+        is_not_mobile=not request.is_mobile
+    )
+
+    ctx = {  # context
+        "posts": latest_posts,
+        "user_based_post": True,
+        'page_iter': pg_iter,
+        "current_page": page,
     }
     return render(request, 'dashboard/index.html', ctx)
 
@@ -35,7 +123,7 @@ def home(request):
 @login_required
 def fav_post(request):
     u = UserExtended.objects.get(user=request.user)
-    posts = [[r.post for r in UserPostRelation.objects.filter(user=u)]] # bcoz 2d list used in template
+    posts = [r.post for r in UserPostRelation.objects.filter(user=u)]
     
     ctx = {  # context
         "posts": posts,

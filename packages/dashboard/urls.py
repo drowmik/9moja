@@ -8,6 +8,8 @@ urlpatterns = [
     
     url(r'^favourite/$', views.fav_post, name='fav_post'),
     
+    url(r'^user/(?P<pk>[\d]+)/$', views.user_based_post, name='user_based_post'),
+    
     url(r'^edit/(?P<pk>[\d]+)/$', views.edit_post, name='edit_post'),
     
     url(r'^delete/(?P<pk>[\d]+)/$', views.delete_post, name='delete_post'),

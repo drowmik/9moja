@@ -7,7 +7,7 @@
     <div class="container">
         {% if posts %}
             <div id="accordion">
-                {% for all_post in posts %}
+                {% comment %}{% for all_post in posts %}
                     <div>
                         {% if  posts|length is not 1 %}
                             <button class="btn
@@ -20,7 +20,7 @@
                             </button>
                         {% endif %}
                         <div class="collapse {% if forloop.counter is 1 %}show{% endif %}"
-                             id="collapse-{{ forloop.counter }}" data-parent="#accordion">
+                             id="collapse-{{ forloop.counter }}" data-parent="#accordion">{% endcomment %}
                             <table class="table text-center bg-light d-lg-table table-bordered table-responsive">
                                 <thead>
                                 <tr>
@@ -40,7 +40,7 @@
                                 </thead>
                                 <tbody>
                                 
-                                {% for post in all_post %}
+                                {% for post in posts %}
                                     <tr>
                                         <th scope="row">{{ forloop.counter }}</th>
                                         <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
@@ -87,9 +87,11 @@
                                 
                                 </tbody>
                             </table>
-                        </div>
+                    
+                            {% include 'main_app/snippets/pagination.html' %}
+                        {% comment %}</div>
                     </div>
-                {% endfor %}
+                {% endfor %}{% endcomment %}
             </div>
         {% else %}
             <p class="my-4"><i>{% trans "আপনি এতো নিরামিষ কেন?  একটাও মজার কিছু দেখালেন না এখনো!!" %}</i></p>
