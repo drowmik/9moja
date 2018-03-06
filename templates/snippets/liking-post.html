@@ -1,0 +1,57 @@
+{% if user.is_authenticated %}
+    <script type="text/javascript">
+        (function ($) {
+            var like_post = function (_t) {
+                var post_id = _t.attr('data-id');
+                var is_liked = _t.attr('data-liked');
+
+                $.ajax({
+                    url: '{% url 'main_app:like_post' %}',
+                    method: 'GET',
+                    data: {
+                        "post_id": post_id,
+                        "is_liked": is_liked,
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        _t.attr('data-liked', data['is_liked']);
+                        liked_color(data['is_liked'], _t, true)
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                });
+            };
+
+            var liked_color = function (_flag, _t, has_liked) {
+                if (parseInt(_flag) === 1) {
+                    if (has_liked) {
+                        var liked_count = _t.parents('.article-actions').prev().find('.article-status-liked_count');
+                        liked_count.html(parseInt(liked_count.html()) + 1);
+                    }
+                    _t.removeClass('btn-outline-secondary').addClass('btn-outline-danger').unbind();
+                } else {
+                    _t.removeClass('btn-outline-danger').addClass('btn-outline-secondary');
+                }
+            };
+
+            {% comment %}$('.article-media').click(function () {
+                //e.preventDefault();
+                var lk_btn = $(this).parent('article').find('.like_btn');
+                like_post(lk_btn);
+            });{% endcomment %}
+
+            $('.like_btn')
+                .click(function (e) {
+                    e.preventDefault();
+                    like_post($(this));
+                })
+                .each(function () {
+                var _this = $(this);
+                liked_color(_this.attr('data-liked'), _this, false);
+            });
+
+        })(jQuery);
+    </script>
+{% endif %}

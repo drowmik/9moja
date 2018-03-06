@@ -77,34 +77,48 @@
                                         href="{{ share_urls.twt }}"
                                 ><i class="fa fa-twitter"></i> {% trans ' করুন' %}</a>
                             </div>
-                            
-                            {% comment %}<iframe
-                                    class="fb"
-                                    src="{{ share_urls.fb }}"
-                                    width="69"
-                                    height="20"
-                                    data-size="large"
-                                    style="border:none;overflow:hidden"
-                                    scrolling="no"
-                                    frameborder="0"
-                                    allowTransparency="true">
-                            </iframe>{% endcomment %}
                         
                         </div>
                         
                         
-                        {% if user.is_authenticated %}
                             {% get_comment_count for main_app.post post.id as comment_count %}
                             
-                            <p class="text-secondary d-inline-block">
-                                {{ post.likes }}{% trans ' টি' %}
-                                <span class="text-danger"><i class="fa fa-heart"></i></span>
+                            <p class="article-status">
+                                <a href="javascript:void(0)" class="text-secondary">
+                                    <span><span class="article-status-liked_count">{{ post.likes }}</span>{% trans " পছন্দ" %}</span>
+                                </a>
+                                <span>.</span>
+                                {% get_comment_count for main_app.post post.id as comment_count %}
+                                <a href="#comment"
+                                   class="text-secondary">
+                                    <span>{{ comment_count }}{% trans " টি বক্তব্য" %}</span>
+                                </a>
                             </p>
                             
-                            <span class="mx-3">.</span>
+                            <ul class="nav article-actions">
+                                <li>
+                                    {% if user.is_authenticated %}
+                                        <button class="btn btn-outline-secondary like_btn" data-id="{{ post.id }}"
+                                                data-liked="{{ post.have_like }}" type="button">
+                                            <i class="fa fa-heart"></i>
+                                        </button>
+                                    {% else %}
+                                        <a class="btn btn-outline-secondary" href="{% url 'login' %}?next={{ post.get_absolute_url }}" target="_blank">
+                                            <i class="fa fa-heart"></i>
+                                        </a>
+                                    {% endif %}
+                                
+                                </li>
+                                <li>
+                                    <a href="javascript:document.querySelector('textarea').select();"
+                                       class="btn btn-outline-secondary">
+                                        <i class="fa fa-commenting-o"></i>
+                                    </a>
+                                </li>
+                            </ul>
                             
-                            <p class="text-secondary d-inline-block">{{ comment_count }}{% trans ' টি মন্তব্য' %}</p>
                             
+                        {% if user.is_authenticated %}
                             {% get_comment_list for main_app.post post.id as comment_list %}
                             {% for comment in comment_list %}
                                 <div class="each-comment border border-dark p-2">
@@ -183,36 +197,6 @@
                                 <input type="submit" name="submit" value="{% trans "মন্তব্য করুন" %}" class="btn btn-primary">
                             </form>
                             
-                            
-                            {% comment %}<script type="text/javascript">
-                                (function ($) {
-
-                                    $('#comment').submit(function (e) {
-                                        e.preventDefault();
-                                        $.ajax({
-                                            url: '{% comment_form_target %}',
-                                            method: 'POST',
-                                            data: {
-                                                "{{ form.content_type.name }}": "main_app.post",
-                                                "{{ form.object_pk.name }}": "{{ post.id }}",
-                                                "{{ form.security_hash.name }}": "{{ form.security_hash.value }}",
-                                                "{{ form.timestamp.name }}": "{{ form.timestamp.value }}",
-                                                "{{ form.name.name }}": "{{ user.username }}",
-                                                "{{ form.email.name }}": "{{ form.email.value }}",
-                                                "{{ form.comment.name }}": "{{ form.comment.value }}",
-                                            },
-                                            success: function (data) {
-                                                console.log(data);
-                                            },
-                                            error: function (e) {
-                                                console.log(e);
-                                            }
-                                        });
-                                    })
-
-                                })(jQuery);
-                            </script>{% endcomment %}
-                        
                         {% else %}
                             <p>{% trans 'মন্তব্য দেখতে এবং করতে ' %}
                                 <span><a href="{% url 'login' %}">{% trans 'লগইন' %}</a></span>
@@ -231,4 +215,8 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block extra_js %}
+    {% include 'snippets/liking-post.html' %}
 {% endblock %}

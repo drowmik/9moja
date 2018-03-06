@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Sum
 from django.http import Http404
 from .models import Post, Category, UserExtended, UserPostRelation
@@ -74,24 +74,25 @@ def index(request):
 
 def each_post(request, slug, pk):
     share_urls = {}
-    try:
-        post = Post.objects.get(id=pk)
+    post = get_object_or_404(Post, id=pk)
 
-        if request.user.is_authenticated:
-            user = UserExtended.objects.get(user=request.user)
-            liking_post(user, post, UserPostRelation)
+    if request.user.is_authenticated:
+        user = UserExtended.objects.get(user=request.user)
+        #liking_post(user, post, UserPostRelation)  # forcefully liking when visiting page
         
-        full_url = str(request.scheme) + "://" + str(request.get_host()) + str(post.get_absolute_url())
-        
-        share_urls["fb"] = "https://www.facebook.com/plugins/share_button.php?href=" + \
-                           full_url + \
-                           "&layout=button_count&size=small&mobile_iframe=true&width=70&height=30&appId"
-        share_urls["twt"] = "http://twitter.com/share?text=visit www.9moja.com for more&url=" + \
-                            full_url + "&hashtags=মজা,নয়মজা,ফানি,9moja,funny,meme,bangla_meme"
-        share_urls["gp"] = "https://plus.google.com/share?url=" + full_url
+        try:    # if logged in user liked post will be marked
+            post.have_like = "1" if UserPostRelation.objects.get(user=user, post=post) else "0"
+        except:
+            post.have_like = "0"
     
-    except Post.DoesNotExist:
-        raise Http404("দুঃখিত, কিছু পাওয়া যায় নি!")
+    full_url = str(request.scheme) + "://" + str(request.get_host()) + str(post.get_absolute_url())
+    
+    share_urls["fb"] = "https://www.facebook.com/plugins/share_button.php?href=" + \
+                       full_url + \
+                       "&layout=button_count&size=small&mobile_iframe=true&width=70&height=30&appId"
+    share_urls["twt"] = "http://twitter.com/share?text=visit www.9moja.com for more&url=" + \
+                        full_url + "&hashtags=মজা,নয়মজা,ফানি,9moja,funny,meme,bangla_meme"
+    share_urls["gp"] = "https://plus.google.com/share?url=" + full_url
     
     from_page = request.GET.get('from_page') if request.method == 'GET' else 1
     
