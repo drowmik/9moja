@@ -56,7 +56,6 @@ FB_PAGE_SCRAP_FOR_CRON = {
     'Mr420.Funny': '৪২০',
     'mr420.bd': 'মিঃ৪২০',
     'MojalosssNew': 'মজা লস',
-    'roshikbangali69': 'রসিক বাঙালি',
     'bd.photo.comment': 'ফটো কমেন্ট',
     'KhatiBanglaMimiz': 'খাঁটি বাংলা',
     'BanglaGoT': 'গেম অব থ্রোন্স',
