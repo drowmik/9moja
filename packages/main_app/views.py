@@ -75,6 +75,8 @@ def index(request):
 def each_post(request, slug, pk):
     share_urls = {}
     post = get_object_or_404(Post, id=pk)
+    if post.status != 'p':
+        raise Http404("আপনার এহেন বোকামির জন্য আমরা শোক প্রকাশ করছি।কারণ, এই নামের কিছুই খুঁজে পাওয়া যায় নি!")
 
     if request.user.is_authenticated:
         user = UserExtended.objects.get(user=request.user)
@@ -164,7 +166,7 @@ def each_category(request, slug):
         )
     
     except Category.DoesNotExist:
-        raise Http404("আপনার এহেন বোকামির জন্য আমরা শোক প্রকাশ করছি।কারণ, এই নামের বিভাগ খুঁজে পাওয়া যায় নি!")
+        raise Http404("আপনার এহেন বোকামির জন্য আমরা শোক প্রকাশ করছি।কারণ, এই নামের কিছুই খুঁজে পাওয়া যায় নি!")
 
     popular_posts = Post.objects.order_by('-likes')[:5]
     popular_cats = Category.objects.filter(post__likes__isnull=False).annotate(like_count=Sum('post__likes')).order_by(

@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'mp+hg4qrs6kc6k3^&cvnrg5*irggffprvdqcck&qe0af2&9jld'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True #if(socket.gethostname() == 'debu-xubuntu' or DATABASE_URL) else False
+DEBUG = os.environ.get("DEBUG", True)
 
 ALLOWED_HOSTS = ['*']
 
