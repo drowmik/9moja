@@ -1,103 +1,142 @@
 {% extends 'dashboard/base.html' %}
 
+{% load static %}
 {% load i18n %}
+
+
+{% if request.user.is_superuser %}
+    {% block header %}
+        
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:home' %}">{% trans 'ড্যাশবোর্ড' %}</a>
+            </li>
+            <li class="breadcrumb-item active">{% trans 'ইউজার বেইসড ডাটা' %}</li>
+        </ol>
+    
+    {% endblock header %}
+{% endif %}
 
 
 {% block main_container %}
     <div class="container">
+        {% if request.user.is_superuser %}
+            ডাটা দেখানো হচ্ছে
+            {% if page_user %}
+                {{ page_user.user }}
+            {% else %}
+                {{ request.user }}
+            {% endif %}
+            - এর
+        {% endif %}
         {% if posts %}
-            <div id="accordion">
-                {% comment %}{% for all_post in posts %}
-                    <div>
-                        {% if  posts|length is not 1 %}
-                            <button class="btn
-                                        {% if all_post.first.user == request.user %}btn-success{% else %}btn-primary{% endif %}
-                                        mb-3 w-100
-                                        {% if forloop.counter is not 1 %}collapsed{% endif %}"
-                                    data-toggle="collapse"
-                                    data-target="#collapse-{{ forloop.counter }}">
-                                {{ all_post.first.user|default:"Posts from Facebook cron" }}
-                            </button>
+            <div>
+                <table class="table text-center bg-light d-lg-table table-bordered table-responsive">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">{% trans 'শিরনাম' %}</th>
+                        <th scope="col">{% trans 'ছবি' %}</th>
+                        {% if user.is_superuser %}
+                            <th scope="col">{% trans 'ব্যবহারকারী' %}</th>
+                            <th scope="col">{% trans 'দুষ্টু?' %}</th>
                         {% endif %}
-                        <div class="collapse {% if forloop.counter is 1 %}show{% endif %}"
-                             id="collapse-{{ forloop.counter }}" data-parent="#accordion">{% endcomment %}
-                            <table class="table text-center bg-light d-lg-table table-bordered table-responsive">
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">{% trans 'শিরনাম' %}</th>
-                                    <th scope="col">{% trans 'ছবি' %}</th>
-                                    {% if user.is_superuser %}
-                                        <th scope="col">{% trans 'ব্যবহারকারী' %}</th>
-                                        <th scope="col">{% trans 'দুষ্টু?' %}</th>
-                                    {% endif %}
-                                    <th scope="col">{% trans 'পোস্টের অবস্থা' %}</th>
-                                    <th scope="col">{% trans 'তারিখ' %}</th>
-                                    <th scope="col">{% trans 'বিভাগ' %}</th>
-                                    <th scope="col">{% trans 'হালনাগাদ' %}</th>
-                                    <th scope="col">{% trans 'মুছুন' %}</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                
-                                {% for post in posts %}
-                                    <tr>
-                                        <th scope="row">{{ forloop.counter }}</th>
-                                        <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
-                                        <td><img src="{{ post.img.url }}" alt="{{ post.title }}"></td>
-                                        {% if user.is_superuser %}
-                                            <td>{{ post.user|default:"-" }}</td>
-                                            <td>
-                                            {% if post.nsfw %}
-                                                <i class="fa fa-check-circle text-success"></i>
-                                            {% else %}
-                                                <i class="fa fa-times-circle text-danger"></i>
-                                            {% endif %}
-                                            </td>
-                                        {% endif %}
-                                        <td>
-                                            {% if post.status == 'u' %}
-                                                <span class="text-warning">{% trans 'ঝুলে আছে' %}</span>
-                                            {% elif post.status == 'p' %}
-                                                <span class="text-success">{% trans 'পাবলিশড' %}</span>
-                                            {% else %}
-                                                <span class="text-danger">{% trans 'দুষ্টু পোস্ট' %}</span>
-                                            {% endif %}
-                                        </td>
-                                        <td><span class="font-12px">{{ post.publish_date }}</span></td>
-                                        <td>
-                                            
-                                            {% for cat in post.get_categories %}
-                                                <a href="{{ cat.category.get_absolute_url }}">{{ cat.category }}</a>{% if not forloop.last %},{% endif %}
-                                            {% endfor %}
-                                        
-                                        </td>
-                                        <td><a href="{% url 'dashboard:edit_post' post.id %}">{% trans 'হালনাগাদ' %}</a></td>
-                                        <td>
-                                            <a href="#"
-                                               data-href="{% url 'dashboard:delete_post' post.id %}"
-                                               class="text-danger del-post-btn url-for-modal"
-                                               data-toggle="modal"
-                                               data-target="#delete_confirmation">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                
-                                </tbody>
-                            </table>
+                        <th scope="col">{% trans 'পোস্টের অবস্থা' %}</th>
+                        <th scope="col">{% trans 'তারিখ' %}</th>
+                        <th scope="col">{% trans 'বিভাগ' %}</th>
+                        <th scope="col">{% trans 'হালনাগাদ' %}</th>
+                        <th scope="col">{% trans 'মুছুন' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     
-                            {% include 'main_app/snippets/pagination.html' %}
-                        {% comment %}</div>
-                    </div>
-                {% endfor %}{% endcomment %}
+                    {% for post in posts %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
+                            <td><img src="{{ post.img.url }}" alt="{{ post.title }}"></td>
+                            {% if user.is_superuser %}
+                                <td>{{ post.user|default:"-" }}</td>
+                                <td>
+                                    {% if post.nsfw %}
+                                        <i class="fa fa-check-circle text-success"></i>
+                                    {% else %}
+                                        <i class="fa fa-times-circle text-danger"></i>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                            <td>
+                                {% if post.status == 'u' %}
+                                    <span class="text-warning">{% trans 'ঝুলে আছে' %}</span>
+                                {% elif post.status == 'p' %}
+                                    <span class="text-success">{% trans 'পাবলিশড' %}</span>
+                                {% else %}
+                                    <span class="text-danger">{% trans 'দুষ্টু পোস্ট' %}</span>
+                                {% endif %}
+                            </td>
+                            <td><span class="font-12px">{{ post.publish_date }}</span></td>
+                            <td>
+                                
+                                {% for cat in post.get_categories %}
+                                    <a href="{{ cat.category.get_absolute_url }}">{{ cat.category }}</a>{% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            
+                            </td>
+                            <td><a href="{% url 'dashboard:edit_post' post.id %}">{% trans 'হালনাগাদ' %}</a></td>
+                            <td>
+                                <a href="#"
+                                   data-href="{% url 'dashboard:delete_post' post.id %}"
+                                   class="text-danger del-post-btn url-for-modal"
+                                   data-toggle="modal"
+                                   data-target="#delete_confirmation">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    
+                    </tbody>
+                </table>
+                
+                {% include 'main_app/snippets/pagination.html' %}
             </div>
         {% else %}
-            <p class="my-4"><i>{% trans "আপনি এতো নিরামিষ কেন?  একটাও মজার কিছু দেখালেন না এখনো!!" %}</i></p>
+            {% if is_home %}
+                <p class="mt-4" style="font-size: 18px;"><i>{% trans "আপনি তো খালি মজা নিলেন কিন্তু দিলেন না!!" %}</i></p>
+                <img src="{% static 'dashboard/img/shame.jpg' %}" style="width: auto" alt="লজ্জা লজ্জা">
+                <br>
+                <a href="{% url 'dashboard:create_post' %}">{% trans 'নতুন মজা তৈরি করুন' %}</a>
+            {% else %}
+                <h1 class="my-3 text-danger">বেচারার কোন পোস্ট পাওয়া যায় নি</h1>
+            {% endif %}
         {% endif %}
         
-        <a href="{% url 'dashboard:create_post' %}">{% trans 'নতুন মজা তৈরি করুন' %}</a>
+        {% if request.user.is_superuser and all_users %}
+            <h2>সকল ব্যবহারকারীগণ</h2>
+            {% comment %}<ul>
+                {% for user in all_users %}
+                    <li class="nav-item">
+                        <a href="{% url 'dashboard:user_based_post' user.id %}" class="nav-link">{{ user }}</a>
+                    </li>
+                {% endfor %}
+                
+                <li class="nav-item">
+                    <a href="{% url 'dashboard:user_based_post' user.id %}" class="nav-link">From Facebook(cron)</a>
+                </li>
+            </ul>{% endcomment %}
+            
+            <div class="btn-toolbar" role="toolbar">
+                {% for user in all_users %}
+                    <div class="btn-group mr-2" role="group">
+                        <a href="{% url 'dashboard:user_based_post' user.id %}" class="btn btn-secondary">{{ user }}</a>
+                    </div>
+                {% endfor %}
+                <div class="btn-group mr-2" role="group">
+                    <a href="{% url 'dashboard:user_based_post' 0 %}" class="btn btn-secondary">From Facebook(cron)</a>
+                </div>
+            </div>
+        
+        {% endif %}
         
         <!-- Modal - Delete confirmation box -->
         <div class="modal fade" id="delete_confirmation" tabindex="-1" role="dialog" aria-labelledby="delete_confirmationTitle" aria-hidden="true">

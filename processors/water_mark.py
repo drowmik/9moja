@@ -18,7 +18,7 @@ class WaterMarker():
         self.base_img = base_img
         
         if marker_img:
-            self.marker_img = marker_img
+            self.marker_img = marker_img if marker_img else self.marker_img
         
         if not self.is_img_exists():
             ##

@@ -5,7 +5,17 @@ from .models import Post, Category, Categorize, UserExtended, UserPostRelation, 
 # admin.site.register(UserExtended)
 @admin.register(UserExtended)
 class UserExtendedAdmin(admin.ModelAdmin):
-    list_display = ['user', 'uploads', 'likes', 'shares']
+    list_display = ['user', 'user_email', 'user_full_name', 'uploads', 'likes', 'shares', 'user_is_staff']
+    
+    def user_is_staff(self, obj):
+        return obj.user.is_staff
+    user_is_staff.boolean = True
+    
+    def user_email(self, obj):
+        return obj.user.email
+    
+    def user_full_name(self, obj):
+        return obj.user.first_name + ' ' + obj.user.last_name
 
 
 @admin.register(UserPostRelation)

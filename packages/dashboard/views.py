@@ -9,7 +9,7 @@ from main_app.models import UserExtended, Post, Category, Categorize, UserPostRe
 from .forms import EditPostForm, CreatePostForm, SignUpForm
 from django.contrib.auth import views as auth_views
 from .utils import *
-import os, shutil
+import os
 from django.conf import settings
 from processors.water_mark import WaterMarker
 from urllib.parse import unquote
@@ -31,18 +31,18 @@ def home(request):
     post_per_page = get_post_per_page(request)
     p = Paginator(posts, post_per_page)
     total_pages = p.num_pages  # or last page
-
+    
     # pagination
     if request.GET.get('page'):
         try:
             page = int(request.GET.get('page'))
         except:
             page = 1
-
+    
     # if direct homepage
     else:
         page = 1
-
+    
     try:
         latest_posts = p.page(page)
     except EmptyPage:
@@ -53,7 +53,7 @@ def home(request):
         # If page is not an integer, deliver first page.
         latest_posts = p.page(1)
         page = 1
-
+    
     pg_iter = long_pagination(
         current_page=page,
         total_pages=total_pages,
@@ -61,10 +61,14 @@ def home(request):
         is_not_mobile=not request.is_mobile
     )
     
+    all_users = UserExtended.objects.exclude(user=request.user)
+    
     ctx = {  # context
         "posts": latest_posts,
         'page_iter': pg_iter,
         "current_page": page,
+        "is_home": True,
+        "all_users": all_users,
     }
     return render(request, 'dashboard/index.html', ctx)
 
@@ -74,25 +78,28 @@ def user_based_post(request, pk):
     # that will collect facebook cron posts
     if pk == '0':
         posts = Post.objects.filter(user=None).order_by('-publish_date')
+        userX = {}
+        userX["user"] = "Facebook"  # for showing template that it's from facebook cron
     else:
-        posts = Post.objects.filter(user=User(id=pk)).order_by('-publish_date')
+        userX = get_object_or_404(UserExtended, id=pk)
+        posts = Post.objects.filter(user=userX.user).order_by('-publish_date')
     
     post_per_page = get_post_per_page(request)
-
+    
     p = Paginator(posts, post_per_page)
     total_pages = p.num_pages  # or last page
-
+    
     # pagination
     if request.GET.get('page'):
         try:
             page = int(request.GET.get('page'))
         except:
             page = 1
-
+    
     # if direct homepage
     else:
         page = 1
-
+    
     try:
         latest_posts = p.page(page)
     except EmptyPage:
@@ -103,19 +110,23 @@ def user_based_post(request, pk):
         # If page is not an integer, deliver first page.
         latest_posts = p.page(1)
         page = 1
-
+    
     pg_iter = long_pagination(
         current_page=page,
         total_pages=total_pages,
         showing=get_page_number_in_pagination(request),  # page number showing in pagination
         is_not_mobile=not request.is_mobile
     )
-
+    
+    all_users = UserExtended.objects.exclude(user=request.user)
+    
     ctx = {  # context
         "posts": latest_posts,
         "user_based_post": True,
         'page_iter': pg_iter,
         "current_page": page,
+        "page_user": userX,
+        "all_users": all_users,
     }
     return render(request, 'dashboard/index.html', ctx)
 
@@ -195,12 +206,12 @@ def edit_post(request, pk):
 @login_required
 def delete_post(request, pk):
     post = get_object_or_404(Post, id=pk)
-    if post.is_img_exists():
-        shutil.rmtree(os.path.dirname(post.img.path))
-    else:
+    try:
+        os.remove(post.img.path)
+    except FileNotFoundError:
         print("No img found when deleting post, awkward!!!")
     post.delete()
-    return redirect('dashboard:home')
+    return redirect(request.META['HTTP_REFERER'])
 
 
 @login_required
@@ -217,7 +228,7 @@ def create_post(request):
             
             try:
                 img_path = os.path.join(settings.BASE_DIR, unquote(f.img.url.strip('/')))
-                water_mark = WaterMarker(img_path, os.path.join(settings.BASE_DIR, 'media/temp/marker.png'))
+                water_mark = WaterMarker(img_path, os.path.join(settings.BASE_DIR, 'packages/dashboard/static/dashboard/img/marker.png'))
                 water_mark.water_mark()
             except:
                 print("water mark is not successful")
