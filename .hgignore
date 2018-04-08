@@ -1,7 +1,0 @@
-env/
-.idea/
-.*\.pyc
-.*\.orig
-db.sqlite3
-media/
-.git/
