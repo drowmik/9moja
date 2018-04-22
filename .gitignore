@@ -4,5 +4,6 @@ env/
 .*\.orig
 db.sqlite3
 .hg/
-.gitignore
 media/
+.*__pycache__.*
+__pycache__/

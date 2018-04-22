@@ -128,11 +128,11 @@ else:
             # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'deshimemedb',
-            'USER': 'werconcitus',
-            'HOST': '127.0.0.1',
+            'NAME': os.environ.get('PGDATABASE', 'deshimemedb'),
+            'USER': os.environ.get('PGUSER', 'werconcitus'),
+            'HOST': os.environ.get('PGHOST', '127.0.0.1'),
             'PORT': 5432,
-            'PASSWORD': 'dmconcitus666',
+            'PASSWORD': os.environ.get('PGPASSWORD', 'dmconcitus666'),
         }
     }
 
@@ -198,12 +198,12 @@ SOCIAL_AUTH_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 
 # fb
-# 9moja app
-# SOCIAL_AUTH_FACEBOOK_KEY = '1659905954049233'  # App ID
-# SOCIAL_AUTH_FACEBOOK_SECRET = 'f33c1cdc6c24f53587bb4466e1d17896'  # App Secret
-#testing
-SOCIAL_AUTH_FACEBOOK_KEY = '1659905954049233'  # App ID
-SOCIAL_AUTH_FACEBOOK_SECRET = 'f33c1cdc6c24f53587bb4466e1d17896'  # App Secret
+SOCIAL_AUTH_FACEBOOK_KEY = '1659905954049233'  # App ID - live
+# SOCIAL_AUTH_FACEBOOK_KEY = '830259100511200'  # App ID - test
+SOCIAL_AUTH_FACEBOOK_SECRET = 'f33c1cdc6c24f53587bb4466e1d17896'  # App Secret - live
+# SOCIAL_AUTH_FACEBOOK_SECRET = '2fa61c5e226d22464e6502a780002f97'  # App Secret - test
+SOCIAL_AUTH_FACEBOOK_API_VERSION = '2.11'
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 SOCIAL_AUTH_TWITTER_KEY = 'dULiZCPsWc5u2OA086itWw2M2'  # App ID
 SOCIAL_AUTH_TWITTER_SECRET = 'Yr9xXLlda9NfaPKA4ghCqmD9ZyybcDSlMiNz55CFmrgo8IfGYb'  # App Secret
