@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'mp+hg4qrs6kc6k3^&cvnrg5*irggffprvdqcck&qe0af2&9jld'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", True)
+DEBUG = os.environ.get("DEBUG", False)
 
 ALLOWED_HOSTS = ['*']
 
@@ -196,6 +196,7 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_LOGIN_ERROR_URL = LOGIN_URL
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+RAISE_EXCEPTIONS = False
 
 # fb
 SOCIAL_AUTH_FACEBOOK_KEY = '1659905954049233'  # App ID - live
