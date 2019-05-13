@@ -4,6 +4,7 @@ env/
 .*\.orig
 db.sqlite3
 .hg/
-media/
+/media/
+/static/
 .*__pycache__.*
 __pycache__/
